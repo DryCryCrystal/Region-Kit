@@ -359,6 +359,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-SubstratumCode/Substratum/Substratum.csproj
-SubstratumCode/Substratum/Substratum.csproj
-*.csproj

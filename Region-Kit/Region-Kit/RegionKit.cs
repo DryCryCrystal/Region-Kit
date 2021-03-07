@@ -1,7 +1,7 @@
 ﻿using BepInEx;
 
 namespace RegionKit {
-    [BepInPlugin("Deltatime", "RegionKit", "1.0.0")]
+    [BepInPlugin("Deltatime", "RegionKit", "0.1.0")]
     class RegionKit : BaseUnityPlugin {
 
         // Code for AutoUpdate support

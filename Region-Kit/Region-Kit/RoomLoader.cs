@@ -15,13 +15,20 @@ namespace RegionKit {
             On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
         }
 
+        public static void Disable() {
+            On.Room.Loaded -= Room_Loaded;
+            On.PlacedObject.GenerateEmptyData -= PlacedObject_GenerateEmptyData;
+            On.DevInterface.ObjectsPage.CreateObjRep -= ObjectsPage_CreateObjRep;
+        }
+
         public static void ObjectsPage_CreateObjRep(On.DevInterface.ObjectsPage.orig_CreateObjRep orig, ObjectsPage self, PlacedObject.Type tp, PlacedObject pObj) {
             if (tp == EnumExt_Objects.PWLightrod) {
                 bool isNewObject = false;
                 if (pObj == null) {
                     isNewObject = true;
-                    pObj = new PlacedObject(tp, null);
-                    pObj.pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), 0.25f) + Custom.DegToVec(Random.value * 360f) * 0.2f;
+                    pObj = new PlacedObject(tp, null) {
+                        pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), 0.25f) + Custom.DegToVec(Random.value * 360f) * 0.2f
+                    };
                     self.RoomSettings.placedObjects.Add(pObj);
                     self.owner.room.AddObject(new PWLightRod(pObj, self.owner.room));
                 }

@@ -4,6 +4,10 @@
             On.SuperStructureFuses.ctor += SuperStructureFuses_ctor;
         }
 
+        public static void Disable() {
+            On.SuperStructureFuses.ctor -= SuperStructureFuses_ctor;
+        }
+
         private static void SuperStructureFuses_ctor(On.SuperStructureFuses.orig_ctor orig, SuperStructureFuses self, PlacedObject placedObject, RWCustom.IntRect rect, Room room) {
             self.placedObject = placedObject;
             self.pos = placedObject.pos;

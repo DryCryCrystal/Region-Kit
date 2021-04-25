@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Region-Kit")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Region Development Kit for Rain World")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("DryCryCrystal & DeltaTime")]
 [assembly: AssemblyProduct("Region-Kit")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
@@ -33,4 +33,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion(RegionKit.RegionKit.modVersion + RegionKit.RegionKit.buildNumber)]
+[assembly: AssemblyInformationalVersion(RegionKit.RegionKit.modVersion)]

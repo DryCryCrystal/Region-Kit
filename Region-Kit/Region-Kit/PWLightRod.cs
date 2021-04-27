@@ -1,16 +1,10 @@
-﻿/*
- * A huge thanks to DeltaTime (Deltatime#5480 on discord) for providing us with their contribution to PWLightRod. 
- * Holy shit, we can't thank this guy enough.
- */
-
+﻿/* Authors: DeltaTime & Woodensponge */
 using DevInterface;
 using System.Linq;
 using UnityEngine;
 
-namespace RegionKit
-{
-	public class PWLightRod : SSLightRod
-	{
+namespace RegionKit {
+	public class PWLightRod : SSLightRod{
 		public PWLightRod(PlacedObject placedObject, Room room) : base(placedObject, room)
 		{
 			this.color = (this.rodData as PWLightRodData).color;

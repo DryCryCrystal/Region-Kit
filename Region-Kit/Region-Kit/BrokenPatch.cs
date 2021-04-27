@@ -1,4 +1,6 @@
-﻿namespace RegionKit {
+﻿/* Author: Woodensponge */
+
+namespace RegionKit {
     class BrokenPatch {
         public static void Patch() {
             On.SuperStructureFuses.ctor += SuperStructureFuses_ctor;

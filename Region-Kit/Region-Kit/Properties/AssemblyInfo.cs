@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
@@ -8,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Region-Kit")]
 [assembly: AssemblyDescription("Region Development Kit for Rain World")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DryCryCrystal & DeltaTime")]
+[assembly: AssemblyCompany("Substratum Dev Team & More")]
 [assembly: AssemblyProduct("Region-Kit")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
@@ -33,5 +32,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion(RegionKit.RegionKit.modVersion + RegionKit.RegionKit.buildNumber)]
+[assembly: AssemblyFileVersion(RegionKit.RegionKit.modVersion + "." + RegionKit.RegionKit.buildVersion)]
 [assembly: AssemblyInformationalVersion(RegionKit.RegionKit.modVersion)]

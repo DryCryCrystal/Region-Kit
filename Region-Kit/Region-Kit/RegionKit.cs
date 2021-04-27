@@ -6,7 +6,7 @@ namespace RegionKit {
     public class RegionKit : PartialityMod {
 
         public const string modVersion = "1.0.0";
-        public const string buildVersion = "56"; //Increments for every code change without a version change.
+        public const string buildVersion = "60"; //Increments for every code change without a version change.
 
         public RegionKit() {
             ModID = "RegionKit";

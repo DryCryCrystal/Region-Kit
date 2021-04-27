@@ -83,6 +83,12 @@ namespace RegionKit {
         public static void MultiplayerMenu_Ctor_CRS(On.Menu.MultiplayerMenu.orig_ctor orig, Menu.MultiplayerMenu self, ProcessManager manager) {
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch(); //DEBUG
             watch.Start(); //DEBUG
+            if (customArenaDisplayNames != null) {
+                customArenaDisplayNames.Clear();
+            }
+            if (customArenaPacks != null) {
+                customArenaPacks.Clear();
+            }
             string path = Custom.RootFolderDirectory() + "Levels" + Path.DirectorySeparatorChar + "Packs" + Path.DirectorySeparatorChar;
             int packIndex = 1;
             packIndex = LoadArenaPacksFromDirectory(path, packIndex);
@@ -99,6 +105,12 @@ namespace RegionKit {
         public static void MultiplayerMenu_Ctor_NoCRS(On.Menu.MultiplayerMenu.orig_ctor orig, Menu.MultiplayerMenu self, ProcessManager manager) {
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch(); //DEBUG
             watch.Start(); //DEBUG
+            if (customArenaDisplayNames != null) {
+                customArenaDisplayNames.Clear();
+            }
+            if (customArenaPacks != null) {
+                customArenaPacks.Clear();
+            }
             LoadArenaPacksFromDirectory(Custom.RootFolderDirectory() + "Levels" + Path.DirectorySeparatorChar + "Packs" + Path.DirectorySeparatorChar, 1);
             orig(self, manager);
             watch.Stop(); //DEBUG

@@ -1,7 +1,5 @@
 ﻿using Partiality.Modloader;
-//TODO0(DELTATIME): Make improved logging that can be used for the entire project.
-//TODO1(DELTATIME): Clean up PWLightrod
-//TODO2(DELTATIME): Clean up BrokenPatch
+//TODO0(DELTATIME): Make logging that can be used for entire project
 namespace RegionKit {
     public class RegionKit : PartialityMod {
 

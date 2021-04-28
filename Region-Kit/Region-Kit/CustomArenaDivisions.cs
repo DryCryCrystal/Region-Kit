@@ -20,6 +20,7 @@ namespace RegionKit {
         public static void Patch() {
             On.RainWorld.Start += RainWorld_Start;
             On.MultiplayerUnlocks.LevelListSortNumber += MultiplayerUnlocks_LevelListSortNumber;
+            On.MultiplayerUnlocks.LevelDisplayName += MultiplayerUnlocks_LevelDisplayName;
         }
 
         public static void LatePatch() {
@@ -33,6 +34,7 @@ namespace RegionKit {
 
         public static void Disable() {
             On.MultiplayerUnlocks.LevelListSortNumber -= MultiplayerUnlocks_LevelListSortNumber;
+            On.MultiplayerUnlocks.LevelDisplayName -= MultiplayerUnlocks_LevelDisplayName;
             On.RainWorld.Start -= RainWorld_Start;
             if (LateHooksApplied) {
                 if (IsCRSactive) {
@@ -62,10 +64,31 @@ namespace RegionKit {
             unlockBatch = GetCustomLevelPackIndex(levelName, self);
             return unlockBatch;
         }
+
+        public static string MultiplayerUnlocks_LevelDisplayName(On.MultiplayerUnlocks.orig_LevelDisplayName orig, string s) {
+            string origReturn = orig.Invoke(s);
+            if (origReturn.Equals(s)) {
+                if (customArenaDisplayNames == null) {
+                    LogError("customArenaDisplayNames is null");
+                    return s;
+                }
+                if (customArenaDisplayNames.TryGetValue(s, out string value)) {
+                    return value;
+                }
+            }
+            return origReturn;
+        }
+
         /* Remove lines marked with DEBUG when they are no longer needed */
         public static void MultiplayerMenu_Ctor_CRS(On.Menu.MultiplayerMenu.orig_ctor orig, Menu.MultiplayerMenu self, ProcessManager manager) {
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch(); //DEBUG
             watch.Start(); //DEBUG
+            if (customArenaDisplayNames != null) {
+                customArenaDisplayNames.Clear();
+            }
+            if (customArenaPacks != null) {
+                customArenaPacks.Clear();
+            }
             string path = Custom.RootFolderDirectory() + "Levels" + Path.DirectorySeparatorChar + "Packs" + Path.DirectorySeparatorChar;
             int packIndex = 1;
             packIndex = LoadArenaPacksFromDirectory(path, packIndex);
@@ -77,15 +100,23 @@ namespace RegionKit {
             watch.Stop(); //DEBUG
             Log($"Finished initializing multiplayerMenu (CRS) in {watch.ElapsedMilliseconds}ms"); //DEBUG
         }
+
         /* Remove lines marked with DEBUG when they are no longer needed */
         public static void MultiplayerMenu_Ctor_NoCRS(On.Menu.MultiplayerMenu.orig_ctor orig, Menu.MultiplayerMenu self, ProcessManager manager) {
             System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch(); //DEBUG
             watch.Start(); //DEBUG
+            if (customArenaDisplayNames != null) {
+                customArenaDisplayNames.Clear();
+            }
+            if (customArenaPacks != null) {
+                customArenaPacks.Clear();
+            }
             LoadArenaPacksFromDirectory(Custom.RootFolderDirectory() + "Levels" + Path.DirectorySeparatorChar + "Packs" + Path.DirectorySeparatorChar, 1);
             orig(self, manager);
             watch.Stop(); //DEBUG
             Log($"Finished initializing multiplayerMenu (No CRS) in {watch.ElapsedMilliseconds}ms"); //DEBUG
         }
+
         /* Checks for CRS and sets isCRSactive to the result, sets the static variables for this class.
         /* Remove lines marked with DEBUG when they are no longer needed */
         public static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self) {
@@ -106,6 +137,7 @@ namespace RegionKit {
             }
             LatePatch();
             customArenaPacks = new Dictionary<string, int>();
+            customArenaDisplayNames = new Dictionary<string, string>();
             watch.Stop(); //DEBUG
             Log("Finished seeking CRS assembly in : " + watch.ElapsedMilliseconds + "ms"); //DEBUG
             orig.Invoke(self);
@@ -113,6 +145,7 @@ namespace RegionKit {
         #endregion hookDefinitions
 
         public static Dictionary<string, int> customArenaPacks;
+        public static Dictionary<string, string> customArenaDisplayNames;
 
         /*Gets the pack index of a level if that level is included in an arenapack, returns 0 if the arena is not included in any packs.*/
         public static int GetCustomLevelPackIndex(string levelName, MultiplayerUnlocks multiplayerUnlocks) {
@@ -132,6 +165,7 @@ namespace RegionKit {
         /* PacksDirectory must have a path separator at the end
         /* Returns the incremented startingPackIndex
         /* The first PackIndex should be 1, since it is added to the amount of packs in the base game.
+        /* Optionally can add a customDisplayName by separating with a ':' character
         /* Remove lines marked with DEBUG when they are no longer needed */
         public static int LoadArenaPacksFromDirectory(string packsDirectory, int startingPackIndex) {
             if (packsDirectory == null) {
@@ -152,9 +186,18 @@ namespace RegionKit {
                             string[] fileLines = File.ReadAllLines(files[i]);
                             if (fileLines != null && fileLines.Length > 0) {
                                 for (int l = 0; l < fileLines.Length; ++l) {
-                                    if (!customArenaPacks.ContainsKey(fileLines[l])) {
-                                        customArenaPacks.Add(fileLines[l], packIndex);
-                                        Log($"Added arena {fileLines[l]} to pack {packIndex}."); //DEBUG
+                                    string[] lineSplit = fileLines[l].Split(':');
+                                    if (!customArenaPacks.ContainsKey(lineSplit[0])) {
+                                        customArenaPacks.Add(lineSplit[0], packIndex);
+                                        Log($"Added arena {lineSplit[0]} to pack {packIndex}."); //DEBUG
+                                        if (customArenaDisplayNames != null) {
+                                            if (lineSplit.Length > 1) {
+                                                Log($"CustomName for {lineSplit[0]} : {lineSplit[1]}");
+                                                customArenaDisplayNames.Add(lineSplit[0], lineSplit[1]);
+                                            }
+                                        } else {
+                                            LogError("customArenaDisplayNames is null");
+                                        }
                                     } else {
                                         LogError($"Arena is already being used in a pack! Pack {files[i]} will not have the arena [{fileLines[l]}]");
                                     }

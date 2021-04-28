@@ -9,7 +9,9 @@ using RWCustom;
 /* Allows for the creation of configurable arena dividers through text files
 /* To add an arenapack, add a text file with the names of the arenas on every line in Levels/Packs (works with CRS too!)
 /* Also has values such as isCRSActive which is true when CRS is found and has CustomRegions.CustomRegions.Mod.CustomWorldMod.activatedPacks */
-
+/* Format for the custom packs files:
+/*  Every arena name in a pack must be divided by a newline
+/*  To add a custom name for an arena, divide the file name and the custom name with a ':' character (no spaces in before/after the ':' character unless it's needed in the filename!) */
 namespace RegionKit {
     public class CustomArenaDivisions {
         #region hooksAndLogs

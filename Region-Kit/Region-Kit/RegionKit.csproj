@@ -33,6 +33,8 @@
   <ItemGroup>
     <Compile Include="BrokenPatch.cs" />
     <Compile Include="CustomArenaDivisions.cs" />
+    <Compile Include="ManagedObjectExamples.cs" />
+    <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PWLightRod.cs" />
     <Compile Include="RegionKit.cs" />

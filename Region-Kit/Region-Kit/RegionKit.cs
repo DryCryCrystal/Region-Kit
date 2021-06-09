@@ -18,6 +18,9 @@ namespace RegionKit {
             BrokenPatch.Patch();
             CustomArenaDivisions.Patch();
             //Add new things here - remember to add them to OnDisable() as well!
+
+            // Use this to enable the example managedobjecttypes for testing or debugging
+            //ManagedObjectExamples.PlacedObjectsExample();
         }
 
         public override void OnDisable() {

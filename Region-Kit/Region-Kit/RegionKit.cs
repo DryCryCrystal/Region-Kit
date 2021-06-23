@@ -4,7 +4,7 @@ namespace RegionKit {
     public class RegionKit : PartialityMod {
 
         public const string modVersion = "1.0.0";
-        public const string buildVersion = "61"; //Increments for every code change without a version change.
+        public const string buildVersion = "62"; //Increments for every code change without a version change.
 
         public RegionKit() {
             ModID = "RegionKit";
@@ -17,6 +17,8 @@ namespace RegionKit {
             RoomLoader.Patch();
             BrokenPatch.Patch();
             CustomArenaDivisions.Patch();
+            EchoExtender.ApplyHooks();
+            ColouredLightSource.RegisterAsFullyManagedObject();
             //Add new things here - remember to add them to OnDisable() as well!
 
             // Use this to enable the example managedobjecttypes for testing or debugging
@@ -27,6 +29,7 @@ namespace RegionKit {
             base.OnDisable();
             RoomLoader.Disable();
             BrokenPatch.Disable();
+            EchoExtender.RemoveHooks();
             //Add new things here- remember to add them to OnEnable() as well!
         }
 

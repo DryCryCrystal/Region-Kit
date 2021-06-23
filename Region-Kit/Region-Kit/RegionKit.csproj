@@ -32,7 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BrokenPatch.cs" />
+    <Compile Include="ColouredLightSource.cs" />
     <Compile Include="CustomArenaDivisions.cs" />
+    <Compile Include="EchoExtender.cs" />
     <Compile Include="ManagedObjectExamples.cs" />
     <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

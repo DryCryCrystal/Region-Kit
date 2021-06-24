@@ -69,7 +69,12 @@ namespace RegionKit {
             string crsInstallations = Custom.RootFolderDirectory() + Path.DirectorySeparatorChar + "Mods" + Path.DirectorySeparatorChar + "CustomResources";
             foreach (var crsPack in Directory.GetDirectories(crsInstallations)) {
                 Debug.Log("[Region Kit Echo Extender : Info] Checking pack " + crsPack.Split(Path.DirectorySeparatorChar).Last() + " for custom Echoes");
+                if (!CustomRegions.Mod.CustomWorldMod.activatedPacks.ContainsKey(crsPack.Split(Path.DirectorySeparatorChar).Last())) {
+                    Debug.Log("[Region Kit Echo Extender : Info] CRS Pack is disabled, skipping");
+                    continue;
+                }
                 string regions = crsPack + Path.DirectorySeparatorChar + "World" + Path.DirectorySeparatorChar + "Regions";
+                if (!Directory.Exists(regions)) continue;
                 foreach (var region in Directory.GetDirectories(regions)) {
                     string regionShort = region.Split(Path.DirectorySeparatorChar).Last();
                     Debug.Log("[Region Kit Echo Extender : Info] Found region " + regionShort + "! Checking for Echo.");
@@ -105,6 +110,10 @@ namespace RegionKit {
             string crsInstallations = Custom.RootFolderDirectory() + Path.DirectorySeparatorChar + "Mods" + Path.DirectorySeparatorChar + "CustomResources";
             foreach (var crsPack in Directory.GetDirectories(crsInstallations)) {
                 Debug.Log("[Region Kit Echo Extender : Info] Checking pack " + crsPack.Split(Path.DirectorySeparatorChar).Last() + " for Echo location");
+                if (!CustomRegions.Mod.CustomWorldMod.activatedPacks.ContainsKey(crsPack.Split(Path.DirectorySeparatorChar).Last())) {
+                    Debug.Log("[Region Kit Echo Extender : Info] CRS Pack is disabled, skipping");
+                    continue;
+                }
                 string region = crsPack + Path.DirectorySeparatorChar + "World" + Path.DirectorySeparatorChar + "Regions" + Path.DirectorySeparatorChar + regionShort;
                 if (Directory.Exists(region)) {
                     Debug.Log("[Region Kit Echo Extender : Info] Region found! Checking for GhostSpot");
@@ -143,7 +152,7 @@ namespace RegionKit {
         private static class HookContainer {
             public static void GhostWorldPresenceOnCtor(On.GhostWorldPresence.orig_ctor orig, GhostWorldPresence self, World world, GhostWorldPresence.GhostID ghostid) {
                 orig(self, world, ghostid);
-                if (!(self.ghostRoom is null) || !ExtendedEchoIDs.Contains(ghostid)) return;
+                if (!ExtendedEchoIDs.Contains(ghostid)) return;
                 self.ghostRoom = EchoLocations.ContainsKey(ghostid) ? world.GetAbstractRoom(EchoLocations[ghostid]) : world.abstractRooms[0];
                 self.songName = EchoSettingsMap.ContainsKey(ghostid) ? EchoSettingsMap[ghostid].EchoSong : EchoSettings.Default.EchoSong;
             }
@@ -230,7 +239,11 @@ namespace RegionKit {
 
             public static void WorldLoaderOnCtor(On.WorldLoader.orig_ctor orig, WorldLoader self, RainWorldGame game, int playercharacter, bool singleroomworld, string worldname, Region region, RainWorldGame.SetupValues setupvalues) {
                 orig(self, game, playercharacter, singleroomworld, worldname, region, setupvalues);
-                GetEchoLocationInRegion(region.name);
+                if (region is null) {
+                    Debug.Log("[Region Kit Echo Extender : Warning] Region is NULL, skipping getting echo location.");
+                }
+                else GetEchoLocationInRegion(region.name);
+                if (game is null) return;
                 _gameInstance = game;
             }
         }

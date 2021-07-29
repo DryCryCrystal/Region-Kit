@@ -19,6 +19,7 @@ namespace RegionKit {
             CustomArenaDivisions.Patch();
             EchoExtender.ApplyHooks();
             ColouredLightSource.RegisterAsFullyManagedObject();
+            Machinery.MachineryStatic.Enable();
             //Add new things here - remember to add them to OnDisable() as well!
 
             // Use this to enable the example managedobjecttypes for testing or debugging
@@ -30,6 +31,7 @@ namespace RegionKit {
             RoomLoader.Disable();
             BrokenPatch.Disable();
             EchoExtender.RemoveHooks();
+            Machinery.MachineryStatic.Disable();
             //Add new things here- remember to add them to OnEnable() as well!
         }
 

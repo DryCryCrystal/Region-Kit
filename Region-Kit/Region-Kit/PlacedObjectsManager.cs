@@ -658,6 +658,24 @@ public static class PlacedObjectsManager
         }
 
         /// <summary>
+        /// Awkward throwless wrapping for <see cref="GetValue{T}(string)"/>
+        /// </summary>
+        /// <typeparam name="T">Field type</typeparam>
+        /// <param name="fieldName">Field name</param>
+        /// <param name="result">Out var</param>
+        /// <returns>True if successful; otherwise false.</returns>
+        public virtual bool TryGetValue<T>(string fieldName, out T result)
+        {
+            result = default(T);
+            try
+            {
+                result = GetValue<T>(fieldName);
+                return true;
+            }
+            catch { return false; }
+        }
+
+        /// <summary>
         /// Stores a new value for the field represented by this key. Used mostly by the managed UI. Changes are only saved when the Save button is clicked on the devtools ui
         /// </summary>
         public virtual void SetValue<T>(string fieldName, T value)

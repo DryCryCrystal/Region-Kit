@@ -38,6 +38,7 @@
     <Compile Include="Machinery\MachineryMPO.cs" />
     <Compile Include="Machinery\MachineryStatic.cs" />
     <Compile Include="Machinery\PistonArray.cs" />
+    <Compile Include="Machinery\SimpleCog.cs" />
     <Compile Include="Machinery\SimplePiston.cs" />
     <Compile Include="ManagedObjectExamples.cs" />
     <Compile Include="PlacedObjectsManager.cs" />

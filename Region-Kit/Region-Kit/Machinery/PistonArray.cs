@@ -24,7 +24,7 @@ namespace RegionKit.Machinery
             {
                 var pair = pistons[i];
                 var ndt = pdByIndex(i);
-                ndt.CopyToKin(pair.item1);
+                ndt.BringToKin(pair.item1);
             }
         }
 
@@ -42,7 +42,7 @@ namespace RegionKit.Machinery
             {
                 forcePos = posByIndex(index),
                 rotation = baseDir + pArrData.relativeRotation,
-                sharpFac = pArrData.sharpFac,
+                //sharpFac = pArrData.sharpFac,
                 align = pArrData.align,
                 phase = pArrData.phaseInc * index,
                 amplitude = pArrData.amplitude,
@@ -64,6 +64,15 @@ namespace RegionKit.Machinery
         internal float rotByIndex(int index) { return baseDir + pArrData.relativeRotation; }
         #endregion
 
+        internal MachineryCustomizer _mc;
+        internal void GrabMC()
+        {
+            _mc = _mc
+                ?? room.roomSettings.placedObjects.FirstOrDefault(
+                    x => x.data is MachineryCustomizer nmc && nmc.GetValue<MachineryID>("amID") == MachineryID.Piston && (x.pos - this.PO.pos).sqrMagnitude <= nmc.GetValue<Vector2>("radius").sqrMagnitude)?.data as MachineryCustomizer
+                ?? new MachineryCustomizer(null);
+        }
+
         internal void CleanUpPistons()
         {
             if (pistons != null)
@@ -74,6 +83,7 @@ namespace RegionKit.Machinery
         }
         internal void GeneratePistons()
         {
+            GrabMC();
             CleanUpPistons();
             pistons = new Tuple<PistonData, SimplePiston>[pArrData.pistonCount];
             for (int i = 0; i < pistons.Length; i++)
@@ -81,6 +91,7 @@ namespace RegionKit.Machinery
                 var pdata = pdByIndex(i);
                 var piston = new SimplePiston(room, null, pdata);
                 this.room.AddObject(piston);
+                piston._mc = this._mc;
                 pistons[i] = new Tuple<PistonData, SimplePiston>(pdata, piston);
 
             }

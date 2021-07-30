@@ -4,10 +4,19 @@ using UnityEngine;
 using RWCustom;
 using RegionKit.Utils;
 
+using static PlacedObjectsManager;
+
 namespace RegionKit.Machinery
 {
+    public class BaseMachineryData : PlacedObjectsManager.ManagedData
+    {
+        public BaseMachineryData(PlacedObject owner, PlacedObjectsManager.ManagedField[] fields) : base(owner, fields) { }
 
-    public class PistonData : PlacedObjectsManager.ManagedData, ICanBringDataToKin<PistonData> 
+        internal MachineryCustomizer assignedMC;
+    }
+
+    #region pistons
+    public class PistonData : BaseMachineryData, ICanBringDataToKin<PistonData> 
     {
         [BackedByField("opmode")]
         internal OperationMode opmode = OperationMode.Sinal;
@@ -15,8 +24,6 @@ namespace RegionKit.Machinery
         internal float rotation = 0f;
         [PlacedObjectsManager.FloatField("amp", 0f, 120f, 20f, increment: 1f, displayName: "Amplitude", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
         internal float amplitude = 20f;
-        //[PlacedObjectsManager.FloatField("shFac", 1f, 5f, 1f, increment: 0.05f, displayName: "Sharpening Factor", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
-        internal float sharpFac = 1f;
         [PlacedObjectsManager.BooleanField("align_rot", true, displayName: "Straight angles only", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.button)]
         internal bool align = false;
         [PlacedObjectsManager.FloatField("phase", -5f, 5f, 0f, displayName: "Phase", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
@@ -30,19 +37,19 @@ namespace RegionKit.Machinery
 
         }
 
-        public void CopyToKin(PistonData other)
+        public void BringToKin(PistonData other)
         {
             other.opmode = this.opmode;
             other.rotation = this.rotation;
             other.amplitude = this.amplitude;
-            other.sharpFac = this.sharpFac;
+            //other.sharpFac = this.sharpFac;
             other.align = this.align;
             other.phase = this.phase;
             other.frequency = this.frequency;
             other.forcePos = this.forcePos;
         }
     }
-    public class PistonArrayData : PlacedObjectsManager.ManagedData
+    public class PistonArrayData : BaseMachineryData
     {
         [PlacedObjectsManager.IntegerField("count", 1, 35, 3, displayName:"Piston count")]
         internal int pistonCount;
@@ -52,8 +59,6 @@ namespace RegionKit.Machinery
         internal Vector2 point2;
         [PlacedObjectsManager.FloatField("amp", 0f, 120f, 20f, increment: 1f, displayName: "Amplitude", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
         internal float amplitude;
-        //[PlacedObjectsManager.FloatField("shFac", 1f, 5f, 1f, increment: 0.05f, displayName: "Sharpening Factor", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
-        internal float sharpFac;
         [PlacedObjectsManager.BooleanField("align_rot", true, displayName: "Straight angles only", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.button)]
         internal bool align;
         [PlacedObjectsManager.FloatField("phaseInc", -5f, 5f, 0f, displayName: "Phase increment", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
@@ -68,30 +73,77 @@ namespace RegionKit.Machinery
         }
 
         
-    } 
+    }
+    #endregion
 
-    public class MachineryCustomizer : PlacedObjectsManager.ManagedData
+    #region cogs
+    public class SimpleCogData : BaseMachineryData
+    {
+        internal Vector2 forcepos;
+        internal OperationMode opmode => GetValue<OperationMode>("opmode");
+        [FloatField("AVSamp", 0.1f, 3f, 1f, increment:0.05f, displayName:"AV shift amplitude")]
+        internal float angVelShiftAmp;
+        internal float angVelShiftFrq;
+        internal float angVelShiftPhs;
+        internal float baseAngVel;
+        internal float rad;
+
+        public SimpleCogData(PlacedObject owner) : base(owner, new PlacedObjectsManager.ManagedField[] 
+        {
+            new EnumField("opmode", typeof(OperationMode), OperationMode.Cosinal, displayName:"Operation mode")
+        })
+        {
+
+        }
+    }
+
+    #endregion
+
+
+    public class MachineryCustomizer : PlacedObjectsManager.ManagedData, ICanBringDataToKin<FSprite>
     {
         [PlacedObjectsManager.StringField("element", "pixel", "Atlas element")]
         internal string elementName = "pixel";
         [PlacedObjectsManager.StringField("shader", "Basic", displayName:"Shader")]
         internal string shaderName = "Basic";
+        [PlacedObjectsManager.StringField("container", "Items", displayName:"rCam container")]
+        internal string ContainerName;
         [PlacedObjectsManager.FloatField("scX", 0f, 35f, 1f, increment:0.1f, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.text, displayName:"X scale")]
         internal float scX = 1f;
         [PlacedObjectsManager.FloatField("scY", 0f, 35f, 1f, increment: 0.1f, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.text, displayName:"Y scale")]
         internal float scY = 1f;
-        [PlacedObjectsManager.FloatField("addRot", 0f, 180f, 0f, increment:0.5f, displayName:"Additional rotation")]
+        [PlacedObjectsManager.FloatField("addRot", -90f, 90f, 0f, increment:0.5f, displayName:"Additional rotation")]
         internal float addRot = 0f;
         [BackedByField("sCol")]
         internal Color spriteColor = Color.red;
         [BackedByField("amID")]
         internal MachineryID affectedMachinesID;
+        [PlacedObjectsManager.FloatField("alpha", 0f, 1f, 1f, increment:0.01f, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.text, "Alpha")]
+        internal float alpha;
+        
+        internal bool AffectsInPoint(Vector2 p)
+        {
+            return (p - owner.pos).sqrMagnitude < GetValue<Vector2>("radius").magnitude;
+        }
+
+        public void BringToKin(FSprite other)
+        {
+            other.color = spriteColor;
+            other.alpha = alpha;
+            other.scaleX = scX;
+            other.scaleY = scY;
+            try { other.element = Futile.atlasManager.GetElementWithName(elementName); }
+            catch { other.element = Futile.atlasManager.GetElementWithName("pixel"); }
+            try { other.shader = MachineryStatic.rw.Shaders[shaderName]; }
+            catch { other.shader = FShader.defaultShader; }
+        }
 
         public MachineryCustomizer(PlacedObject owner) : 
             base(owner, 
                 new PlacedObjectsManager.ManagedField[] {
                     new PlacedObjectsManager.ColorField("sCol", Color.red, displayName:"Color"),
-                    new PlacedObjectsManager.EnumField("amID", typeof(MachineryID), MachineryID.Piston, displayName:"Affected machinery")
+                    new PlacedObjectsManager.EnumField("amID", typeof(MachineryID), MachineryID.Piston, displayName:"Affected machinery"),
+                    new PlacedObjectsManager.Vector2Field("radius", new Vector2(30f, 0f), PlacedObjectsManager.Vector2Field.VectorReprType.circle)
                 })
         { }
     }

@@ -7,6 +7,6 @@ namespace RegionKit.Utils
 {
     public interface ICanBringDataToKin <T>
     {
-        void CopyToKin(T other);
+        void BringToKin(T other);
     }
 }

@@ -20,7 +20,7 @@ namespace RegionKit.Machinery
         public override void Update(bool eu)
         {
             base.Update(eu);
-            _lt += 1f;
+            _lt += room?.world?.rainCycle.brokenAntiGrav?.CurrentLightsOn ?? 1f;
             oldPos = currentPos;
         }
 
@@ -35,17 +35,18 @@ namespace RegionKit.Machinery
             get
             {
                 var res = mData.amplitude;
-                
+                Func<float, float> chosenFunc;
                 switch (mData.opmode)
                 {
+                    default:
                     case OperationMode.Sinal:
-                        res *= Sin(_lt + mData.phase) * mData.frequency;
+                        chosenFunc = Sin;
                         break;
                     case OperationMode.Cosinal:
-                        res *= Cos((_lt + mData.phase) * mData.frequency);
+                        chosenFunc = Cos;
                         break;
                 }
-                //res = Lerp(res, (res >= 0.5f) ? 1f : 0f, mData.sharpFac);
+                res *= chosenFunc((_lt + mData.phase) * mData.frequency);
                 return res;
             }
         }
@@ -58,10 +59,11 @@ namespace RegionKit.Machinery
         {
             _mc = _mc 
                 ?? room.roomSettings.placedObjects.FirstOrDefault(
-                    x => x.data is MachineryCustomizer nmc && nmc.GetValue<MachineryID>("amID") == MachineryID.Piston)?.data as MachineryCustomizer 
+                    x => x.data is MachineryCustomizer nmc && nmc.GetValue<MachineryID>("amID") == MachineryID.Piston && (x.pos - this.PO.pos).sqrMagnitude <= nmc.GetValue<Vector2>("radius").sqrMagnitude)?.data as MachineryCustomizer 
                 ?? new MachineryCustomizer(null);
         }
 
+        #region irawable things
         public void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
             GrabMC();
@@ -72,38 +74,26 @@ namespace RegionKit.Machinery
 
         public void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
-#warning add ts smoothing
             var pos = Vector2.Lerp(oldPos, currentPos, timeStacker);
+            _mc.BringToKin(sLeaser.sprites[0]);
             sLeaser.sprites[0].rotation = effRot + _mc.addRot;
-            sLeaser.sprites[0].color = _mc.spriteColor;
-            sLeaser.sprites[0].scaleX = _mc.scX;
-            sLeaser.sprites[0].scaleY = _mc.scY;
             sLeaser.sprites[0].x = pos.x - camPos.x;
             sLeaser.sprites[0].y = pos.y - camPos.y;
         }
 
         public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
-            try { sLeaser.sprites[0].element = Futile.atlasManager.GetElementWithName(_mc.elementName); }
-            catch
-            {
-                Debug.Log("SimplePiston.ApplyPalette: invalid element name, using default.");
-                sLeaser.sprites[0].element = Futile.atlasManager.GetElementWithName("pixel");
-            }
-            try
-            {   sLeaser.sprites[0].shader = room.game.rainWorld.Shaders[_mc.shaderName]; }
-            catch
-            {
-                Debug.Log("SimplePiston.ApplyPalette: invalid shader name, using default.");
-                sLeaser.sprites[0].shader = FShader.defaultShader;
-            }
+
         }
 
         public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
             foreach (var fs in sLeaser.sprites) fs.RemoveFromContainer();
-            (newContatiner ?? rCam.ReturnFContainer("Items")).AddChild(sLeaser.sprites[0]);
+            try { (newContatiner ?? rCam.ReturnFContainer(_mc.ContainerName)).AddChild(sLeaser.sprites[0]); }
+            catch { rCam.ReturnFContainer("Items").AddChild(sLeaser.sprites[0]); }
+            
         }
+        #endregion
     }
 
 }

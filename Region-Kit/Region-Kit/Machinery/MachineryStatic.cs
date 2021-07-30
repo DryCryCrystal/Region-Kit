@@ -29,8 +29,14 @@ namespace RegionKit.Machinery
         {
             PlacedObjectsManager.RegisterManagedObject(new PlacedObjectsManager.ManagedObjectType("SimplePiston", typeof(SimplePiston), typeof(PistonData), typeof(PlacedObjectsManager.ManagedRepresentation)));
             PlacedObjectsManager.RegisterManagedObject(new PlacedObjectsManager.ManagedObjectType("PistonArray", typeof(PistonArray), typeof(PistonArrayData), typeof(PlacedObjectsManager.ManagedRepresentation)));
+            PlacedObjectsManager.RegisterEmptyObjectType("MachineryCustomizer", typeof(MachineryCustomizer), typeof(PlacedObjectsManager.ManagedRepresentation));
         }
         private static bool appliedOnce = false;
+    }
+
+    public static class EnumExt_RKMachinery
+    {
+        public static AbstractPhysicalObject.AbstractObjectType abstractPiston;
     }
 
     public enum OperationMode
@@ -38,4 +44,14 @@ namespace RegionKit.Machinery
         Sinal = 2,
         Cosinal = 4,
     }
+    public enum MachineryID
+    {
+        Piston,
+        Cog
+    }
 }
+
+//  to-do list/idea stash:
+//  - integrate with brokenzerog
+//  add more machines
+//

@@ -12,7 +12,7 @@ namespace RegionKit.Machinery
     public class SimplePiston : UpdatableAndDeletable, IDrawable
     {
         public SimplePiston(Room rm, PlacedObject pobj) : this(rm, pobj, null) { }
-        public SimplePiston(Room rm, PlacedObject pobj, PistonData mdt = null)
+        public SimplePiston(Room rm, PlacedObject pobj, PistonData mdt = null)// : base (new UselessAbstractPiston(rm.world, rm.GetWorldCoordinate(pobj?.pos ?? mdt?.forcePos ?? default), null))
         {
             PO = pobj;
             this._assignedMData = mdt;
@@ -21,6 +21,7 @@ namespace RegionKit.Machinery
         {
             base.Update(eu);
             _lt += 1f;
+            oldPos = currentPos;
         }
 
         internal PistonData mData => _assignedMData ?? PO?.data as PistonData;
@@ -38,20 +39,32 @@ namespace RegionKit.Machinery
                 switch (mData.opmode)
                 {
                     case OperationMode.Sinal:
-                        res *= Sin((_lt + mData.phase) * mData.frequency);
+                        res *= Sin(_lt + mData.phase) * mData.frequency;
                         break;
                     case OperationMode.Cosinal:
-                        res *= Cos((_lt + mData.phase)* mData.frequency);
+                        res *= Cos((_lt + mData.phase) * mData.frequency);
                         break;
                 }
+                //res = Lerp(res, (res >= 0.5f) ? 1f : 0f, mData.sharpFac);
                 return res;
             }
         }
+        internal Vector2 currentPos => originPoint + DegToVec(effRot) * Shift;
+        internal Vector2 oldPos;
 
+        internal MachineryCustomizer _mc;
         
+        internal void GrabMC()
+        {
+            _mc = _mc 
+                ?? room.roomSettings.placedObjects.FirstOrDefault(
+                    x => x.data is MachineryCustomizer nmc && nmc.GetValue<MachineryID>("amID") == MachineryID.Piston)?.data as MachineryCustomizer 
+                ?? new MachineryCustomizer(null);
+        }
 
         public void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
+            GrabMC();
             sLeaser.sprites = new FSprite[1];
             sLeaser.sprites[0] = new FSprite("pixel");
             this.AddToContainer(sLeaser, rCam, null);
@@ -60,16 +73,30 @@ namespace RegionKit.Machinery
         public void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
 #warning add ts smoothing
-            var pos = originPoint + DegToVec(effRot) * Shift;
-            sLeaser.sprites[0].rotation = effRot;
+            var pos = Vector2.Lerp(oldPos, currentPos, timeStacker);
+            sLeaser.sprites[0].rotation = effRot + _mc.addRot;
+            sLeaser.sprites[0].color = _mc.spriteColor;
+            sLeaser.sprites[0].scaleX = _mc.scX;
+            sLeaser.sprites[0].scaleY = _mc.scY;
             sLeaser.sprites[0].x = pos.x - camPos.x;
             sLeaser.sprites[0].y = pos.y - camPos.y;
         }
 
         public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
         {
-            sLeaser.sprites[0].color = new Color(1f, 0f, 0f);
-            sLeaser.sprites[0].scale = 20f;
+            try { sLeaser.sprites[0].element = Futile.atlasManager.GetElementWithName(_mc.elementName); }
+            catch
+            {
+                Debug.Log("SimplePiston.ApplyPalette: invalid element name, using default.");
+                sLeaser.sprites[0].element = Futile.atlasManager.GetElementWithName("pixel");
+            }
+            try
+            {   sLeaser.sprites[0].shader = room.game.rainWorld.Shaders[_mc.shaderName]; }
+            catch
+            {
+                Debug.Log("SimplePiston.ApplyPalette: invalid shader name, using default.");
+                sLeaser.sprites[0].shader = FShader.defaultShader;
+            }
         }
 
         public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
@@ -77,8 +104,6 @@ namespace RegionKit.Machinery
             foreach (var fs in sLeaser.sprites) fs.RemoveFromContainer();
             (newContatiner ?? rCam.ReturnFContainer("Items")).AddChild(sLeaser.sprites[0]);
         }
-
-        
-        }
+    }
 
 }

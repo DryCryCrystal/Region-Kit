@@ -33,7 +33,7 @@ namespace RegionKit.Machinery
         internal Tuple<PistonData, SimplePiston>[] pistons;
         internal Vector2 p1 => PO.pos;
         internal Vector2 p2 => pArrData.GetValue<Vector2>("point2");
-        internal float baseDir => VecToDeg(PerpendicularVector(p2 - p1));
+        internal float baseDir => VecToDeg(PerpendicularVector(p2));
 
         #region child gen by index
         internal PistonData pdByIndex(int index)
@@ -43,7 +43,7 @@ namespace RegionKit.Machinery
                 forcePos = posByIndex(index),
                 rotation = baseDir + pArrData.relativeRotation,
                 sharpFac = pArrData.sharpFac,
-                align = false,
+                align = pArrData.align,
                 phase = pArrData.phaseInc * index,
                 amplitude = pArrData.amplitude,
                 frequency = pArrData.frequency,
@@ -64,7 +64,6 @@ namespace RegionKit.Machinery
         internal float rotByIndex(int index) { return baseDir + pArrData.relativeRotation; }
         #endregion
 
-
         internal void CleanUpPistons()
         {
             if (pistons != null)
@@ -77,16 +76,20 @@ namespace RegionKit.Machinery
         {
             CleanUpPistons();
             pistons = new Tuple<PistonData, SimplePiston>[pArrData.pistonCount];
-            var cPhase = 0f;
             for (int i = 0; i < pistons.Length; i++)
             {
-                cPhase += pArrData.phaseInc;
                 var pdata = pdByIndex(i);
                 var piston = new SimplePiston(room, null, pdata);
                 this.room.AddObject(piston);
                 pistons[i] = new Tuple<PistonData, SimplePiston>(pdata, piston);
 
             }
+        }
+
+        public override void Destroy()
+        {
+            base.Destroy();
+            foreach (var pair in pistons) pair.item2.Destroy();
         }
     }
 }

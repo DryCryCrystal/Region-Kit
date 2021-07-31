@@ -55,7 +55,7 @@ namespace RegionKit.Machinery
         internal OperationMode omByIndex(int index)
         {
             return OperationMode.Sinal;
-            return (index % 2 == 0) ? OperationMode.Cosinal : OperationMode.Sinal;
+            //return (index % 2 == 0) ? OperationMode.Cosinal : OperationMode.Sinal;
         }
         internal Vector2 posByIndex(int index)
         {

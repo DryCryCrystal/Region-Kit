@@ -8,9 +8,9 @@ using static PlacedObjectsManager;
 
 namespace RegionKit.Machinery
 {
-    public class BaseMachineryData : PlacedObjectsManager.ManagedData
+    public class BaseMachineryData : ManagedData
     {
-        public BaseMachineryData(PlacedObject owner, PlacedObjectsManager.ManagedField[] fields) : base(owner, fields) { }
+        public BaseMachineryData(PlacedObject owner, ManagedField[] fields) : base(owner, fields) { }
 
         internal MachineryCustomizer assignedMC;
     }
@@ -20,19 +20,19 @@ namespace RegionKit.Machinery
     {
         [BackedByField("opmode")]
         internal OperationMode opmode = OperationMode.Sinal;
-        [PlacedObjectsManager.FloatField("rot", 0f, 360f, 0f, increment: 1f, displayName: "Direction", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
+        [FloatField("rot", 0f, 360f, 0f, increment: 1f, displayName: "Direction", control: ManagedFieldWithPanel.ControlType.slider)]
         internal float rotation = 0f;
-        [PlacedObjectsManager.FloatField("amp", 0f, 120f, 20f, increment: 1f, displayName: "Amplitude", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
+        [FloatField("amp", 0f, 120f, 20f, increment: 1f, displayName: "Amplitude", control: ManagedFieldWithPanel.ControlType.slider)]
         internal float amplitude = 20f;
-        [PlacedObjectsManager.BooleanField("align_rot", true, displayName: "Straight angles only", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.button)]
+        [BooleanField("align_rot", true, displayName: "Straight angles only", control: ManagedFieldWithPanel.ControlType.button)]
         internal bool align = false;
-        [PlacedObjectsManager.FloatField("phase", -5f, 5f, 0f, displayName: "Phase", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
+        [FloatField("phase", -5f, 5f, 0f, displayName: "Phase", control: ManagedFieldWithPanel.ControlType.slider)]
         internal float phase = 0f;
-        [PlacedObjectsManager.FloatField("frequency", 0.05f, 2f, 1f, displayName: "Drequency", increment: 0.05f)]
+        [FloatField("frequency", 0.05f, 2f, 1f, displayName: "Drequency", increment: 0.05f)]
         internal float frequency = 1f;
         internal Vector2 forcePos;
 
-        public PistonData(PlacedObject owner) : base(owner, new PlacedObjectsManager.ManagedField[] { new PlacedObjectsManager.EnumField("opmode", typeof(OperationMode), OperationMode.Sinal, displayName: "Operation mode"), })
+        public PistonData(PlacedObject owner) : base(owner, new ManagedField[] { new EnumField("opmode", typeof(OperationMode), OperationMode.Sinal, displayName: "Operation mode"), })
         {
 
         }
@@ -51,23 +51,23 @@ namespace RegionKit.Machinery
     }
     public class PistonArrayData : BaseMachineryData
     {
-        [PlacedObjectsManager.IntegerField("count", 1, 35, 3, displayName:"Piston count")]
+        [IntegerField("count", 1, 35, 3, displayName:"Piston count")]
         internal int pistonCount;
-        [PlacedObjectsManager.FloatField("relrot", 0f, 180f, 0f, increment:0.5f, displayName:"Relative rotation")]
+        [FloatField("relrot", 0f, 180f, 0f, increment:0.5f, displayName:"Relative rotation")]
         internal float relativeRotation;
         [BackedByField("point2")]
         internal Vector2 point2;
-        [PlacedObjectsManager.FloatField("amp", 0f, 120f, 20f, increment: 1f, displayName: "Amplitude", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
+        [FloatField("amp", 0f, 120f, 20f, increment: 1f, displayName: "Amplitude", control: ManagedFieldWithPanel.ControlType.slider)]
         internal float amplitude;
-        [PlacedObjectsManager.BooleanField("align_rot", true, displayName: "Straight angles only", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.button)]
+        [BooleanField("align_rot", true, displayName: "Straight angles only", control: ManagedFieldWithPanel.ControlType.button)]
         internal bool align;
-        [PlacedObjectsManager.FloatField("phaseInc", -5f, 5f, 0f, displayName: "Phase increment", control: PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider)]
+        [FloatField("phaseInc", -5f, 5f, 0f, displayName: "Phase increment", control: ManagedFieldWithPanel.ControlType.slider)]
         internal float phaseInc;
-        [PlacedObjectsManager.FloatField("frequency", 0.05f, 2f, 1f, displayName: "Frequency", increment: 0.05f)]
+        [FloatField("frequency", 0.05f, 2f, 1f, displayName: "Frequency", increment: 0.05f)]
         internal float frequency;
 
 
-        public PistonArrayData(PlacedObject owner) : base(owner, new PlacedObjectsManager.ManagedField[] { new PlacedObjectsManager.Vector2Field("point2", owner.pos, PlacedObjectsManager.Vector2Field.VectorReprType.line)})
+        public PistonArrayData(PlacedObject owner) : base(owner, new ManagedField[] { new Vector2Field("point2", owner.pos, Vector2Field.VectorReprType.line)})
         {
 
         }
@@ -83,12 +83,15 @@ namespace RegionKit.Machinery
         internal OperationMode opmode => GetValue<OperationMode>("opmode");
         [FloatField("AVSamp", 0.1f, 3f, 1f, increment:0.05f, displayName:"AV shift amplitude")]
         internal float angVelShiftAmp;
+        [FloatField("AVSfrq", 0.1f, 3f, 1f, increment:0.05f, displayName:"AV shift frequency")]
         internal float angVelShiftFrq;
+        [FloatField("AVphs", -5f, 5f, 0f, increment:0.1f, displayName: "AV shift phase")]
         internal float angVelShiftPhs;
+        [FloatField("AVbase", -30f, 30f, 10f, increment:0.2f, displayName:"Angular velocity (AV)")]
         internal float baseAngVel;
         internal float rad;
 
-        public SimpleCogData(PlacedObject owner) : base(owner, new PlacedObjectsManager.ManagedField[] 
+        public SimpleCogData(PlacedObject owner) : base(owner, new ManagedField[] 
         {
             new EnumField("opmode", typeof(OperationMode), OperationMode.Cosinal, displayName:"Operation mode")
         })
@@ -99,28 +102,31 @@ namespace RegionKit.Machinery
 
     #endregion
 
-
-    public class MachineryCustomizer : PlacedObjectsManager.ManagedData, ICanBringDataToKin<FSprite>
+    public class MachineryCustomizer : ManagedData, ICanBringDataToKin<FSprite>
     {
-        [PlacedObjectsManager.StringField("element", "pixel", "Atlas element")]
+        [StringField("element", "pixel", "Atlas element")]
         internal string elementName = "pixel";
-        [PlacedObjectsManager.StringField("shader", "Basic", displayName:"Shader")]
+        [StringField("shader", "Basic", displayName:"Shader")]
         internal string shaderName = "Basic";
-        [PlacedObjectsManager.StringField("container", "Items", displayName:"rCam container")]
+        [StringField("container", "Items", displayName:"rCam container")]
         internal string ContainerName;
-        [PlacedObjectsManager.FloatField("scX", 0f, 35f, 1f, increment:0.1f, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.text, displayName:"X scale")]
+        [FloatField("scX", 0f, 35f, 1f, increment:0.1f, ManagedFieldWithPanel.ControlType.text, displayName:"X scale")]
         internal float scX = 1f;
-        [PlacedObjectsManager.FloatField("scY", 0f, 35f, 1f, increment: 0.1f, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.text, displayName:"Y scale")]
+        [FloatField("scY", 0f, 35f, 1f, increment: 0.1f, ManagedFieldWithPanel.ControlType.text, displayName:"Y scale")]
         internal float scY = 1f;
-        [PlacedObjectsManager.FloatField("addRot", -90f, 90f, 0f, increment:0.5f, displayName:"Additional rotation")]
+        [FloatField("addRot", -90f, 90f, 0f, increment:0.5f, displayName:"Additional rotation")]
         internal float addRot = 0f;
         [BackedByField("sCol")]
         internal Color spriteColor = Color.red;
         [BackedByField("amID")]
         internal MachineryID affectedMachinesID;
-        [PlacedObjectsManager.FloatField("alpha", 0f, 1f, 1f, increment:0.01f, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.text, "Alpha")]
+        [FloatField("alpha", 0f, 1f, 1f, increment:0.01f, ManagedFieldWithPanel.ControlType.text, "Alpha")]
         internal float alpha;
-        
+        [FloatField("anchX", -10f, 10f, 0f, control:ManagedFieldWithPanel.ControlType.text, displayName:"X anchor")]
+        internal float anchX;
+        [FloatField("anchY", -10f, 10f, 0f, control: ManagedFieldWithPanel.ControlType.text, displayName: "Y anchor")]
+        internal float anchY;
+
         internal bool AffectsInPoint(Vector2 p)
         {
             return (p - owner.pos).sqrMagnitude < GetValue<Vector2>("radius").magnitude;
@@ -132,6 +138,7 @@ namespace RegionKit.Machinery
             other.alpha = alpha;
             other.scaleX = scX;
             other.scaleY = scY;
+
             try { other.element = Futile.atlasManager.GetElementWithName(elementName); }
             catch { other.element = Futile.atlasManager.GetElementWithName("pixel"); }
             try { other.shader = MachineryStatic.rw.Shaders[shaderName]; }
@@ -140,11 +147,22 @@ namespace RegionKit.Machinery
 
         public MachineryCustomizer(PlacedObject owner) : 
             base(owner, 
-                new PlacedObjectsManager.ManagedField[] {
-                    new PlacedObjectsManager.ColorField("sCol", Color.red, displayName:"Color"),
-                    new PlacedObjectsManager.EnumField("amID", typeof(MachineryID), MachineryID.Piston, displayName:"Affected machinery"),
-                    new PlacedObjectsManager.Vector2Field("radius", new Vector2(30f, 0f), PlacedObjectsManager.Vector2Field.VectorReprType.circle)
+                new ManagedField[] {
+                    new ColorField("sCol", Color.red, displayName:"Color"),
+                    new EnumField("amID", typeof(MachineryID), MachineryID.Piston, displayName:"Affected machinery"),
+                    new Vector2Field("radius", new Vector2(30f, 0f), Vector2Field.VectorReprType.circle),
                 })
         { }
+    }
+
+    public class PowerManagerData : ManagedData
+    {
+        [FloatField("basePower", 0f, 1f, 1f, increment:0.02f, displayName:"Base power")]
+        internal float basePowerLevel;
+
+        public PowerManagerData(PlacedObject owner) : base(owner, new ManagedField[] { })
+        {
+
+        }
     }
 }

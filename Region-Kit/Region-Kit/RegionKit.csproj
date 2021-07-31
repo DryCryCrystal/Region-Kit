@@ -35,18 +35,22 @@
     <Compile Include="ColouredLightSource.cs" />
     <Compile Include="CustomArenaDivisions.cs" />
     <Compile Include="EchoExtender.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Machinery\MachineryMPO.cs" />
     <Compile Include="Machinery\MachineryStatic.cs" />
     <Compile Include="Machinery\PistonArray.cs" />
+    <Compile Include="Machinery\RoomPowerManager.cs" />
     <Compile Include="Machinery\SimpleCog.cs" />
     <Compile Include="Machinery\SimplePiston.cs" />
     <Compile Include="ManagedObjectExamples.cs" />
     <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PWLightRod.cs" />
-    <Compile Include="RegionKit.cs" />
+    <Compile Include="RegionKitMod.cs" />
     <Compile Include="RoomLoader.cs" />
     <Compile Include="Utils\ICanBringDataToKin.cs" />
+    <Compile Include="Utils\PetrifiedWood.cs" />
+    <Compile Include="Utils\RKExtensions.cs" />
     <Compile Include="Utils\Tuple.cs" />
   </ItemGroup>
   <ItemGroup>

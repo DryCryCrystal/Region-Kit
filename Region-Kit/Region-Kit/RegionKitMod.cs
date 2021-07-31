@@ -1,12 +1,13 @@
 ﻿using Partiality.Modloader;
 //TODO0(DELTATIME): Make logging that can be used for entire project
+//TODO0: done but untested. see Utils.PetrifiedWood.
 namespace RegionKit {
-    public class RegionKit : PartialityMod {
+    public class RegionKitMod : PartialityMod {
 
         public const string modVersion = "1.0.0";
-        public const string buildVersion = "64"; //Increments for every code change without a version change.
+        public const string buildVersion = "65"; //Increments for every code change without a version change.
 
-        public RegionKit() {
+        public RegionKitMod() {
             ModID = "RegionKit";
             author = "Substratum Dev Team & More";
             Version = modVersion;

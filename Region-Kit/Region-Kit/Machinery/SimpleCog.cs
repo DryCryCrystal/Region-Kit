@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using RegionKit.Utils;
 
 using static UnityEngine.Mathf;
+
 namespace RegionKit.Machinery
 {
     public class SimpleCog : UpdatableAndDeletable, IDrawable
@@ -13,17 +15,20 @@ namespace RegionKit.Machinery
         public SimpleCog(Room rm, PlacedObject pobj, SimpleCogData acd = null)
         {
             PO = pobj;
+            this.room = rm;
             _assignedCD = acd;
+            Debug.Log($"Cog created in {rm.abstractRoom?.name}");
         }
         public override void Update(bool eu)
         {
             base.Update(eu);
-            _lt += room?.world?.rainCycle.brokenAntiGrav?.CurrentLightsOn ?? 1f;
+            _lt += room.GetGlobalPower();
             lastRot = rot;
             rot = (rot + cAngVel) % 360f;
         }
 
         internal SimpleCogData cData => PO?.data as SimpleCogData ?? _assignedCD ?? new SimpleCogData(null);
+        
         private readonly SimpleCogData _assignedCD;
         private PlacedObject PO;
 
@@ -36,11 +41,13 @@ namespace RegionKit.Machinery
                 ?? new MachineryCustomizer(null);
         }
 
+        internal Vector2 cpos => PO?.pos ?? _assignedCD?.owner.pos ?? default;
         private float _lt;
         internal float lastRot;
         internal float rot;
         internal float cAngVel
         {
+#warning angular accelerations don't work, figure out
             get
             {
                 var res = cData.baseAngVel;
@@ -55,7 +62,7 @@ namespace RegionKit.Machinery
                         targetFunc = Cos;
                         break;
                 }
-                res += cData.angVelShiftAmp * targetFunc((_lt + cData.angVelShiftPhs) * cData.angVelShiftFrq);
+                res += cData.angVelShiftAmp * targetFunc(_lt * cData.angVelShiftFrq);
                 return res;
             }
         }
@@ -66,12 +73,15 @@ namespace RegionKit.Machinery
             GrabMC();
             sLeaser.sprites = new FSprite[1];
             sLeaser.sprites[0] = new FSprite("ShelterGate_cog");
+            AddToContainer(sLeaser, rCam, null);
         }
 
         public void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
+            sLeaser.sprites[0].SetPosition(cpos - camPos);
             _mc.BringToKin(sLeaser.sprites[0]);
-            sLeaser.sprites[0].rotation = Lerp(lastRot, rot, timeStacker);
+            sLeaser.sprites[0].rotation = LerpAngle(lastRot, rot, timeStacker);
+
         }
 
         public void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)

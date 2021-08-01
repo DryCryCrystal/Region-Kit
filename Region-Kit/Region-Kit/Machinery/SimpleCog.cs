@@ -18,6 +18,7 @@ namespace RegionKit.Machinery
             this.room = rm;
             _assignedCD = acd;
             Debug.Log($"Cog created in {rm.abstractRoom?.name}");
+            PetrifiedWood.WriteLine("E");
         }
         public override void Update(bool eu)
         {
@@ -25,10 +26,20 @@ namespace RegionKit.Machinery
             _lt += room.GetGlobalPower();
             lastRot = rot;
             rot = (rot + cAngVel) % 360f;
+            if (Input.GetKeyDown(KeyCode.F3)) Console.WriteLine($"{cAngVel} : {cData.angVelShiftAmp}, {cData.angVelShiftPhs}, {cData.angVelShiftFrq}");
         }
 
-        internal SimpleCogData cData => PO?.data as SimpleCogData ?? _assignedCD ?? new SimpleCogData(null);
-        
+        internal SimpleCogData cData
+        {
+            get
+            {
+                var r = _assignedCD ?? PO?.data as SimpleCogData;
+                if (r == null) { _bcd = _bcd ?? new SimpleCogData(null); return _bcd; }
+                return r;
+            }
+        }
+
+        private SimpleCogData _bcd;
         private readonly SimpleCogData _assignedCD;
         private PlacedObject PO;
 
@@ -47,7 +58,6 @@ namespace RegionKit.Machinery
         internal float rot;
         internal float cAngVel
         {
-#warning angular accelerations don't work, figure out
             get
             {
                 var res = cData.baseAngVel;

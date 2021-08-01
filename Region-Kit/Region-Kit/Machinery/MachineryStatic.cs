@@ -13,9 +13,15 @@ using RegionKit.Utils;
 
 namespace RegionKit.Machinery
 {
+    /// <summary>
+    /// Handles registration of machinery objects.
+    /// </summary>
     public static class MachineryStatic
     {
         private static bool appliedOnce = false;
+        /// <summary>
+        /// Applies hooks and registers MPO.
+        /// </summary>
         public static void Enable()
         {
             if (!appliedOnce)
@@ -30,6 +36,9 @@ namespace RegionKit.Machinery
 
         internal static HashSet<Hook> MachineryHooks;
 
+        /// <summary>
+        /// Undoes hooks.
+        /// </summary>
         public static void Disable()
         {
             
@@ -37,7 +46,7 @@ namespace RegionKit.Machinery
         }
 
         internal static RainWorld rw;
-
+        #region hooks
         private static void RW_Start(RainWorld_Start orig, RainWorld self)
         {
             orig(self);
@@ -54,7 +63,6 @@ namespace RegionKit.Machinery
         {
             return self.GetGlobalPower();
         }
-
         private static void GenerateHooks()
         {
             MachineryHooks = new HashSet<Hook>
@@ -64,6 +72,8 @@ namespace RegionKit.Machinery
                 new Hook(typeof(Room).GetPropertyAllContexts(nameof(Room.ElectricPower)).GetGetMethod(), typeof(MachineryStatic).GetMethodAllContexts(nameof(Room_GetPower)))
             };
         }
+        #endregion
+
         private static void RegisterMPO()
         {
             PlacedObjectsManager.RegisterManagedObject<SimplePiston, PistonData, PlacedObjectsManager.ManagedRepresentation>("SimplePiston");
@@ -83,11 +93,17 @@ namespace RegionKit.Machinery
         //public static AbstractPhysicalObject.AbstractObjectType abstractPiston;
     }
 
+    /// <summary>
+    /// Machinery operation modes.
+    /// </summary>
     public enum OperationMode
     {
         Sinal = 2,
         Cosinal = 4,
     }
+    /// <summary>
+    /// Used as filter for <see cref=""/>
+    /// </summary>
     public enum MachineryID
     {
         Piston,
@@ -98,4 +114,6 @@ namespace RegionKit.Machinery
 //  to-do list/idea stash:
 //  - integrate with brokenzerog
 //  - add more machines
+//  - cog array?
 //  - sounds
+//  - power manager might become performance heavy if there's too many subscribers. consider ways of preventing.

@@ -21,13 +21,23 @@ namespace RegionKit.Machinery
         public override void Update(bool eu)
         {
             base.Update(eu);
-            _lt += room.GetGlobalPower();
             oldPos = currentPos;
+            _lt += room.GetGlobalPower();
+            currentPos = originPoint + DegToVec(effRot) * Shift;
         }
 
-        internal PistonData mData => _assignedMData ?? PO?.data as PistonData ?? new PistonData(null);
-#warning add private mdata field to avoid unnecessary mkobj, same with cogs
+        internal PistonData mData
+        {
+            get
+            {
+                var r = _assignedMData ?? PO?.data as PistonData;
+                if (r == null) { _bpd = _bpd ?? new PistonData(null); return _bpd; }
+                return r;
+            }
+        }
+        private PistonData _bpd;
         private readonly PistonData _assignedMData;
+
         internal readonly PlacedObject PO;
         private double _lt = 0f;
         internal Vector2 originPoint => PO?.pos ?? _assignedMData?.forcePos ?? default;
@@ -52,7 +62,7 @@ namespace RegionKit.Machinery
                 return res;
             }
         }
-        internal Vector2 currentPos => originPoint + DegToVec(effRot) * Shift;
+        internal Vector2 currentPos;
         internal Vector2 oldPos;
 
         internal MachineryCustomizer _mc;
@@ -76,7 +86,6 @@ namespace RegionKit.Machinery
 
         public void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
-#warning add timestacker smoothing
             var pos = Vector2.Lerp(oldPos, currentPos, timeStacker);
             _mc.BringToKin(sLeaser.sprites[0]);
             sLeaser.sprites[0].rotation = effRot + _mc.addRot;

@@ -1,4 +1,5 @@
 ﻿using Partiality.Modloader;
+using RegionKit.Utils;
 //TODO0(DELTATIME): Make logging that can be used for entire project
 //TODO0: done but untested. see Utils.PetrifiedWood.
 namespace RegionKit {
@@ -22,9 +23,11 @@ namespace RegionKit {
             ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             //Add new things here - remember to add them to OnDisable() as well!
-
+            PetrifiedWood.ClearLogs();
+            PetrifiedWood.SetTarget(new System.IO.FileInfo(System.IO.Path.Combine(RWCustom.Custom.RootFolderDirectory(), "RegionKitLog.txt")));
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
+
         }
 
         public override void OnDisable() {
@@ -33,6 +36,7 @@ namespace RegionKit {
             BrokenPatch.Disable();
             EchoExtender.RemoveHooks();
             Machinery.MachineryStatic.Disable();
+            PetrifiedWood.ShutDown();
             //Add new things here- remember to add them to OnEnable() as well!
         }
 

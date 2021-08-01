@@ -81,7 +81,7 @@ namespace RegionKit.Machinery
     {
         internal Vector2 forcepos;
         internal OperationMode opmode => GetValue<OperationMode>("opmode");
-        [FloatField("AVSamp", 0.1f, 3f, 1f, increment:0.05f, displayName:"AV shift amplitude")]
+        [FloatField("AVSamp", 0.1f, 15f, 1f, increment:0.1f, displayName:"AV shift amplitude")]
         internal float angVelShiftAmp;
         [FloatField("AVSfrq", 0.1f, 3f, 1f, increment:0.05f, displayName:"AV shift frequency")]
         internal float angVelShiftFrq;

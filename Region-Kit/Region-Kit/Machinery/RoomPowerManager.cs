@@ -30,6 +30,7 @@ namespace RegionKit.Machinery
             res = Clamp01(res);
             return res;
         }
+
         public float GetGlobalPower()
         {
             var res = pmData.basePowerLevel;

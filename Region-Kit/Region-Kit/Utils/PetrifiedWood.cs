@@ -14,6 +14,7 @@ namespace RegionKit.Utils
     {
         internal static void BootUp()
         {
+            if (iothread != null && iothread.IsAlive) return;
             UnityEngine.Debug.Log("RegionKit.PetrifiedWood: starting a logger thread.");
             tarFile = tarFile ?? new FileInfo(Path.Combine(RootFolderDirectory(), defaultLogFileName));
             if (!tarFile.Exists) tarFile.CreateText().Dispose();
@@ -41,7 +42,7 @@ namespace RegionKit.Utils
         }
         internal static void ClearLogs()
         {
-            if (tarFile.Exists) tarFile.Delete();
+            if (tarFile?.Exists ?? false) tarFile.Delete();
         }
 
         internal static void WriteLine(object o, int addIndent)
@@ -60,7 +61,7 @@ namespace RegionKit.Utils
 
         internal static void Write(object o)
         {
-            if (!iothread?.IsAlive ?? true) BootUp();
+            if (iothread == null || !iothread.IsAlive) BootUp();
             _wq.Enqueue(o);
         }
 
@@ -117,7 +118,10 @@ namespace RegionKit.Utils
                     }
             }
             var ams = thingsAreBad ? "No one will hear this." : "Task expired.";
-            tarFile.AppendText().Write($"\n\nLogger thread {Thread.CurrentThread.ManagedThreadId} exiting. " + ams + "\n");
+            var ws = tarFile.AppendText();
+            ws.Write($"\n\nLogger thread {Thread.CurrentThread.ManagedThreadId} exiting. " + ams + "\n");
+            ws.Flush();
+            ws.Dispose();
         }
         internal static bool iShouldExist;
         internal static int IndentLevel { get { return _indLv; } set { _indLv = IntClamp(value, 0, 35); } }

@@ -1068,6 +1068,12 @@ public static class PlacedObjectsManager
             this._possibleValues = possibleValues;
         }
 
+        public static EnumField RegisterDefault<T>(string name, T defaultValue, ControlType ct = ControlType.arrows, string displayName = null)
+            where T : Enum
+        {
+            return new EnumField(name, typeof(T), defaultValue, control:ct, displayName:displayName);
+        }
+
         protected virtual Enum[] PossibleValues // We defer this listing so enumextend can do its magic.
         {
             get

@@ -23,8 +23,8 @@ namespace RegionKit {
             ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             //Add new things here - remember to add them to OnDisable() as well!
-            PetrifiedWood.ClearLogs();
             PetrifiedWood.SetTarget(new System.IO.FileInfo(System.IO.Path.Combine(RWCustom.Custom.RootFolderDirectory(), "RegionKitLog.txt")));
+            PetrifiedWood.ClearLogs();
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
 

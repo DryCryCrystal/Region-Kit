@@ -48,6 +48,7 @@
     <Compile Include="PWLightRod.cs" />
     <Compile Include="RegionKitMod.cs" />
     <Compile Include="RoomLoader.cs" />
+    <Compile Include="Utils\ContainerCodes.cs" />
     <Compile Include="Utils\ICanBringDataToKin.cs" />
     <Compile Include="Utils\PetrifiedWood.cs" />
     <Compile Include="Utils\RKExtensions.cs" />

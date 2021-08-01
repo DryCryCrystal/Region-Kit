@@ -26,7 +26,7 @@ namespace RegionKit.Machinery
             _lt += room.GetGlobalPower();
             lastRot = rot;
             rot = (rot + cAngVel) % 360f;
-            if (Input.GetKeyDown(KeyCode.F3)) Console.WriteLine($"{cAngVel} : {cData.angVelShiftAmp}, {cData.angVelShiftPhs}, {cData.angVelShiftFrq}");
+            //if (Input.GetKeyDown(KeyCode.F3)) Console.WriteLine($"{cAngVel} : {cData.angVelShiftAmp}, {cData.angVelShiftFrq}");
         }
 
         internal SimpleCogData cData
@@ -60,7 +60,7 @@ namespace RegionKit.Machinery
         {
             get
             {
-                var res = cData.baseAngVel;
+                var res = Lerp(0f, cData.baseAngVel, room.GetGlobalPower());
                 Func<float, float> targetFunc;
                 switch (cData.opmode)
                 {
@@ -73,6 +73,7 @@ namespace RegionKit.Machinery
                         break;
                 }
                 res += cData.angVelShiftAmp * targetFunc(_lt * cData.angVelShiftFrq);
+                res = Lerp(0f, res, room.GetGlobalPower());
                 return res;
             }
         }

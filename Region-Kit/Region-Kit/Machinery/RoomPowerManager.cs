@@ -26,7 +26,7 @@ namespace RegionKit.Machinery
         {
             var res = pmData.basePowerLevel;
             res += GetGlobalPower();
-            foreach (var unit in subs) res += unit.BonusForPoint(point);
+            foreach (var unit in subs) if (unit.Enabled) res += unit.BonusForPoint(point);
             res = Clamp01(res);
             return res;
         }
@@ -34,7 +34,7 @@ namespace RegionKit.Machinery
         public float GetGlobalPower()
         {
             var res = pmData.basePowerLevel;
-            foreach (var unit in subs) { res += unit.GlobalBonus(); }
+            foreach (var unit in subs) { if (unit.Enabled) res += unit.GlobalBonus(); }
             res = Clamp01(res); 
             return res;
         }

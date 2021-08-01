@@ -1,12 +1,14 @@
 ﻿using Partiality.Modloader;
+using RegionKit.Utils;
 //TODO0(DELTATIME): Make logging that can be used for entire project
+//TODO0: done but untested. see Utils.PetrifiedWood.
 namespace RegionKit {
-    public class RegionKit : PartialityMod {
+    public class RegionKitMod : PartialityMod {
 
         public const string modVersion = "1.0.0";
-        public const string buildVersion = "62"; //Increments for every code change without a version change.
+        public const string buildVersion = "65"; //Increments for every code change without a version change.
 
-        public RegionKit() {
+        public RegionKitMod() {
             ModID = "RegionKit";
             author = "Substratum Dev Team & More";
             Version = modVersion;
@@ -19,10 +21,13 @@ namespace RegionKit {
             CustomArenaDivisions.Patch();
             EchoExtender.ApplyHooks();
             ColouredLightSource.RegisterAsFullyManagedObject();
+            Machinery.MachineryStatic.Enable();
             //Add new things here - remember to add them to OnDisable() as well!
-
+            PetrifiedWood.SetTarget(new System.IO.FileInfo(System.IO.Path.Combine(RWCustom.Custom.RootFolderDirectory(), "RegionKitLog.txt")));
+            PetrifiedWood.ClearLogs();
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
+
         }
 
         public override void OnDisable() {
@@ -30,6 +35,8 @@ namespace RegionKit {
             RoomLoader.Disable();
             BrokenPatch.Disable();
             EchoExtender.RemoveHooks();
+            Machinery.MachineryStatic.Disable();
+            PetrifiedWood.ShutDown();
             //Add new things here- remember to add them to OnEnable() as well!
         }
 

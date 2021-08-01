@@ -218,6 +218,22 @@ public static class PlacedObjectsManager
     #endregion INTERNALS
 
     /// <summary>
+    /// Generic wrapping for <see cref="RegisterManagedObject(ManagedObjectType)"/> with type constraints.
+    /// </summary>
+    /// <typeparam name="UAD"><see cref="UpdatableAndDeletable"/> descendant to be tied to the object.</typeparam>
+    /// <typeparam name="DATA"><see cref="ManagedData"/> descendant. </typeparam>
+    /// <typeparam name="REPR">Managed representation.</typeparam>
+    /// <param name="name"></param>
+    /// <param name="singleinstance"></param>
+    public static void RegisterManagedObject<UAD, DATA, REPR> (string name, bool singleinstance = false)
+        where UAD : UpdatableAndDeletable
+        where DATA : PlacedObjectsManager.ManagedData
+        where REPR : PlacedObjectsManager.ManagedRepresentation
+    {
+        RegisterManagedObject(new ManagedObjectType(name, typeof(UAD), typeof(DATA), typeof(REPR), singleinstance));
+    }
+
+    /// <summary>
     /// Register a <see cref="ManagedObjectType"/> or <see cref="FullyManagedObjectType"/> to handle object, data and repr initialization during room load and devtools hooks
     /// </summary>
     /// <param name="obj"></param>
@@ -245,6 +261,18 @@ public static class PlacedObjectsManager
     }
 
     /// <summary>
+    /// Generic wrapping for <see cref="RegisterEmptyObjectType(string, Type, Type)"/> with type constraints.
+    /// </summary>
+    /// <typeparam name="DATA">Data object type.</typeparam>
+    /// <typeparam name="REPR">Representation object type.</typeparam>
+    /// <param name="name">Name of enum extension.</param>
+    public static void RegisterEmptyObjectType <DATA, REPR> (string name) 
+        where DATA : PlacedObjectsManager.ManagedData 
+        where REPR : PlacedObjectsManager.ManagedRepresentation
+    {
+        RegisterEmptyObjectType(name, typeof(DATA), typeof(REPR));
+    }
+    /// <summary>
     /// Shorthand for registering a ManagedObjectType with no actual object.
     /// Creates an empty data-holding placed object.
     /// Data and Repr must work well together (typically rep tries to cast data to a specific type to use it).
@@ -253,7 +281,7 @@ public static class PlacedObjectsManager
     /// <param name="name"></param>
     /// <param name="dataType"></param>
     /// <param name="reprType"></param>
-    public static void RegisterEmptyObjectType(string name, Type dataType, Type reprType)
+    private static void RegisterEmptyObjectType(string name, Type dataType, Type reprType)
     {
         ManagedObjectType emptyObjectType = new ManagedObjectType(name, null, dataType, reprType);
         RegisterManagedObject(emptyObjectType);
@@ -372,6 +400,20 @@ public static class PlacedObjectsManager
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Generic wrapping for <see cref="ManagedObjectType"/> with type constraints.
+    /// </summary>
+    /// <typeparam name="UAD"></typeparam>
+    /// <typeparam name="DATA"></typeparam>
+    /// <typeparam name="REPR"></typeparam>
+    public class ManagedObjectType<UAD, DATA, REPR> : ManagedObjectType
+        where UAD : UpdatableAndDeletable
+        where DATA : ManagedData
+        where REPR : ManagedRepresentation
+    {
+        public ManagedObjectType (string name, bool singleinstance = false) : base (name, typeof(UAD), typeof(DATA), typeof (REPR), singleinstance) { }
     }
 
     /// <summary>
@@ -655,6 +697,24 @@ public static class PlacedObjectsManager
                 return (T)field.GetValue(this);
             else
                 return (T)valuesByKey[fieldName];
+        }
+
+        /// <summary>
+        /// Awkward throwless wrapping for <see cref="GetValue{T}(string)"/>
+        /// </summary>
+        /// <typeparam name="T">Field type</typeparam>
+        /// <param name="fieldName">Field name</param>
+        /// <param name="result">Out var</param>
+        /// <returns>True if successful; otherwise false.</returns>
+        public virtual bool TryGetValue<T>(string fieldName, out T result)
+        {
+            result = default(T);
+            try
+            {
+                result = GetValue<T>(fieldName);
+                return true;
+            }
+            catch { return false; }
         }
 
         /// <summary>
@@ -1006,6 +1066,12 @@ public static class PlacedObjectsManager
         {
             this.type = type;
             this._possibleValues = possibleValues;
+        }
+
+        public static EnumField RegisterDefault<T>(string name, T defaultValue, ControlType ct = ControlType.arrows, string displayName = null)
+            where T : Enum
+        {
+            return new EnumField(name, typeof(T), defaultValue, control:ct, displayName:displayName);
         }
 
         protected virtual Enum[] PossibleValues // We defer this listing so enumextend can do its magic.

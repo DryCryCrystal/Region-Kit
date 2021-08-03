@@ -12,6 +12,8 @@ namespace RegionKit.Utils
 {
     internal static class RKExtensions
     {
+        public const BindingFlags allContexts = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+
         public static MethodInfo GetMethodAllContexts(this Type self, string name)
         {
             return self.GetMethod(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic);
@@ -20,6 +22,7 @@ namespace RegionKit.Utils
         {
             return self.GetProperty(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic);
         }
+        
         public static float GetGlobalPower(this Room self)
         {
             if (ManagersByRoom.TryGetValue(self.GetHashCode(), out var rpm)) return rpm.GetGlobalPower();

@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using MonoMod.RuntimeDetour;
 using RegionKit.Utils;
@@ -34,7 +36,7 @@ namespace RegionKit.Machinery
             foreach (var h in MachineryHooks) h.Apply();
         }
 
-        internal static HashSet<Hook> MachineryHooks;
+        internal static List<Hook> MachineryHooks;
 
         /// <summary>
         /// Undoes hooks.
@@ -59,17 +61,25 @@ namespace RegionKit.Machinery
             if (ManagersByRoom.TryGetValue(self.GetHashCode(), out var manager) && obj is RoomPowerManager.IRoomPowerModifier rpm) manager.RegisterPowerDevice(rpm);
         }
         private delegate float orig_Room_GetPower(Room self);
+        private static void RWG_new(RWG_Ctor orig, RainWorldGame self, ProcessManager manager)
+        {
+            ManagersByRoom.Clear();
+            orig(self, manager);
+        }
+        private delegate void RWG_Ctor(RainWorldGame self, ProcessManager manager);
         private static float Room_GetPower(orig_Room_GetPower orig, Room self)
         {
-            return self.GetGlobalPower();
+            if (ManagersByRoom.TryGetValue(self.GetHashCode(), out var rpm)) return rpm.GetGlobalPower();
+            return orig(self);
         }
         private static void GenerateHooks()
         {
-            MachineryHooks = new HashSet<Hook>
+            MachineryHooks = new List<Hook>
             {
                 new Hook(typeof(RainWorld).GetMethodAllContexts(nameof(RainWorld.Start)), typeof(MachineryStatic).GetMethodAllContexts(nameof(RW_Start))),
                 new Hook(typeof(Room).GetMethodAllContexts(nameof(Room.AddObject)), typeof(MachineryStatic).GetMethodAllContexts(nameof(Room_AddObject))),
-                new Hook(typeof(Room).GetPropertyAllContexts(nameof(Room.ElectricPower)).GetGetMethod(), typeof(MachineryStatic).GetMethodAllContexts(nameof(Room_GetPower)))
+                new Hook(typeof(Room).GetPropertyAllContexts(nameof(Room.ElectricPower)).GetGetMethod(), typeof(MachineryStatic).GetMethodAllContexts(nameof(Room_GetPower))),
+                new Hook(typeof(RainWorldGame).GetConstructor(new Type[]{ typeof(ProcessManager)}), typeof(MachineryStatic).GetMethodAllContexts(nameof(RWG_new)))
             };
         }
         #endregion
@@ -84,9 +94,10 @@ namespace RegionKit.Machinery
             PlacedObjectsManager.RegisterManagedObject<RoomPowerManager, PowerManagerData, PlacedObjectsManager.ManagedRepresentation>("PowerManager", true);
         }
 
-        public static Dictionary<int, RoomPowerManager> ManagersByRoom = new Dictionary<int, RoomPowerManager>();
+        public static readonly Dictionary<int, RoomPowerManager> ManagersByRoom = new Dictionary<int, RoomPowerManager>();
 
     }
+
 
     public static class EnumExt_RKMachinery
     {
@@ -102,7 +113,7 @@ namespace RegionKit.Machinery
         Cosinal = 4,
     }
     /// <summary>
-    /// Used as filter for <see cref=""/>
+    /// Used as filter for <see cref="MachineryCustomizer"/>
     /// </summary>
     public enum MachineryID
     {

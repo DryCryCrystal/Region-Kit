@@ -1,13 +1,20 @@
 ﻿using DevInterface;
 using UnityEngine;
 using RWCustom;
+using RegionKit.Objects;
 
-namespace RegionKit {
+namespace RegionKit
+{
 
-    public static class EnumExt_Objects {
+    public static class EnumExt_Objects 
+    {
         public static PlacedObject.Type PWLightrod;
     }
 
+    public static class EnumExt_Effects
+    {
+        public static RoomSettings.RoomEffect.Type PWMalfunction;
+    }
     class RoomLoader {
         public static void Patch() {
             On.Room.Loaded += Room_Loaded;

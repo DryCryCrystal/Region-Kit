@@ -18,3 +18,9 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
   - RGB based SSLightRod.
 - Placed Objects Manager Framework
   - Framework created by Henpemaz to allow for easy creation of custom objects.
+- Placed wormgrass
+  - PlacedObject for setting up wormgrass without re-exporting room geometry.
+- RegionKit.Machinery:
+  - A small set of customizable objects for adding moving parts like cogs and pistons to your levels. Can use any loaded sprites and shaders by name.
+  - NOTE: MachineryCustomizer object is used for changing sprite/container/shader settings.
+  - A general purpose power level customization system, a related interface to be used. See code: `RegionKit.Machinery.RoomPowerManager`, `RegionKit.Machinery.RoomPowerManager.IRoomPowerModifier`.

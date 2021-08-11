@@ -9,6 +9,9 @@ using static UnityEngine.Mathf;
 
 namespace RegionKit.Machinery
 {
+    /// <summary>
+    /// Replaces <see cref="Room.ElectricPower"/> behavior when present with custom modifiers. See: <see cref="IRoomPowerModifier"/>.
+    /// </summary>
     public class RoomPowerManager : UpdatableAndDeletable
     {
         public RoomPowerManager(Room rm, PlacedObject pobj)
@@ -18,10 +21,21 @@ namespace RegionKit.Machinery
             else ManagersByRoom.Add(h, this);
             PO = pobj;
         }
+        public override void Update(bool eu)
+        {
+            base.Update(eu);
+            selfCheckTimer++;
+            if (selfCheckTimer > 10) ValidateDeviceSet();
+        }
         internal PowerManagerData pmData { get { _pmd = _pmd ?? PO?.data as PowerManagerData ?? new PowerManagerData(null); return _pmd; } }
         private PowerManagerData _pmd;
         private PlacedObject PO;
-
+        private int selfCheckTimer = 0;
+        /// <summary>
+        /// Local resulting power. Applied on top of <see cref="GetGlobalPower"/>.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public float GetPowerForPoint(Vector2 point)
         {
             var res = pmData.basePowerLevel;
@@ -30,7 +44,10 @@ namespace RegionKit.Machinery
             res = Clamp01(res);
             return res;
         }
-
+        /// <summary>
+        /// Sum of global power bonuses from all subscribers.
+        /// </summary>
+        /// <returns></returns>
         public float GetGlobalPower()
         {
             var res = pmData.basePowerLevel;
@@ -46,6 +63,7 @@ namespace RegionKit.Machinery
         }
         private void ValidateDeviceSet()
         {
+            selfCheckTimer = 0;
             for (int i = subs.Count - 1; i >= 0; i--)
             {
                 if (subs[i].RemoveOnValidation) subs.RemoveAt(i);
@@ -53,12 +71,29 @@ namespace RegionKit.Machinery
         }
 
         internal List<IRoomPowerModifier> subs = new List<IRoomPowerModifier>();
-        
+        /// <summary>
+        /// Use this interface to modify room power levels. Has to be impl by an <see cref="UpdatableAndDeletable"/>.
+        /// </summary>
         public interface IRoomPowerModifier
         {
+            /// <summary>
+            /// Whether <see cref="RoomPowerManager"/> should remove the instance soon. Warning: several frames may pass between this being set to true and manager actually getting rid of the subscriber list! Make sure to handle your <see cref="Enabled"/> properly if this matters.
+            /// </summary>
             bool RemoveOnValidation { get; }
+            /// <summary>
+            /// Whether power bonus for object should be applied.
+            /// </summary>
             bool Enabled { get; }
+            /// <summary>
+            /// Power bonus for a specified position in the room. <see cref="RoomPowerManager.GetPowerForPoint(Vector2)"/> applies those ON TOP of <see cref="GlobalBonus"/>.
+            /// </summary>
+            /// <param name="point"></param>
+            /// <returns></returns>
             float BonusForPoint(Vector2 point);
+            /// <summary>
+            /// General power bonus for room.
+            /// </summary>
+            /// <returns></returns>
             float GlobalBonus();
         }
     }

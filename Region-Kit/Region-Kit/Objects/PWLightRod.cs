@@ -3,7 +3,7 @@ using DevInterface;
 using System.Linq;
 using UnityEngine;
 
-namespace RegionKit {
+namespace RegionKit.Objects {
 	public class PWLightRod : SSLightRod{
 		public PWLightRod(PlacedObject placedObject, Room room) : base(placedObject, room)
 		{

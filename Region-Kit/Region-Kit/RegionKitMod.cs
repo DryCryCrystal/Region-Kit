@@ -6,7 +6,7 @@ namespace RegionKit {
     public class RegionKitMod : PartialityMod {
 
         public const string modVersion = "1.0.0";
-        public const string buildVersion = "66"; //Increments for every code change without a version change.
+        public const string buildVersion = "67"; //Increments for every code change without a version change.
 
         public RegionKitMod() {
             ModID = "RegionKit";
@@ -16,11 +16,15 @@ namespace RegionKit {
 
         public override void OnEnable() {
             base.OnEnable();
+            
+            //VARIOUS PATCHES
             RoomLoader.Patch();
             BrokenPatch.Patch();
             CustomArenaDivisions.Patch();
             EchoExtender.ApplyHooks();
-            ColouredLightSource.RegisterAsFullyManagedObject();
+            
+            //Objects
+            Objects.ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             MiscPO.MiscPOStatic.Enable();
             //Add new things here - remember to add them to OnDisable() as well!
@@ -28,6 +32,9 @@ namespace RegionKit {
             PetrifiedWood.ClearLogs();
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
+
+            //EFFECTS
+            Effects.PWMalfunction.Patch();
         }
 
         public override void OnDisable() {

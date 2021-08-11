@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RegionKit {
+namespace RegionKit.Objects {
     public class ColouredLightSource : UpdatableAndDeletable {
         public PlacedObject LocalPlacedObject;
         public LightSource LightSource;

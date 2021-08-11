@@ -1,4 +1,4 @@
-﻿/* Author: Woodensponge */
+﻿/* Author: Woodensponge and Slime_Cubed */
 
 namespace RegionKit {
     class BrokenPatch {

@@ -30,13 +30,24 @@ namespace RegionKit.MiscPO
             if (instance.game == null) return;
             instance.AddObject(new WormgrassManager(instance));
         }
+        internal static void Room_NotViewed(Room_Void_None orig, Room instance)
+        {
+            orig(instance);
+            foreach (var uad in instance.updateList) if (uad is INotifyWhenRoomIsViewed tar) tar.RoomNoLongerViewed();
+        }
+        internal static void Room_Viewed(Room_Void_None orig, Room instance)
+        {
+            orig(instance);
+            foreach (var uad in instance.updateList) if (uad is INotifyWhenRoomIsViewed tar) tar.RoomViewed();
+        }
 
         private static List<Hook> mHk;
         private static void GenerateHooks()
         {
             mHk = new List<Hook>
             {
-                new Hook(typeof(Room).GetMethodAllContexts(nameof(Room.Loaded)), typeof(MiscPOStatic).GetMethodAllContexts(nameof(Room_Loaded)))
+                new Hook(typeof(Room).GetMethodAllContexts(nameof(Room.Loaded)), typeof(MiscPOStatic).GetMethodAllContexts(nameof(Room_Loaded))),
+                new Hook(typeof(Room).GetMethodAllContexts(nameof(Room.NowViewed)), typeof(MiscPOStatic).GetMethodAllContexts(nameof(Room_Viewed)))
             };
         }
         #endregion

@@ -27,9 +27,9 @@ namespace RegionKit {
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             MiscPO.MiscPOStatic.Enable();
+            Particles.ParticlesStatic.Enable();
             //Add new things here - remember to add them to OnDisable() as well!
-            PetrifiedWood.SetTarget(new System.IO.FileInfo(System.IO.Path.Combine(RWCustom.Custom.RootFolderDirectory(), "RegionKitLog.txt")));
-            PetrifiedWood.ClearLogs();
+            PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
 
@@ -43,8 +43,10 @@ namespace RegionKit {
             BrokenPatch.Disable();
             EchoExtender.RemoveHooks();
             Machinery.MachineryStatic.Disable();
-            PetrifiedWood.ShutDown();
+            //PetrifiedWood.ShutDown();
+            PetrifiedWood.Lifetime = 5;
             MiscPO.MiscPOStatic.Disable();
+            Particles.ParticlesStatic.Disable();
             //Add new things here- remember to add them to OnEnable() as well!
         }
 

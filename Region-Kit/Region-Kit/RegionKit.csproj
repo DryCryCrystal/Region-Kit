@@ -34,6 +34,7 @@
     <Compile Include="BrokenPatch.cs" />
     <Compile Include="Effects\PWMalfunction.cs" />
     <Compile Include="INotifyWhenRoomIsViewed.cs" />
+    <Compile Include="MiscPO\ConfWaterFall.cs" />
     <Compile Include="MiscPO\MiscPOStatic.cs" />
     <Compile Include="MiscPO\MiscPO_MPO.cs" />
     <Compile Include="MiscPO\WormgrassManager.cs" />
@@ -52,8 +53,10 @@
     <Compile Include="Particles\PBehaviourState.cs" />
     <Compile Include="Particles\ParticlesMPO.cs" />
     <Compile Include="Particles\ParticlesStatic.cs" />
+    <Compile Include="Particles\FakeSkyDandelion.cs" />
     <Compile Include="Particles\PVisualState.cs" />
     <Compile Include="Particles\RoomParticleSystem.cs" />
+    <Compile Include="Particles\WavyParticle.cs" />
     <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\PWLightRod.cs" />

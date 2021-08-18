@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using RWCustom;
 using UnityEngine;
+using RegionKit.Utils;
 
 using static UnityEngine.Mathf;
 using static RWCustom.Custom;
@@ -51,7 +52,9 @@ namespace RegionKit.Particles
                 myLight.setRad = crd;
                 myLight.setPos = this.pos;
                 myLight.stayAlive = true;
+                myLight.color = visuals.lCol;
             }
+            
         }
 
         #region lifecycle
@@ -109,6 +112,8 @@ namespace RegionKit.Particles
         protected LightSource myLight;
         protected bool lightSetUpRan = false;
 
+        //protected Vector2 VEL;
+
         #region IDrawable things
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
@@ -117,14 +122,17 @@ namespace RegionKit.Particles
             try
             {
                 sLeaser.sprites[0] = new FSprite(visuals.aElm);
-
             }
-            catch
+            catch (Exception fue)
             {
-                
+                PetrifiedWood.WriteLine($"Invalid atlas element {visuals.aElm}!");
+                PetrifiedWood.WriteLine(fue);
+                sLeaser.sprites[0] = new FSprite("SkyDandelion", true);// .element = Futile.atlasManager.GetElementWithName("SkyDandelion");
             }
             room.game.rainWorld.Shaders.TryGetValue("Basic", out var sh);
+            sLeaser.sprites[0].color = visuals.sCol;
             sLeaser.sprites[0].shader = sh;
+            AddToContainer(sLeaser, rCam, rCam.ReturnFContainer(ContainerCodes.Foreground.ToString()));
         }
         public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
@@ -136,8 +144,13 @@ namespace RegionKit.Particles
         }
         public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
         {
+            var cpos = Vector2.Lerp(lastPos, pos, timeStacker);
+            sLeaser.sprites[0].SetPosition(cpos - camPos);
+            sLeaser.sprites[0].alpha = CurrentPower;
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
         }
         #endregion
+
+
     }
 }

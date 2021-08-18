@@ -55,11 +55,12 @@ namespace RegionKit.MiscPO
         private static void RegisterMPO()
         {
             PlacedObjectsManager.RegisterEmptyObjectType<WormgrassRectData, PlacedObjectsManager.ManagedRepresentation>("WormgrassRect");
+            PlacedObjectsManager.RegisterManagedObject<ConfWaterFall, PlacedWaterfallData, PlacedObjectsManager.ManagedRepresentation>("PlacedWaterfall");
         }
 
         internal static void Disable()
         {
-            foreach (var hk in mHk) if (hk.IsApplied) hk.Apply();
+            foreach (var hk in mHk) if (hk.IsApplied) hk.Undo();
         }
     }
 }

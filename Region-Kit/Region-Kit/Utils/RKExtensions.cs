@@ -63,5 +63,19 @@ namespace RegionKit.Utils
             }
             return res;
         }
+
+        public static T RandomOrDefault<T>(this T[] a)
+        {
+            if (a.Length == 0) return default;
+            //var R = new System.Random(UnityEngine.Random);
+            return a[UnityEngine.Random.Range(0, a.Length)];
+        }
+
+        public static T RandomOrDefault<T>(this List<T> l)
+        {
+            if (l.Count == 0) return default;
+            //var R = new System.Random(l.GetHashCode());
+            return l[UnityEngine.Random.Range(0, l.Count)];
+        }
     }
 }

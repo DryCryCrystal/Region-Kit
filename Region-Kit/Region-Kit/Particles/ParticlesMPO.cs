@@ -22,21 +22,44 @@ namespace RegionKit.Particles
         public int fadeInFluke;
         [IntegerField("fadeOut", 0, 400, 80, ManagedFieldWithPanel.ControlType.text, displayName: "Fade-out frames")]
         public int fadeOut;
-        [IntegerField("fadeOutFluke", 0, 400, 80, ManagedFieldWithPanel.ControlType.text, displayName: "Fade-out fluke")]
+        [IntegerField("fadeOutFluke", 0, 400, 0, ManagedFieldWithPanel.ControlType.text, displayName: "Fade-out fluke")]
         public int fadeOutFluke;
-        [IntegerField("lt", 0, 15000, 2000, ManagedFieldWithPanel.ControlType.text, displayName: "Lifetime")]
+        [IntegerField("lt", 0, 15000, 80, ManagedFieldWithPanel.ControlType.text, displayName: "Lifetime")]
         public int lifeTime;
         [IntegerField("ltFluke", 0, 15000, 0, ManagedFieldWithPanel.ControlType.text, displayName: "Lifetime fluke")]
         public int lifeTimeFluke;
         public float startDir => VecToDeg(GetValue<Vector2>("sdBase"));
         [FloatField("sdFluke", 0f, 180f, 0f, displayName:"Direction fluke (deg)")]
         public float startDirFluke;
-        [FloatField("speed", 0f, 100f, 10f, control:ManagedFieldWithPanel.ControlType.text, displayName:"Speed")]
+        [FloatField("speed", 0f, 100f, 5f, control:ManagedFieldWithPanel.ControlType.text, displayName:"Speed")]
         public float startSpeed;
-        [FloatField("speedFluke", 0f, 100f, 10f, control: ManagedFieldWithPanel.ControlType.text, displayName: "Speed fluke")]
+        [FloatField("speedFluke", 0f, 100f, 0f, control: ManagedFieldWithPanel.ControlType.text, displayName: "Speed fluke")]
         public float startSpeedFluke;
 
-        public abstract List<IntVector2> GetSuitableTiles();
+        public List<IntVector2> ReturnSuitableTiles(Room rm)
+        {
+            UpdateTilesetCacheValidity();
+            if (AreaNeedsRefresh) { c_ST = GetSuitableTiles(rm); }
+            return c_ST;
+        }
+
+        protected virtual List<IntVector2> GetSuitableTiles(Room rm)
+        {
+            return new List<IntVector2> { (owner.pos / 20).ToIV2() };
+        }
+        protected virtual void UpdateTilesetCacheValidity()
+        {
+            c_ownerpos = owner.pos;
+        }
+
+        protected List<IntVector2> c_ST;
+        protected virtual bool AreaNeedsRefresh => c_ownerpos != owner.pos;
+        protected Vector2 c_ownerpos;
+
+        [IntegerField("cdMin", 1, int.MaxValue, 40, ManagedFieldWithPanel.ControlType.text, displayName:"Min cooldown")]
+        public int minCooldown;
+        [IntegerField("cdMax", 1, int.MaxValue, 50, ManagedFieldWithPanel.ControlType.text, displayName: "Max cooldown")]
+        public int maxCooldown;
 
         public ParticleSystemData(PlacedObject owner, List<ManagedField> additionalFields)
             : base (owner,
@@ -45,7 +68,13 @@ namespace RegionKit.Particles
                       new Vector2Field("sdBase", new Vector2(30f, 30f), label:"Direction"),
                   }).ToArray())
         {
-            
+            //c_ST = GetSuitableTiles();
+        }
+
+        public override void FromString(string s)
+        {
+            base.FromString(s);
+            //c_ST = GetSuitableTiles(owner.);
         }
 
         public PBehaviourState DataForNew()
@@ -61,8 +90,13 @@ namespace RegionKit.Particles
 
             return res;
         }
-    }
 
+        public PBehaviourState DataForNew(float cutoff)
+        {
+            var res = DataForNew();
+
+        }
+    }
     public class RectParticleSpawnerData : ParticleSystemData
     {
         Vector2 RectBounds => GetValue<Vector2>("effRect");
@@ -75,11 +109,19 @@ namespace RegionKit.Particles
 
         }
 
-        public override List<IntVector2> GetSuitableTiles()
+        private Vector2 c_RB;
+        protected override bool AreaNeedsRefresh => base.AreaNeedsRefresh && c_RB == RectBounds;
+        protected override void UpdateTilesetCacheValidity()
         {
+            base.UpdateTilesetCacheValidity();
+            c_RB = RectBounds;
+        }
+        protected override List<IntVector2> GetSuitableTiles(Room rm)
+        {
+            //c_RB = RectBounds;
             var res = new List<IntVector2>();
             IntVector2 orpos = (owner.pos / 20f).ToIV2();
-            IntVector2 bounds = (RectBounds / 20f).ToIV2();
+            IntVector2 bounds = ((owner.pos + RectBounds) / 20f).ToIV2();
             IntRect area = IntRect.MakeFromIntVector2(orpos);
             area.ExpandToInclude(bounds);
             for (int x = area.left; x < area.right; x++)
@@ -88,6 +130,38 @@ namespace RegionKit.Particles
                 {
                     res.Add(new IntVector2(x, y));
                 }
+            }
+            PetrifiedWood.WriteLine(Json.Serialize(res));
+            return res;
+        }
+    }
+    public class OffscreenSpawnerData : ParticleSystemData
+    {
+        [IntegerField("margin", 0, 10, 1)]
+        public int margin;
+
+        public OffscreenSpawnerData(PlacedObject owner) : base (owner, new List<ManagedField>())
+        {
+
+        }
+
+        protected override List<IntVector2> GetSuitableTiles(Room rm)
+        {
+#warning test this
+            var res = new List<IntVector2>();
+            var rb = new IntRect(0 - margin, 0 - margin, rm.Width + margin, rm.Height + margin);
+            var dropVector = GetValue<Vector2>("sdBase");
+            //var row = new List<IntVector2>();
+            //var column = new List<IntVector2>();
+            int ys = (dropVector.y > 0) ? rb.bottom : rb.top;
+            int xs = (dropVector.x > 0) ? rb.left : rb.right;
+            for (int x = rb.left; x < rb.right; x++)
+            {
+                res.Add(new IntVector2(x, ys));
+            }
+            for (int y = rb.bottom; y < rb.top; y++)
+            {
+                res.Add(new IntVector2(xs, y));
             }
             return res;
         }
@@ -99,22 +173,23 @@ namespace RegionKit.Particles
         public Color spriteColorFluke => GetValue<Color>("sColFluke");
         public Color lightColor => GetValue<Color>("lColBase");
         public Color lightColorFluke => GetValue<Color>("lColFluke");
-        [FloatField("lrminBase", 0f, float.MaxValue, 20f, displayName:"Light radius min")]
-        public float lightRadMin;
-        [FloatField("lrminFluke", 0f, float.MaxValue, 0f, displayName:"Lightradmin fluke")]
-        public float lightRadMinFluke;
-        [FloatField("lrmaxBase", 0f, float.MaxValue, 30f, displayName:"Light radius max")]
-        public float lightRadMax;
-        [FloatField("lrmaxFluke", 0f, float.MaxValue, 30f, displayName: "Lightradmax fluke")]
-        public float lightRadMaxFluke;
-        [FloatField("lIntBase", 0f, 1f, 0f, displayName:"Light intensity")]
-        public float LightIntensity;
+        [FloatField("lrminBase", 0f, 400f, 20f, displayName:"Light radius min")]
+        public float lightRadMin = 20f;
+        [FloatField("lrminFluke", 0f, 400f, 0f, displayName:"Lightradmin fluke")]
+        public float lightRadMinFluke = 0f;
+        [FloatField("lrmaxBase", 0f, 400f, 30f, displayName:"Light radius max")]
+        public float lightRadMax = 30f;
+        [FloatField("lrmaxFluke", 0f, 400f, 0f, displayName: "Lightradmax fluke")]
+        public float lightRadMaxFluke = 0f;
+        [FloatField("lIntBase", 0f, 1f, 1f, displayName:"Light intensity")]
+        public float LightIntensity = 1f;
         [FloatField("lIntFluke", 0f, 1f, 0f, displayName:"Light intensity fluke")]
-        public float LightIntensityFluke;
-        [StringField("eName", "pixel", displayName:"Atlas element")]
-        public string elmName;
+        public float LightIntensityFluke = 0f;
+        [StringField("eName", "SkyDandelion", displayName:"Atlas element")]
+        public string elmName = "SkyDandelion";
         [StringField("shader", "Basic", displayName:"Shader")]
-        public string shader;
+        public string shader = "Basic";
+        public Vector2 p2 => GetValue<Vector2>("p2");
 
         public ParticleVisualCustomizer(PlacedObject owner) : base(owner, new ManagedField[]
         {
@@ -122,6 +197,7 @@ namespace RegionKit.Particles
             new ColorField("sColFluke", new Color(0f, 0f, 0f), displayName:"Sprite color fluke"),
             new ColorField("lColBase", new Color(1f, 1f,1f), displayName:"Light color"),
             new ColorField("lColFluke", new Color(0f, 0f, 0f), displayName:"Light color fluke"),
+            new Vector2Field("p2", new Vector2(40f, 0f), Vector2Field.VectorReprType.circle)
         })
         {
             

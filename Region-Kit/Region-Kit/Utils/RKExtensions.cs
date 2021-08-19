@@ -40,6 +40,18 @@ namespace RegionKit.Utils
         public static IntVector2 ToIV2(this Vector2 sv) => new IntVector2((int)sv.x, (int)sv.y);
         public static Vector2 ToV2(this IntVector2 sv) => new Vector2(sv.x, sv.y);
         public static IntRect ConstructIR(IntVector2 p1, IntVector2 p2) => new IntRect(Min(p1.x, p2.x), Min(p1.y, p2.y), Max(p1.x, p2.x), Max(p1.y, p2.y));
+        public static List<IntVector2> ReturnTiles (this IntRect ir)
+        {
+            var res = new List<IntVector2>();
+            for (int x = ir.left; x < ir.right; x++)
+            {
+                for (int y = ir.bottom; y < ir.top; y++)
+                {
+                    res.Add(new IntVector2(x, y));
+                }
+            }
+            return res;
+        }
 
         public static void ClampToNormal(this Color self)
         {
@@ -53,8 +65,7 @@ namespace RegionKit.Utils
             self.AddRange(range);
             return self;
         }
-        
-        public static Color RandDeviate (this Color self, Color dev)
+        public static Color Deviation (this Color self, Color dev)
         {
             var res = new Color();
             for (int i = 0; i < 4; i++)
@@ -63,14 +74,12 @@ namespace RegionKit.Utils
             }
             return res;
         }
-
         public static T RandomOrDefault<T>(this T[] a)
         {
             if (a.Length == 0) return default;
             //var R = new System.Random(UnityEngine.Random);
             return a[UnityEngine.Random.Range(0, a.Length)];
         }
-
         public static T RandomOrDefault<T>(this List<T> l)
         {
             if (l.Count == 0) return default;

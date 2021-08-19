@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RegionKit.Particles
 {
-    public struct PBehaviourState
+    public struct PMoveState
     {
 #warning finalize what goes here
         public float dir;
@@ -16,7 +16,7 @@ namespace RegionKit.Particles
         public int fadeOut;
         public Vector2 pos;
 
-        public PBehaviourState(float dir, float speed, int fadeIn, int lifetime, int fadeOut, Vector2 pos)
+        public PMoveState(float dir, float speed, int fadeIn, int lifetime, int fadeOut, Vector2 pos)
         {
             this.dir = dir;
             this.speed = speed;

@@ -15,30 +15,36 @@ namespace RegionKit.Particles
         public RoomParticleSystem(PlacedObject owner, Room room)
         {
             Owner = owner;
-            PVC = new List<ParticleVisualCustomizer>();
-            FetchPVC(room);
-            BirthEvent += WavyParticle.MakeNew;
+            //PVC = new List<ParticleVisualCustomizer>();
+            FetchVisualsAndBM(room);
+            BirthEvent += GenericParticle.MakeNew;
+            //BirthEvent += WavyParticle.MakeNew;
 
         }
+
         public override void Update(bool eu)
         {
             ProgressCreationCycle();
             base.Update(eu);
-            
         }
         protected virtual void ProgressCreationCycle()
         {
             cooldown--;
             if (cooldown <= 0)
             {
-                var PossibleBirths = BirthEvent.GetInvocationList();
-                if (PossibleBirths.Length > 0) 
+                var PossibleBirths = BirthEvent?.GetInvocationList();
+                if (PossibleBirths != null && PossibleBirths.Length > 0) 
                 {
                     var p = (GenericParticle)
                         PossibleBirths.RandomOrDefault().DynamicInvoke(
                             PSD.DataForNew(),
-                            PVC.RandomOrDefault()?.DataForNew() ?? default);
+                            Visuals.RandomOrDefault()?.DataForNew() ?? default);
                     p.pos = PickSpawnPos();
+                    foreach (var provider in Modifiers)
+                    {
+                        var newmodule = provider.GetNewForParticle(p);
+                        p.addModule(newmodule);
+                    }
                     room.AddObject(p);
 
                 } //BirthEvent.Invoke(PSD.DataForNew(), PVC?.DataForNew() ?? default);
@@ -51,35 +57,40 @@ namespace RegionKit.Particles
         protected PlacedObject Owner;
         protected int cooldown;
 
-        protected virtual void FetchPVC(Room room)
+        protected virtual void FetchVisualsAndBM(Room room)
         {
-            PVC.Clear();
+            Visuals.Clear();
+            Modifiers.Clear();
             for (int i = 0; i < room.roomSettings.placedObjects.Count; i++)
             {
                 if (room.roomSettings.placedObjects[i].data is ParticleVisualCustomizer f_PVC
                     && (Owner.pos - f_PVC.owner.pos).sqrMagnitude < f_PVC.p2.sqrMagnitude) 
-                { PVC.Add(f_PVC); }
+                { Visuals.Add(f_PVC); }
+                if (room.roomSettings.placedObjects[i].data is ParticleBehaviourProvider f_BMD 
+                    && (Owner.pos - f_BMD.owner.pos).sqrMagnitude < f_BMD.p2.sqrMagnitude)
+                { Modifiers.Add(f_BMD); }
             }
         }
-        protected List<ParticleVisualCustomizer> PVC;
+        protected readonly List<ParticleVisualCustomizer> Visuals = new List<ParticleVisualCustomizer>();
+        protected readonly List<ParticleBehaviourProvider> Modifiers = new List<ParticleBehaviourProvider>();
         
-        public delegate GenericParticle ParticleCreate(PBehaviourState suggestedStart, PVisualState suggestedVis);
+        public delegate GenericParticle ParticleCreate(PMoveState suggestedStart, PVisualState suggestedVis);
         public event ParticleCreate BirthEvent;
 
-        protected virtual float EstimateTravelDistance(float ltSlice)
-        {
+        //protected virtual float EstimateTravelDistance(float ltSlice)
+        //{
             
-        }
-        protected virtual float EstimateAngDev(float ltSlice)
-        {
+        //}
+        //protected virtual float EstimateAngDev(float ltSlice)
+        //{
 
-        }
-        protected virtual Vector2 PickSpawnPos(float ltSlice)
-        {
-            var res = PickSpawnPos();
-            res += DegToVec(EstimateAngDev(ltSlice)).normalized * EstimateTravelDistance(ltSlice);
-            return res;
-        }
+        //}
+        //protected virtual Vector2 PickSpawnPos(float ltSlice)
+        //{
+        //    var res = PickSpawnPos();
+        //    res += DegToVec(EstimateAngDev(ltSlice)).normalized * EstimateTravelDistance(ltSlice);
+        //    return res;
+        //}
         protected virtual Vector2 PickSpawnPos()
         {
             var tiles = PSD.ReturnSuitableTiles(room);

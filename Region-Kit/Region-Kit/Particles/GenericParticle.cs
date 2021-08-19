@@ -12,17 +12,17 @@ using static RegionKit.Utils.PetrifiedWood;
 
 namespace RegionKit.Particles
 {
-    public abstract class GenericParticle : CosmeticSprite
+    public class GenericParticle : CosmeticSprite
     {
-        public GenericParticle(PBehaviourState bSt, PVisualState vSt) : base()
+        public static GenericParticle MakeNew(PMoveState start, PVisualState visuals)
+        {
+            return new GenericParticle(start, visuals);
+        }
+
+        public GenericParticle(PMoveState bSt, PVisualState vSt) : base()
         {
             start = bSt;
             visuals = vSt;
-            //fadeIn = bSt.fadeIn;
-            //lt = bSt.lifetime;
-            //fadeOut = bSt.fadeOut;
-            //startDir = bSt.dir;
-            //startSpeed = bSt.speed;
             vel = DegToVec(bSt.dir).normalized * bSt.speed;
             pos = bSt.pos;
             lastPos = pos;
@@ -30,10 +30,14 @@ namespace RegionKit.Particles
 
         public override void Update(bool eu)
         {
+            lifetime += 1f;
+            vel = DegToVec(start.dir) * start.speed;
             var cpw = CurrentPower;
             var crd = cRad(cpw);
-            if (!lightSetUpRan)
+            if (!SetUpRan)
             {
+                foreach (var m in Modules) m.Enable();
+                OnCreate?.Invoke();
                 if (visuals.lInt > 0f && visuals.lRadMax > 0f)
                 {
                     myLight = new LightSource(pos, false, visuals.lCol, this);
@@ -42,10 +46,9 @@ namespace RegionKit.Particles
                     myLight.HardSetRad(crd);
                     room.AddObject(myLight);
                 }
-                lightSetUpRan = true;
             }
+            SetUpRan = true;
             ProgressLifecycle();
-            base.Update(eu);
             if (myLight != null)
             {
                 myLight.setAlpha = cpw;
@@ -54,8 +57,26 @@ namespace RegionKit.Particles
                 myLight.stayAlive = true;
                 myLight.color = visuals.lCol;
             }
-            
+            OnUpdate?.Invoke();
+            base.Update(eu);
         }
+
+        public override void Destroy()
+        {
+            OnDestroy?.Invoke();
+            foreach (var m in Modules) m.Disable();
+            base.Destroy();
+        }
+
+        #region modules
+        public void addModule(PBehaviourModule m) { Modules.Add(m); }
+        public readonly List<PBehaviourModule> Modules = new List<PBehaviourModule>();
+
+        public delegate void lcStages();
+        public event lcStages OnUpdate;
+        public event lcStages OnCreate;
+        public event lcStages OnDestroy;
+        #endregion
 
         #region lifecycle
 
@@ -107,10 +128,11 @@ namespace RegionKit.Particles
         //public readonly int fadeOut;
         #endregion
 
-        public PBehaviourState start;
+        public PMoveState start;
         public PVisualState visuals;
         protected LightSource myLight;
-        protected bool lightSetUpRan = false;
+        protected bool SetUpRan = false;
+        public float lifetime { get; protected set; } = 0f;
 
         //protected Vector2 VEL;
 

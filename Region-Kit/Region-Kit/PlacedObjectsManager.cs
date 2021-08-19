@@ -1299,6 +1299,22 @@ public static class PlacedObjectsManager
             this.controlType = controlType;
             this.label = label ?? "";
         }
+        /// <summary>
+        /// ctor variant suitable for attribute use
+        /// </summary>
+        /// <param name="key">The key to access that field with</param>
+        /// <param name="defX">default X value</param>
+        /// <param name="defY">default Y value</param>
+        /// <param name="ctp">the type of UI for this field, from <see cref="Vector2Field.VectorReprType"/></param>
+        /// <param name="label"></param>
+        public Vector2Field(string key,
+                float defX, float defY,
+                VectorReprType ctp = VectorReprType.line,
+                string label = null)
+                : this(key, new Vector2(defX, defY), ctp, label)
+        {
+
+        }
 
         public enum VectorReprType
         {
@@ -1343,6 +1359,20 @@ public static class PlacedObjectsManager
         {
             this.controlType = controlType;
         }
+        /// <summary>
+        /// ctor variant suitable for attribute use
+        /// </summary>
+        /// <param name="key">the key to access that field with</param>
+        /// <param name="defX">default X value</param>
+        /// <param name="defY">default Y value</param>
+        /// <param name="ctype">the type of UI for this field, from <see cref="IntVector2Field.IntVectorReprType"/></param>
+        public IntVector2Field(string key,
+                int defX, int defY,
+                IntVectorReprType ctype = IntVectorReprType.line)
+                : this(key, new RWCustom.IntVector2(defX, defY), ctype)
+        {
+
+        }
 
         public enum IntVectorReprType
         {
@@ -1385,6 +1415,21 @@ public static class PlacedObjectsManager
         /// <param name="defaultColor">the value a new data object is generated with</param>
         /// <param name="controlType">one of <see cref="ManagedFieldWithPanel.ControlType.text"/> or <see cref="ManagedFieldWithPanel.ControlType.slider"/></param>
         public ColorField(string key, Color defaultColor, ControlType controlType = ControlType.text, string displayName = null) : base(key, defaultColor, controlType, displayName) { }
+        /// <summary>
+        /// ctor variant suitable for attribute usage
+        /// </summary>
+        /// <param name="key">key to identify the field</param>
+        /// <param name="defR">default red channel value</param>
+        /// <param name="defG">default green channel value</param>
+        /// <param name="defB">default blue channel value</param>
+        /// <param name="defA">default alpha (largely irrelevant but jic)</param>
+        /// <param name="control">one of <see cref="ManagedFieldWithPanel.ControlType.text"/> or <see cref="ManagedFieldWithPanel.ControlType.slider"/></param>
+        /// <param name="displayname"></param>
+        public ColorField(string key, float defR, float defG, float defB, float defA, ControlType control = ControlType.text, string displayname = null) 
+            : this (key, new Color(defR, defG, defB, defA), control, displayname)
+        {
+
+        }
 
         public override object FromString(string str)
         {

@@ -22,6 +22,9 @@ namespace RegionKit.Particles
         {
             PlacedObjectsManager.RegisterEmptyObjectType<ParticleVisualCustomizer, PlacedObjectsManager.ManagedRepresentation>("ParticleVisualCustomizer");
             PlacedObjectsManager.RegisterManagedObject<RoomParticleSystem, RectParticleSpawnerData, PlacedObjectsManager.ManagedRepresentation>("RectParticleSpawner");
+            PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.WavinessProvider, PlacedObjectsManager.ManagedRepresentation>("ParticleWaviness");
+            PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.AfflictionProvider, PlacedObjectsManager.ManagedRepresentation>("ParticleAffliction");
+            PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.AntibodyProvider, PlacedObjectsManager.ManagedRepresentation>("ParticleAntibodies");
         }
 
 

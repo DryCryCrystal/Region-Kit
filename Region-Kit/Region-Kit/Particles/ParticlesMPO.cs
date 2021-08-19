@@ -39,7 +39,7 @@ namespace RegionKit.Particles
         public List<IntVector2> ReturnSuitableTiles(Room rm)
         {
             UpdateTilesetCacheValidity();
-            if (AreaNeedsRefresh) { c_ST = GetSuitableTiles(rm); }
+            if (AreaNeedsRefresh || c_ST == null) { c_ST = GetSuitableTiles(rm); }
             return c_ST;
         }
 
@@ -77,9 +77,9 @@ namespace RegionKit.Particles
             //c_ST = GetSuitableTiles(owner.);
         }
 
-        public PBehaviourState DataForNew()
+        public PMoveState DataForNew()
         {
-            var res = new PBehaviourState
+            var res = new PMoveState
             {
                 dir = LerpAngle(startDir - startDirFluke, startDir + startDirFluke, UnityEngine.Random.value),
                 speed = Clamp(Lerp(startSpeed - startSpeedFluke, startSpeed + startSpeedFluke, UnityEngine.Random.value), 0f, float.MaxValue),
@@ -91,11 +91,11 @@ namespace RegionKit.Particles
             return res;
         }
 
-        public PBehaviourState DataForNew(float cutoff)
-        {
-            var res = DataForNew();
+        //public PBehaviourState DataForNew(float cutoff)
+        //{
+        //    var res = DataForNew();
 
-        }
+        //}
     }
     public class RectParticleSpawnerData : ParticleSystemData
     {
@@ -208,8 +208,8 @@ namespace RegionKit.Particles
 #warning finish pvs.datafornew
             var res = new PVisualState
             {
-                sCol = spriteColor.RandDeviate(spriteColorFluke),
-                lCol = lightColor.RandDeviate(lightColorFluke),
+                sCol = spriteColor.Deviation(spriteColorFluke),
+                lCol = lightColor.Deviation(lightColorFluke),
                 lRadMin = ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
                 lRadMax = ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
                 lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
@@ -217,9 +217,9 @@ namespace RegionKit.Particles
                 shader = shader,
                 container = ContainerCodes.Foreground
             };
-
+            res.sCol.ClampToNormal();
+            res.lCol.ClampToNormal();
             return res;
         }
     }
-
 }

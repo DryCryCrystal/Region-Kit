@@ -14,6 +14,7 @@ using static PlacedObjectsManager;
 
 namespace RegionKit.Particles
 {
+    #region spawners
     public abstract class ParticleSystemData : ManagedData
     {
         [IntegerField("fadeIn", 0, 400, 80, ManagedFieldWithPanel.ControlType.text, displayName:"Fade-in frames")]
@@ -38,21 +39,32 @@ namespace RegionKit.Particles
 
         public List<IntVector2> ReturnSuitableTiles(Room rm)
         {
-            UpdateTilesetCacheValidity();
+            //this right here is to update your changes live as you edit in devtools without recalculating tile set every request.
             if (AreaNeedsRefresh || c_ST == null) { c_ST = GetSuitableTiles(rm); }
+            UpdateTilesetCacheValidity();
             return c_ST;
         }
-
+        /// <summary>
+        /// Gets a list of tiles particles should be able to spawn on.
+        /// </summary>
+        /// <param name="rm"></param>
+        /// <returns></returns>
         protected virtual List<IntVector2> GetSuitableTiles(Room rm)
         {
             return new List<IntVector2> { (owner.pos / 20).ToIV2() };
         }
+        /// <summary>
+        /// Override and use to add your checks for <see cref="AreaNeedsRefresh"/>.
+        /// </summary>
         protected virtual void UpdateTilesetCacheValidity()
         {
             c_ownerpos = owner.pos;
         }
-
+        //cached tileset
         protected List<IntVector2> c_ST;
+        /// <summary>
+        /// Returns true when settings have been changed and tile set needs re-generating again. See code: <see cref="ReturnSuitableTiles(Room)"/>
+        /// </summary>
         protected virtual bool AreaNeedsRefresh => c_ownerpos != owner.pos;
         protected Vector2 c_ownerpos;
 
@@ -71,12 +83,10 @@ namespace RegionKit.Particles
             //c_ST = GetSuitableTiles();
         }
 
-        public override void FromString(string s)
-        {
-            base.FromString(s);
-            //c_ST = GetSuitableTiles(owner.);
-        }
-
+        /// <summary>
+        /// Returns fluke'd move params
+        /// </summary>
+        /// <returns></returns>
         public PMoveState DataForNew()
         {
             var res = new PMoveState
@@ -90,13 +100,10 @@ namespace RegionKit.Particles
 
             return res;
         }
-
-        //public PBehaviourState DataForNew(float cutoff)
-        //{
-        //    var res = DataForNew();
-
-        //}
     }
+    /// <summary>
+    /// SpawnerData for tossing in particles in a rectangular area
+    /// </summary>
     public class RectParticleSpawnerData : ParticleSystemData
     {
         Vector2 RectBounds => GetValue<Vector2>("effRect");
@@ -108,7 +115,7 @@ namespace RegionKit.Particles
         {
 
         }
-
+        //cached second point for areaNeedsRefresh
         private Vector2 c_RB;
         protected override bool AreaNeedsRefresh => base.AreaNeedsRefresh && c_RB == RectBounds;
         protected override void UpdateTilesetCacheValidity()
@@ -131,7 +138,7 @@ namespace RegionKit.Particles
                     res.Add(new IntVector2(x, y));
                 }
             }
-            PetrifiedWood.WriteLine(Json.Serialize(res));
+            //PetrifiedWood.WriteLine(Json.Serialize(res));
             return res;
         }
     }
@@ -145,6 +152,13 @@ namespace RegionKit.Particles
 
         }
 
+        Vector2 c_dir;
+        protected override void UpdateTilesetCacheValidity()
+        {
+            base.UpdateTilesetCacheValidity();
+            c_dir = base.GetValue<Vector2>("sdBase");
+        }
+        protected override bool AreaNeedsRefresh => base.AreaNeedsRefresh && c_dir == base.GetValue<Vector2>("sdBase");
         protected override List<IntVector2> GetSuitableTiles(Room rm)
         {
 #warning test this
@@ -157,15 +171,18 @@ namespace RegionKit.Particles
             int xs = (dropVector.x > 0) ? rb.left : rb.right;
             for (int x = rb.left; x < rb.right; x++)
             {
-                res.Add(new IntVector2(x, ys));
+                var r = new IntVector2(x, ys);
+                if (!rm.GetTile(r).Solid) res.Add(r);
             }
             for (int y = rb.bottom; y < rb.top; y++)
             {
-                res.Add(new IntVector2(xs, y));
+                var r = new IntVector2(xs, y);
+                if (!rm.GetTile(r).Solid) res.Add(r);
             }
             return res;
         }
     }
+    #endregion
 
     public class ParticleVisualCustomizer : ManagedData
     {
@@ -173,6 +190,8 @@ namespace RegionKit.Particles
         public Color spriteColorFluke => GetValue<Color>("sColFluke");
         public Color lightColor => GetValue<Color>("lColBase");
         public Color lightColorFluke => GetValue<Color>("lColFluke");
+        [BooleanField("flat", false, displayName:"Flat light")]
+        public bool flatLight;
         [FloatField("lrminBase", 0f, 400f, 20f, displayName:"Light radius min")]
         public float lightRadMin = 20f;
         [FloatField("lrminFluke", 0f, 400f, 0f, displayName:"Lightradmin fluke")]
@@ -190,6 +209,7 @@ namespace RegionKit.Particles
         [StringField("shader", "Basic", displayName:"Shader")]
         public string shader = "Basic";
         public Vector2 p2 => GetValue<Vector2>("p2");
+        public ContainerCodes cc => GetValue<ContainerCodes>("cc");
 
         public ParticleVisualCustomizer(PlacedObject owner) : base(owner, new ManagedField[]
         {
@@ -197,7 +217,8 @@ namespace RegionKit.Particles
             new ColorField("sColFluke", new Color(0f, 0f, 0f), displayName:"Sprite color fluke"),
             new ColorField("lColBase", new Color(1f, 1f,1f), displayName:"Light color"),
             new ColorField("lColFluke", new Color(0f, 0f, 0f), displayName:"Light color fluke"),
-            new Vector2Field("p2", new Vector2(40f, 0f), Vector2Field.VectorReprType.circle)
+            new Vector2Field("p2", new Vector2(40f, 0f), Vector2Field.VectorReprType.circle),
+            new EnumField("cc", typeof(ContainerCodes), ContainerCodes.Foreground, displayName:"Container")
         })
         {
             
@@ -215,7 +236,7 @@ namespace RegionKit.Particles
                 lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
                 aElm = elmName,
                 shader = shader,
-                container = ContainerCodes.Foreground
+                container = cc
             };
             res.sCol.ClampToNormal();
             res.lCol.ClampToNormal();

@@ -5,8 +5,6 @@ using System.Text;
 using System.IO;
 using System.Threading;
 
-using static RWCustom.Custom;
-
 
 namespace RegionKit.Utils
 {
@@ -94,15 +92,7 @@ namespace RegionKit.Utils
                                 wt.Write(toWrite.ToString());
                                 wt.Flush();
                             }
-                            Thread.Sleep(15);
-                            //if (WriteQueue.TryDequeue(out var toWrite))
-                            //{
-                            //    //var bytesTW = Encoding.UTF8.GetBytes(toWrite.ToString());
-                            //    //wt.Seek(0, SeekOrigin.End);
-                                
-
-                            //}
-                            //wt.Write(Encoding.UTF8.GetBytes(res.ToString()));
+                            Thread.Sleep(10);
                         }
 
                         while (_encEx.Count > 0)
@@ -113,14 +103,14 @@ namespace RegionKit.Utils
                                 wt.Write($"\nWrite exc encountered on {oldex.Item2}:\n{oldex.Item1}");
                                 wt.Flush();
                             }
-                            Thread.Sleep(15);
+                            Thread.Sleep(10);
 
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    _encEx.Enqueue(new Tuple<Exception, DateTime>(e, DateTime.Now));
+                    lock (_encEx) _encEx.Enqueue(new Tuple<Exception, DateTime>(e, DateTime.Now));
                 }
                 Thread.Sleep(250);
             }

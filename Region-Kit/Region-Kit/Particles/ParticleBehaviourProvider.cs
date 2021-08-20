@@ -9,12 +9,27 @@ using static PlacedObjectsManager;
 
 namespace RegionKit.Particles
 {
+    /// <summary>
+    /// "Empty" data class for attaching <see cref="PBehaviourModule"/> descendants to newly created particles.
+    /// </summary>
     public abstract class ParticleBehaviourProvider : ManagedData
     {
         public abstract PBehaviourModule GetNewForParticle(GenericParticle p);
-
+        /// <summary>
+        /// Affects sorting of providers in <see cref="RoomParticleSystem.Modifiers"/>. Higher value -> applied later.
+        /// </summary>
+        [IntegerField("order", 1, 100, 1, ManagedFieldWithPanel.ControlType.arrows, displayName:"Load order")]
+        public int applyOrder;
+        /// <summary>
+        /// circle for checking whether a provider affects a given particle system
+        /// </summary>
         [Vector2Field("p2", 30f, 30f, Vector2Field.VectorReprType.circle)]
-        public Vector2 p2; //=> GetValue<Vector2>("p2");
+        public Vector2 p2;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="addFields">List of additional <see cref="ManagedField"/>. Can be null.</param>
         public ParticleBehaviourProvider(PlacedObject owner, List<ManagedField> addFields) : 
             base(owner, addFields?.AddRangeReturnSelf(new ManagedField[] 
             {
@@ -23,32 +38,81 @@ namespace RegionKit.Particles
         {
 
         }
-
-        public class AntibodyProvider : ParticleBehaviourProvider
+        /// <summary>
+        /// Meant to handle modifiers that don't require additional init data and thus can live without custom manageddata descendants
+        /// </summary>
+        public sealed class PlainModuleRegister : ParticleBehaviourProvider
         {
-            public AntibodyProvider(PlacedObject owner) : base(owner, null)
+            static PlainModuleRegister()
             {
-
+                RegisteredDelegates = new Dictionary<string, Func<GenericParticle, PBehaviourModule>>();
+                RegisterPModType<PBehaviourModule.AFFLICTION>("affliction");
+                RegisterPModType<PBehaviourModule.ANTIBODY>("antibody");
+                RegisterPModType<PBehaviourModule.AvoidWater>("avoidwater");
+                RegisterPModType<PBehaviourModule.wallCollision>("wallcollision");
+                RegisterPModType<PBehaviourModule.stickToSurface>("sticktowalls");
             }
+            public PlainModuleRegister(PlacedObject owner) : base(owner, null) { }
+            private static readonly Dictionary<string, Func<GenericParticle, PBehaviourModule>> RegisteredDelegates;
+            /// <summary>
+            /// registers a new behaviormodule type with a specified key.
+            /// </summary>
+            /// <typeparam name="T">MUST have a constructor that takes argument set of (<see cref="GenericParticle"/>)! </typeparam>
+            /// <param name="key">use it to spawn later</param>
+            public static void RegisterPModType<T>(string key)
+                where T : PBehaviourModule
+            {
+                if (string.IsNullOrEmpty(key)) throw new ArgumentException("Can not register a null/empty key!");
+                if (RegisteredDelegates.ContainsKey(key)) throw new ArgumentException("Duplicate key!");
+                RegisteredDelegates.Add
+                    (key, new Func<GenericParticle, PBehaviourModule>
+                    (x => { return (PBehaviourModule)Activator.CreateInstance(typeof(T), x); }));
+                try
+                {
+                    RegisteredDelegates[key](new GenericParticle(default, default));
+                    PetrifiedWood.WriteLine($"Registered plain module: {key}.");
+                }
+                catch (Exception e)
+                {
+                    RegisteredDelegates.Remove(key);
+                    PetrifiedWood.WriteLine($"Could not register {key}. Exception on test instantiate.\n{e}");
+                }
+            }
+            /// <summary>
+            /// directly registers a spawn method via delegate. Still does a simple check to see if it throws.
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="del"></param>
+            public static void RegisterSpawnMethod(string key, Func<GenericParticle, PBehaviourModule> del)
+            {
+                try
+                {
+                    del(new GenericParticle(default, default));
+                    RegisteredDelegates.Add(key, del);
+                    PetrifiedWood.WriteLine($"Registered plain module: {key}");
+                }
+                catch (Exception e)
+                {
+                    PetrifiedWood.WriteLine($"Error registering delegate {del} under {key}: exception on test instatiate.\n{e}");
+                }
+                
+            }
+            /// <summary>
+            /// key to get new instances of <see cref="PBehaviourModule"/> descendants by
+            /// </summary>
+            [StringField("sk", "affliction", displayName:"Addon key")]
+            public string SelectedKey;
+            public PlainModuleRegister(PlacedObject owner, List<ManagedField> addFields) : base(owner, addFields) { }
 
             public override PBehaviourModule GetNewForParticle(GenericParticle p)
             {
-                return new PBehaviourModule.ANTIBODY(p);
-                //throw new NotImplementedException();
+                if (RegisteredDelegates.TryGetValue(SelectedKey, out var del)) { return del(p); }
+                return null;
             }
         }
-        public class AfflictionProvider : ParticleBehaviourProvider
-        {
-            public AfflictionProvider(PlacedObject owner) : base(owner, null)
-            {
-            }
-
-            public override PBehaviourModule GetNewForParticle(GenericParticle p)
-            {
-                return new PBehaviourModule.AFFLICTION(p);
-                //throw new NotImplementedException();
-            }
-        }
+        /// <summary>
+        /// applies a <see cref="PBehaviourModule.Wavy"/>
+        /// </summary>
         public class WavinessProvider : ParticleBehaviourProvider
         {
             [FloatField("amp", 0.1f, 40f, 15f, displayName:"Amplitude")]

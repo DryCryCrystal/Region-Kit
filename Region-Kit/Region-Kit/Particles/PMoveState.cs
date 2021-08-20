@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace RegionKit.Particles
 {
+    /// <summary>
+    /// carries a couple movement parameters for a particle
+    /// </summary>
     public struct PMoveState
     {
 #warning finalize what goes here
@@ -24,6 +27,11 @@ namespace RegionKit.Particles
             this.lifetime = lifetime;
             this.fadeOut = fadeOut;
             this.pos = pos;
+        }
+
+        public void Slice(float ltF)
+        {
+
         }
     }
 }

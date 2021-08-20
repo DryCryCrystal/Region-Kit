@@ -21,10 +21,10 @@ namespace RegionKit.Particles
         internal static void RegisterMPO()
         {
             PlacedObjectsManager.RegisterEmptyObjectType<ParticleVisualCustomizer, PlacedObjectsManager.ManagedRepresentation>("ParticleVisualCustomizer");
-            PlacedObjectsManager.RegisterManagedObject<RoomParticleSystem, RectParticleSpawnerData, PlacedObjectsManager.ManagedRepresentation>("RectParticleSpawner");
             PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.WavinessProvider, PlacedObjectsManager.ManagedRepresentation>("ParticleWaviness");
-            PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.AfflictionProvider, PlacedObjectsManager.ManagedRepresentation>("ParticleAffliction");
-            PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.AntibodyProvider, PlacedObjectsManager.ManagedRepresentation>("ParticleAntibodies");
+            PlacedObjectsManager.RegisterEmptyObjectType<ParticleBehaviourProvider.PlainModuleRegister, PlacedObjectsManager.ManagedRepresentation>("GenericPBMDispenser");
+            PlacedObjectsManager.RegisterManagedObject<RoomParticleSystem, RectParticleSpawnerData, PlacedObjectsManager.ManagedRepresentation>("RectParticleSpawner");
+            PlacedObjectsManager.RegisterManagedObject<RoomParticleSystem, OffscreenSpawnerData, PlacedObjectsManager.ManagedRepresentation>("OffscreenParticleSpawner");
         }
 
 
@@ -32,15 +32,5 @@ namespace RegionKit.Particles
         {
 
         }
-
-        public static void RegisterParticleType<T>()
-            where T : GenericParticle
-        {
-            var pt = typeof(T);
-            if (pt.IsAbstract) throw new ArgumentException("Unable to register an abstract particle class!");
-            if (partTypes.Contains(pt)) throw new ArgumentException("Can not register the same class twice!");
-            partTypes.Add(pt);
-        }
-        internal static HashSet<Type> partTypes = new HashSet<Type>();
     }
 }

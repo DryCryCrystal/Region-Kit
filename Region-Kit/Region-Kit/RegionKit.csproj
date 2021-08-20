@@ -35,7 +35,7 @@
     <Compile Include="Effects\PWMalfunction.cs" />
     <Compile Include="INotifyWhenRoomIsViewed.cs" />
     <Compile Include="Machinery\OscillationParams.cs" />
-    <Compile Include="MiscPO\ConfWaterFall.cs" />
+    <Compile Include="MiscPO\PlacedWaterFall.cs" />
     <Compile Include="MiscPO\MiscPOStatic.cs" />
     <Compile Include="MiscPO\MiscPO_MPO.cs" />
     <Compile Include="MiscPO\WormgrassManager.cs" />

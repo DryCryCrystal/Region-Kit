@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace RegionKit.Particles
 {
+    /// <summary>
+    /// carries sprite settings
+    /// </summary>
     public struct PVisualState
     {
         public string aElm;

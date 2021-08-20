@@ -12,15 +12,25 @@ using static RegionKit.Utils.PetrifiedWood;
 
 namespace RegionKit.Particles
 {
+    /// <summary>
+    /// Working unit for <see cref="RoomParticleSystem"/>.
+    /// </summary>
     public class GenericParticle : CosmeticSprite
     {
+
         public static GenericParticle MakeNew(PMoveState start, PVisualState visuals)
         {
             return new GenericParticle(start, visuals);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bSt">instantiation movement and fade in/out data</param>
+        /// <param name="vSt">visuals package</param>
         public GenericParticle(PMoveState bSt, PVisualState vSt) : base()
         {
+            //throw null;
+            vSt.aElm = vSt.aElm ?? "SkyDandelion";
             start = bSt;
             visuals = vSt;
             vel = DegToVec(bSt.dir).normalized * bSt.speed;
@@ -28,10 +38,16 @@ namespace RegionKit.Particles
             lastPos = pos;
         }
 
+        public void SliceLT(float frac)
+        {
+
+        }
+
         public override void Update(bool eu)
         {
+            lastRot = rot;
             lifetime += 1f;
-            vel = DegToVec(start.dir) * start.speed;
+            //every frame, velocity is set to initial. Make sure to treat it accordingly in your custom behaviour modules
             var cpw = CurrentPower;
             var crd = cRad(cpw);
             if (!SetUpRan)
@@ -57,8 +73,10 @@ namespace RegionKit.Particles
                 myLight.stayAlive = true;
                 myLight.color = visuals.lCol;
             }
-            OnUpdate?.Invoke();
+            vel = DegToVec(start.dir) * start.speed;
+            OnUpdatePreMove?.Invoke();
             base.Update(eu);
+            OnUpdatePostMove?.Invoke();
         }
 
         public override void Destroy()
@@ -73,14 +91,30 @@ namespace RegionKit.Particles
         public readonly List<PBehaviourModule> Modules = new List<PBehaviourModule>();
 
         public delegate void lcStages();
-        public event lcStages OnUpdate;
+        /// <summary>
+        /// invoked near the end of every frame
+        /// </summary>
+        public event lcStages OnUpdatePreMove;
+        /// <summary>
+        /// Invoked after base update call. Can be used to undo position changes.
+        /// </summary>
+        public event lcStages OnUpdatePostMove;
+        /// <summary>
+        /// invoked on first frame
+        /// </summary>
         public event lcStages OnCreate;
+        /// <summary>
+        /// invoked when particle is about to be destroyed
+        /// </summary>
         public event lcStages OnDestroy;
         #endregion
 
         #region lifecycle
 
         protected virtual float cRad(float power) => Lerp(visuals.lRadMin, visuals.lRadMax, power);
+        /// <summary>
+        /// 0 to 1; represents how thick/transparent a particle is at the moment
+        /// </summary>
         public virtual float CurrentPower
         {
             get
@@ -94,6 +128,9 @@ namespace RegionKit.Particles
                 }
             }
         }
+        /// <summary>
+        /// every frame, ticks down the clock of a particle's birth, thrive and inevitable demise
+        /// </summary>
         internal void ProgressLifecycle()
         {
             progress++;
@@ -110,6 +147,11 @@ namespace RegionKit.Particles
             private set { _pr = value; }
         }
         private int _pr;
+        /// <summary>
+        /// returns length of current life phase
+        /// </summary>
+        /// <param name="phase"></param>
+        /// <returns></returns>
         private int GetPhaseLimit(byte phase)
         {
             switch (phase)
@@ -121,24 +163,32 @@ namespace RegionKit.Particles
             }
         }
         public byte phase = 0;
-        //public readonly float startDir;
-        //public readonly float startSpeed;
-        //public readonly int fadeIn;
-        //public readonly int lt;
-        //public readonly int fadeOut;
         #endregion
-
+        /// <summary>
+        /// starting movement parameters and fade in/out settings
+        /// </summary>
         public PMoveState start;
+        /// <summary>
+        /// visual package - atlas element, container, etc
+        /// </summary>
         public PVisualState visuals;
+        /// <summary>
+        /// attached light source
+        /// </summary>
         protected LightSource myLight;
         protected bool SetUpRan = false;
         public float lifetime { get; protected set; } = 0f;
-
+        private float lastRot;
+        /// <summary>
+        /// to make your sprite go speen
+        /// </summary>
+        public float rot;
         //protected Vector2 VEL;
 
         #region IDrawable things
         public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
         {
+            
             base.InitiateSprites(sLeaser, rCam);
             sLeaser.sprites = new FSprite[1];
             try
@@ -154,7 +204,7 @@ namespace RegionKit.Particles
             room.game.rainWorld.Shaders.TryGetValue("Basic", out var sh);
             sLeaser.sprites[0].color = visuals.sCol;
             sLeaser.sprites[0].shader = sh;
-            AddToContainer(sLeaser, rCam, rCam.ReturnFContainer(ContainerCodes.Foreground.ToString()));
+            AddToContainer(sLeaser, rCam, rCam.ReturnFContainer(visuals.container.ToString()));
         }
         public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
         {
@@ -169,10 +219,9 @@ namespace RegionKit.Particles
             var cpos = Vector2.Lerp(lastPos, pos, timeStacker);
             sLeaser.sprites[0].SetPosition(cpos - camPos);
             sLeaser.sprites[0].alpha = CurrentPower;
+            sLeaser.sprites[0].rotation = LerpAngle(lastRot, rot, timeStacker);
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
         }
         #endregion
-
-
     }
 }

@@ -55,7 +55,7 @@ namespace RegionKit.MiscPO
         private static void RegisterMPO()
         {
             PlacedObjectsManager.RegisterEmptyObjectType<WormgrassRectData, PlacedObjectsManager.ManagedRepresentation>("WormgrassRect");
-            PlacedObjectsManager.RegisterManagedObject<ConfWaterFall, PlacedWaterfallData, PlacedObjectsManager.ManagedRepresentation>("PlacedWaterfall");
+            PlacedObjectsManager.RegisterManagedObject<PlacedWaterFall, PlacedWaterfallData, PlacedObjectsManager.ManagedRepresentation>("PlacedWaterfall");
         }
 
         internal static void Disable()

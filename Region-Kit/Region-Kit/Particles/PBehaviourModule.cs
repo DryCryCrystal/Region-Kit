@@ -17,6 +17,12 @@ namespace RegionKit.Particles
     public abstract class PBehaviourModule
     {
         GenericParticle owner;
+
+        /// <summary>
+        /// Use this to indicate how computationally heavy is your <see cref="PBehaviourModule"/> derivative. Used to smoothen loading process.
+        /// </summary>
+        public virtual float ComputationalCost => 0.15f;
+
         public PBehaviourModule(GenericParticle gp)
         {
             owner = gp;
@@ -55,6 +61,7 @@ namespace RegionKit.Particles
             {
                 owner.OnUpdatePreMove += owner_update;
             }
+            public override float ComputationalCost => base.ComputationalCost + 0.06f;
         }
         /// <summary>
         /// Example module: does nothing outside of triggering <see cref="ANTIBODY"/> instances
@@ -99,6 +106,7 @@ namespace RegionKit.Particles
                         }
                 }
             }
+            public override float ComputationalCost => 0.09f;
         }
 
         public class AvoidWater : PBehaviourModule
@@ -147,8 +155,8 @@ namespace RegionKit.Particles
                 owner.pos = cd.pos;
                 owner.vel = cd.vel;
             }
+            public override float ComputationalCost => base.ComputationalCost + 0.06f;
         }
-
         public class stickToSurface : wallCollision
         {
             public stickToSurface(GenericParticle gp) : base(gp)
@@ -186,6 +194,33 @@ namespace RegionKit.Particles
                 if (op != owner.pos) stuck = true;
             }
             private bool stuck;
+
+            public override float ComputationalCost => base.ComputationalCost + 0.07f;
+        }
+        public class Spin : PBehaviourModule
+        {
+            public Spin(GenericParticle gp, float angVb, Machinery.OscillationParams osp) : base(gp)
+            {
+                myosp = osp;
+                angVelBase = angVb;
+            }
+            float angVelBase;
+            Machinery.OscillationParams myosp;
+            public override void Disable()
+            {
+                owner.OnUpdatePostMove -= actionCycle;
+            }
+
+            public override void Enable()
+            {
+                owner.OnUpdatePostMove += actionCycle;
+            }
+
+            private void actionCycle()
+            {
+                owner.rot += angVelBase + myosp.oscm(owner.lifetime * myosp.frq) * myosp.amp;
+            }
+            public override float ComputationalCost => base.ComputationalCost + 0.06f;
         }
     }
 }

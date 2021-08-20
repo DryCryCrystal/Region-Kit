@@ -143,5 +143,21 @@ namespace RegionKit.Particles
                 return new PBehaviourModule.Wavy(p, GetOscParams());//throw new NotImplementedException();
             }
         }
+
+        public class SpinProvider : WavinessProvider
+        {
+            [FloatField("avB", -60f, 60f, 0f, displayName:"base angular velocity")]
+            public float angVec;
+            
+
+            public SpinProvider(PlacedObject owner) : base(owner)
+            {
+            }
+
+            public override PBehaviourModule GetNewForParticle(GenericParticle p)
+            {
+                return new PBehaviourModule.Spin(p, angVec, GetOscParams());
+            }
+        }
     }
 }

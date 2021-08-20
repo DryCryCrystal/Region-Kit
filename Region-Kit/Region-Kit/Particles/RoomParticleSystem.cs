@@ -13,39 +13,127 @@ namespace RegionKit.Particles
     /// <summary>
     /// particle spawner.
     /// </summary>
-    public class RoomParticleSystem : UpdatableAndDeletable, INotifyWhenRoomIsViewed
+    public class RoomParticleSystem : UpdatableAndDeletable
     {
         /// <summary>
         /// Constructor used by MPO.
         /// </summary>
         /// <param name="owner"></param>
         /// <param name="room"></param>
-        public RoomParticleSystem(PlacedObject owner, Room room) : this (owner, room, GenericParticle.MakeNew)
+        public RoomParticleSystem(PlacedObject owner, Room room) : this(owner, room, owner.pos, owner.data as ParticleSystemData, GenericParticle.MakeNew)
         {
 
         }
-
-        public RoomParticleSystem(PlacedObject owner, Room room, params ParticleCreate[] births)
+        /// <summary>
+        /// Constructor that can be used for manual instantiation with a custom set of birth delegates
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="room"></param>
+        /// <param name="births"></param>
+        public RoomParticleSystem(PlacedObject owner, Room room, Vector2 oPos, ParticleSystemData npsd, params ParticleCreate[] births)
         {
+            backupPSD = npsd;
+            overridePos = oPos;
             Owner = owner;
             FetchVisualsAndBM(room);
             if (births != null) foreach (var d in births) BirthEvent += d;
+            int IdealTotalBootUpFrames = (int)(AverageLifetime() * 1.5f);
+            DelayRequestedByMe = Min(Min(IdealTotalBootUpFrames, TotalForceFrameLimit));
+            room.waitToEnterAfterFullyLoaded = Max(room.waitToEnterAfterFullyLoaded, DelayRequestedByMe);
+            ForceFramesMultiplier = (int)(BaseComfortableFpF / AverageComputeCost() / ((ComfortableParticleDensity > AverageDensity()) ? (1f) : (AverageDensity() / ComfortableParticleDensity)));
+            PetrifiedWood.WriteLine($"{IdealTotalBootUpFrames}, {AverageLifetime()}, {ForceFramesMultiplier}");
+        }
+        #region warmup setup;
+        //this section has settings for "warmup" = faking constant activity and making it look like particle system works offscreen constantly
+        //this is somewhat janky and causes noticeable load time delays
+        //there are probably better ways to go about this, but i can't be bothered with them right now
+
+        //max particle density before force rate starts decreasing
+        static int ComfortableParticleDensity = 20;
+        //comfortable rate "force frames per frame" for self and particles created on warmup
+        static int BaseComfortableFpF = 85;
+        //add load frames upper border
+        static int TotalForceFrameLimit = 25;
+        #endregion
+        //how many force updates should be ran per warmup frame
+        int ForceFramesMultiplier;
+        int DelayRequestedByMe;
+        public int AverageDensity()
+        {
+            return AverageLifetime() / ((PSD.minCooldown + PSD.maxCooldown) / 2);
+        }
+        public int AverageLifetime()
+        {
+            return PSD.fadeIn + PSD.lifeTime + PSD.fadeOut;
+        }
+        public float AverageComputeCost()
+        {
+            var result = 1f;
+            var TotalModCost = 1f;
+            var dummy = new GenericParticle(default, default);
+            foreach (var mod in Modifiers)
+            {
+                TotalModCost += Max(0f, mod.GetNewForParticle(dummy)?.ComputationalCost ?? 0f);
+            }
+            var pBirths = BirthEvent?.GetInvocationList() ?? new Delegate[0];
+            float[] birthcosts = new float[pBirths.Length];
+            if (birthcosts.Length != 0)
+            {
+                float sum = 0f;
+                for (int i = 0; i < birthcosts.Length; i++)
+                {
+                    float ccost = ((GenericParticle)pBirths[i].DynamicInvoke(default(PMoveState), default(PVisualState))).ComputationalCost;
+                    sum += Max(1f, ccost);
+                }
+                sum /= birthcosts.Length;
+                result = sum * TotalModCost;
+            }
+            else
+            {
+                return 1f;
+            }
+            return result;
         }
 
+        readonly List<GenericParticle> forceupdatelist = new List<GenericParticle>();
         public override void Update(bool eu)
         {
-            ProgressCreationCycle();
+            if (room.waitToEnterAfterFullyLoaded > 0 && DelayRequestedByMe > 0)
+            {
+                //warmup
+                DelayRequestedByMe--;
+                for (int c = 0; c < ForceFramesMultiplier; c++)
+                {
+                    var lccp = ProgressCreationCycle();
+                    if (lccp != null) forceupdatelist.Add(lccp);
+                    for (int cp = forceupdatelist.Count - 1; cp > -1; cp--)
+                    {
+                        forceupdatelist[cp].Update(true);
+                        if (forceupdatelist[cp].slatedForDeletetion) forceupdatelist.RemoveAt(cp);
+                    }
+                }
+            }
+            else
+            {
+                ProgressCreationCycle();
+            }
+            
             base.Update(eu);
         }
-        protected virtual void ProgressCreationCycle()
+        /// <summary>
+        /// progresses cooldown and spawns things when necessary
+        /// </summary>
+        /// <returns>newly created <see cref="GenericParticle"/>, null if none was made</returns>
+        protected virtual GenericParticle ProgressCreationCycle()
         {
+            GenericParticle p = null;
             cooldown--;
             if (cooldown <= 0)
             {
                 var PossibleBirths = BirthEvent?.GetInvocationList();
                 if (PossibleBirths != null && PossibleBirths.Length > 0) 
                 {
-                    var p = (GenericParticle)
+                    p = (GenericParticle)
                         PossibleBirths.RandomOrDefault().DynamicInvoke(
                             PSD.DataForNew(),
                             Visuals.RandomOrDefault()?.DataForNew() ?? default);
@@ -58,16 +146,18 @@ namespace RegionKit.Particles
                     }
                     room.AddObject(p);
 
-                } //BirthEvent.Invoke(PSD.DataForNew(), PVC?.DataForNew() ?? default);
+                }
                 cooldown = UnityEngine.Random.Range(PSD.minCooldown, PSD.maxCooldown);
             }
+            return p;
         }
 
         protected ParticleSystemData PSD => Owner.data as ParticleSystemData ?? backupPSD;
-        //use this if you want to have PSD 
+        //use this if you want to have PSD without having an owner
         public ParticleSystemData backupPSD;
         
         protected PlacedObject Owner;
+
         //same as aboove
         public Vector2 overridePos;
         protected Vector2 MyPos => Owner?.pos ?? overridePos;
@@ -113,7 +203,7 @@ namespace RegionKit.Particles
         public event ParticleCreate BirthEvent;
 
         /// <summary>
-        /// Acquires detailed coords from within area of effect
+        /// pulls a random tile and returns a random position within it
         /// </summary>
         /// <returns></returns>
         protected virtual Vector2 PickSpawnPos()
@@ -128,33 +218,6 @@ namespace RegionKit.Particles
             };
         }
 
-        public int AverageLifetime()
-        {
-            return PSD.fadeIn + PSD.lifeTime + PSD.fadeOut;
-        }
-        public float AverageSpeed()
-        {
-            return PSD.startSpeed;
-        }
-
-        public void PopulateExpectedArea()
-        {
-#warning populate not done
-            foreach (var tile in PSD.ReturnSuitableTiles(room))
-            {
-                var detpos = room.MiddleOfTile(tile);
-            }
-            //throw new NotImplementedException();
-        }
-        public virtual void RoomViewed()
-        {
-            PopulateExpectedArea();
-            //throw new NotImplementedException();
-        }
-
-        public virtual void RoomNoLongerViewed()
-        {
-            //throw new NotImplementedException();
-        }
+        
     }
 }

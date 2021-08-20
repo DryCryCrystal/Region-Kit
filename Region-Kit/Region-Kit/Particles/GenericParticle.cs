@@ -75,6 +75,7 @@ namespace RegionKit.Particles
             }
             vel = DegToVec(start.dir) * start.speed;
             OnUpdatePreMove?.Invoke();
+            lastRot = rot;
             base.Update(eu);
             OnUpdatePostMove?.Invoke();
         }
@@ -164,6 +165,7 @@ namespace RegionKit.Particles
         }
         public byte phase = 0;
         #endregion
+
         /// <summary>
         /// starting movement parameters and fade in/out settings
         /// </summary>
@@ -223,5 +225,10 @@ namespace RegionKit.Particles
             base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
         }
         #endregion
+
+        /// <summary>
+        /// Use this to indicate how computationally heavy is your <see cref="GenericParticle"/> derivative. Used to smoothen loading process.
+        /// </summary>
+        public virtual float ComputationalCost => 1f;
     }
 }

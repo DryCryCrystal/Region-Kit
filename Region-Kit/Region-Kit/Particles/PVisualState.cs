@@ -21,8 +21,9 @@ namespace RegionKit.Particles
         public float lRadMax;
         public float lRadMin;
         public float affByDark;
+        public bool flat;
 
-        public PVisualState(string aElm, string shader, ContainerCodes container, Color sCol, Color lCol, float lInt, float lRadMax, float lRadMin, float affByDark)
+        public PVisualState(string aElm, string shader, ContainerCodes container, Color sCol, Color lCol, float lInt, float lRadMax, float lRadMin, float affByDark, bool flat)
         {
             this.aElm = aElm;
             this.shader = shader;
@@ -33,6 +34,7 @@ namespace RegionKit.Particles
             this.lRadMax = lRadMax;
             this.lRadMin = lRadMin;
             this.affByDark = affByDark;
+            this.flat = flat;
         }
     }
 }

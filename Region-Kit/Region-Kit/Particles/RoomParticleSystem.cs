@@ -37,6 +37,7 @@ namespace RegionKit.Particles
             Owner = owner;
             FetchVisualsAndBM(room);
             if (births != null) foreach (var d in births) BirthEvent += d;
+            if (!PSD.doWarmup) return;
             int IdealTotalBootUpFrames = (int)(AverageLifetime() * 1.5f);
             DelayRequestedByMe = Min(Min(IdealTotalBootUpFrames, TotalForceFrameLimit));
             room.waitToEnterAfterFullyLoaded = Max(room.waitToEnterAfterFullyLoaded, DelayRequestedByMe);
@@ -49,9 +50,9 @@ namespace RegionKit.Particles
         //there are probably better ways to go about this, but i can't be bothered with them right now
 
         //max particle density before force rate starts decreasing
-        static int ComfortableParticleDensity = 20;
+        static int ComfortableParticleDensity = 35;
         //comfortable rate "force frames per frame" for self and particles created on warmup
-        static int BaseComfortableFpF = 85;
+        static int BaseComfortableFpF = 200;
         //add load frames upper border
         static int TotalForceFrameLimit = 25;
         #endregion

@@ -17,6 +17,8 @@ namespace RegionKit.Particles
     #region spawners
     public abstract class ParticleSystemData : ManagedData
     {
+        [BooleanField("warmup", false, displayName:"Warmup on room load")]
+        public bool doWarmup;
         [IntegerField("fadeIn", 0, 400, 80, ManagedFieldWithPanel.ControlType.text, displayName:"Fade-in frames")]
         public int fadeIn;
         [IntegerField("fadeInFluke", 0, 400, 0, ManagedFieldWithPanel.ControlType.text, displayName: "Fade-in fluke")]
@@ -144,8 +146,10 @@ namespace RegionKit.Particles
     }
     public class OffscreenSpawnerData : ParticleSystemData
     {
-        [IntegerField("margin", 0, 10, 1)]
+        [IntegerField("margin", 0, 30, 1)]
         public int margin;
+        [BooleanField("nosolid", true, displayName:"Skip solid tiles")]
+        public bool AirOnly;
 
         public OffscreenSpawnerData(PlacedObject owner) : base (owner, new List<ManagedField>())
         {
@@ -172,14 +176,38 @@ namespace RegionKit.Particles
             for (int x = rb.left; x < rb.right; x++)
             {
                 var r = new IntVector2(x, ys);
-                if (!rm.GetTile(r).Solid) res.Add(r);
+                if (!rm.GetTile(r).Solid || !AirOnly) res.Add(r);
             }
             for (int y = rb.bottom; y < rb.top; y++)
             {
                 var r = new IntVector2(xs, y);
-                if (!rm.GetTile(r).Solid) res.Add(r);
+                if (!rm.GetTile(r).Solid || !AirOnly) res.Add(r);
             }
             return res;
+        }
+    }
+    public class WholeScreenSpawnerData : ParticleSystemData
+    {
+        [IntegerField("Margin", 0, 30, 1, displayName:"Margin")]
+        public int Margin;
+        [BooleanField("nosolid", true, displayName: "Skip solid tiles")]
+        public bool AirOnly;
+
+        public WholeScreenSpawnerData(PlacedObject owner) : base(owner, null)
+        {
+
+        }
+        protected override List<IntVector2> GetSuitableTiles(Room rm)
+        {
+            var r = ConstructIR(new IntVector2(-Margin, -Margin), new IntVector2(rm.TileWidth + Margin, rm.TileHeight + Margin)).ReturnTiles();
+            if (AirOnly)
+            {
+                for (int i = r.Count - 1; i > -1; i--)
+                {
+                    if (rm.GetTile(r[i]).Solid) r.RemoveAt(i);
+                }
+            }
+            return r;
         }
     }
     #endregion
@@ -236,7 +264,8 @@ namespace RegionKit.Particles
                 lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
                 aElm = elmName,
                 shader = shader,
-                container = cc
+                container = cc,
+                flat = flatLight
             };
             res.sCol.ClampToNormal();
             res.lCol.ClampToNormal();

@@ -208,12 +208,12 @@ namespace RegionKit.Particles
             Machinery.OscillationParams myosp;
             public override void Disable()
             {
-                owner.OnUpdatePostMove -= actionCycle;
+                owner.OnUpdatePreMove -= actionCycle;
             }
 
             public override void Enable()
             {
-                owner.OnUpdatePostMove += actionCycle;
+                owner.OnUpdatePreMove += actionCycle;
             }
 
             private void actionCycle()

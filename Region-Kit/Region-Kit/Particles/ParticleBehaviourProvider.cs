@@ -62,8 +62,8 @@ namespace RegionKit.Particles
             public static void RegisterPModType<T>(string key)
                 where T : PBehaviourModule
             {
-                if (string.IsNullOrEmpty(key)) throw new ArgumentException("Can not register a null/empty key!");
-                if (RegisteredDelegates.ContainsKey(key)) throw new ArgumentException("Duplicate key!");
+                if (string.IsNullOrEmpty(key)) { PetrifiedWood.WriteLine("Can not register a null/empty key!"); return; }//throw new ArgumentException();
+                if (RegisteredDelegates.ContainsKey(key)) { PetrifiedWood.WriteLine($"Duplicate key: {key}!"); return; }
                 RegisteredDelegates.Add
                     (key, new Func<GenericParticle, PBehaviourModule>
                     (x => { return (PBehaviourModule)Activator.CreateInstance(typeof(T), x); }));
@@ -143,7 +143,6 @@ namespace RegionKit.Particles
                 return new PBehaviourModule.Wavy(p, GetOscParams());//throw new NotImplementedException();
             }
         }
-
         public class SpinProvider : WavinessProvider
         {
             [FloatField("avB", -60f, 60f, 0f, displayName:"base angular velocity")]

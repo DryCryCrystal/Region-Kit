@@ -17,7 +17,6 @@ namespace RegionKit.Particles
     /// </summary>
     public class GenericParticle : CosmeticSprite
     {
-
         public static GenericParticle MakeNew(PMoveState start, PVisualState visuals)
         {
             return new GenericParticle(start, visuals);
@@ -38,14 +37,9 @@ namespace RegionKit.Particles
             lastPos = pos;
         }
 
-        public void SliceLT(float frac)
-        {
-
-        }
-
         public override void Update(bool eu)
         {
-            lastRot = rot;
+            //lastRot = rot;
             lifetime += 1f;
             //every frame, velocity is set to initial. Make sure to treat it accordingly in your custom behaviour modules
             var cpw = CurrentPower;
@@ -60,6 +54,7 @@ namespace RegionKit.Particles
                     myLight.requireUpKeep = true;
                     myLight.HardSetAlpha(cpw);
                     myLight.HardSetRad(crd);
+                    myLight.flat = visuals.flat;
                     room.AddObject(myLight);
                 }
             }

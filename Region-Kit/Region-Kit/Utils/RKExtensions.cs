@@ -39,7 +39,7 @@ namespace RegionKit.Utils
 
         public static IntVector2 ToIV2(this Vector2 sv) => new IntVector2((int)sv.x, (int)sv.y);
         public static Vector2 ToV2(this IntVector2 sv) => new Vector2(sv.x, sv.y);
-        public static IntRect ConstructIR(IntVector2 p1, IntVector2 p2) => new IntRect(Min(p1.x, p2.x), Min(p1.y, p2.y), Max(p1.x, p2.x), Max(p1.y, p2.y));
+        
         public static List<IntVector2> ReturnTiles (this IntRect ir)
         {
             var res = new List<IntVector2>();

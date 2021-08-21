@@ -33,6 +33,9 @@
   <ItemGroup>
     <Compile Include="BrokenPatch.cs" />
     <Compile Include="Effects\PWMalfunction.cs" />
+    <Compile Include="INotifyWhenRoomIsViewed.cs" />
+    <Compile Include="Machinery\OscillationParams.cs" />
+    <Compile Include="MiscPO\PlacedWaterFall.cs" />
     <Compile Include="MiscPO\MiscPOStatic.cs" />
     <Compile Include="MiscPO\MiscPO_MPO.cs" />
     <Compile Include="MiscPO\WormgrassManager.cs" />
@@ -47,6 +50,14 @@
     <Compile Include="Machinery\SimpleCog.cs" />
     <Compile Include="Machinery\SimplePiston.cs" />
     <Compile Include="ManagedObjectExamples.cs" />
+    <Compile Include="Particles\GenericParticle.cs" />
+    <Compile Include="Particles\ParticleBehaviourProvider.cs" />
+    <Compile Include="Particles\PBehaviourModule.cs" />
+    <Compile Include="Particles\PMoveState.cs" />
+    <Compile Include="Particles\ParticlesMPO.cs" />
+    <Compile Include="Particles\ParticlesStatic.cs" />
+    <Compile Include="Particles\PVisualState.cs" />
+    <Compile Include="Particles\RoomParticleSystem.cs" />
     <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\PWLightRod.cs" />
@@ -56,6 +67,7 @@
     <Compile Include="Utils\ICanBringDataToKin.cs" />
     <Compile Include="Utils\PetrifiedWood.cs" />
     <Compile Include="Utils\RKExtensions.cs" />
+    <Compile Include="Utils\RKUtils.cs" />
     <Compile Include="Utils\Tuple.cs" />
   </ItemGroup>
   <ItemGroup>

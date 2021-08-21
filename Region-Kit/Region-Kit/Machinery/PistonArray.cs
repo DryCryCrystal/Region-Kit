@@ -24,7 +24,7 @@ namespace RegionKit.Machinery
             {
                 var pair = pistons[i];
                 var ndt = pdByIndex(i);
-                ndt.BringToKin(pair.item1);
+                ndt.BringToKin(pair.Item1);
             }
         }
 
@@ -77,7 +77,7 @@ namespace RegionKit.Machinery
         {
             if (pistons != null)
             {
-                foreach (var pair in pistons) { pair.item2.Destroy(); }
+                foreach (var pair in pistons) { pair.Item2.Destroy(); }
             }
             pistons = null;
         }
@@ -100,7 +100,7 @@ namespace RegionKit.Machinery
         public override void Destroy()
         {
             base.Destroy();
-            foreach (var pair in pistons) pair.item2.Destroy();
+            foreach (var pair in pistons) pair.Item2.Destroy();
         }
     }
 }

@@ -8,6 +8,19 @@ using static PlacedObjectsManager;
 namespace RegionKit.MiscPO
 {
 
+    internal class PlacedWaterfallData : ManagedData
+    {
+        [FloatField("flow", 0f, 20f, 4f)]
+        internal float flow;
+        [IntegerField("width", 1, 10, 1)]
+        internal int width;
+
+        public PlacedWaterfallData(PlacedObject po) : base (po, new ManagedField[] { })
+        {
+
+        }
+    }
+
     internal class WormgrassRectData : ManagedData
     {
         internal IntVector2 p2 => GetValue<IntVector2>("p2");

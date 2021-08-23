@@ -32,6 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BrokenPatch.cs" />
+    <Compile Include="EchoExtender\CRSEchoParser.cs" />
+    <Compile Include="EchoExtender\EchoExtender.cs" />
+    <Compile Include="EchoExtender\EchoSettings.cs" />
+    <Compile Include="EchoExtender\EnumExt_EchoExtender.cs" />
+    <Compile Include="EchoExtender\ExtensionMethods.cs" />
     <Compile Include="Effects\PWMalfunction.cs" />
     <Compile Include="INotifyWhenRoomIsViewed.cs" />
     <Compile Include="Machinery\OscillationParams.cs" />
@@ -41,7 +46,6 @@
     <Compile Include="MiscPO\WormgrassManager.cs" />
     <Compile Include="Objects\ColouredLightSource.cs" />
     <Compile Include="CustomArenaDivisions.cs" />
-    <Compile Include="EchoExtender.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Machinery\MachineryMPO.cs" />
     <Compile Include="Machinery\MachineryStatic.cs" />

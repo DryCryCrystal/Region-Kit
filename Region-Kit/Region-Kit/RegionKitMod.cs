@@ -6,7 +6,7 @@ namespace RegionKit {
     public class RegionKitMod : PartialityMod {
 
         public const string modVersion = "1.0.0";
-        public const string buildVersion = "67"; //Increments for every code change without a version change.
+        public const string buildVersion = "68"; //Increments for every code change without a version change.
 
         public RegionKitMod() {
             ModID = "RegionKit";
@@ -21,7 +21,7 @@ namespace RegionKit {
             RoomLoader.Patch();
             BrokenPatch.Patch();
             CustomArenaDivisions.Patch();
-            EchoExtender.ApplyHooks();
+            EchoExtender.EchoExtender.ApplyHooks();
             
             //Objects
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();
@@ -41,7 +41,7 @@ namespace RegionKit {
             base.OnDisable();
             RoomLoader.Disable();
             BrokenPatch.Disable();
-            EchoExtender.RemoveHooks();
+            EchoExtender.EchoExtender.RemoveHooks();
             Machinery.MachineryStatic.Disable();
             //PetrifiedWood.ShutDown();
             PetrifiedWood.Lifetime = 5;

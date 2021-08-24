@@ -3,11 +3,11 @@
 A unified dependency and object kit for Rain World region modding. Created by The Substratum Dev Team and other members of the community.
 
 #### Table of Contents
-- [The Goal](https://github.com/DryCryCrystal/Region-Kit#the-goal)
-- [Features](https://github.com/DryCryCrystal/Region-Kit#features)
-- [Credits](https://github.com/DryCryCrystal/Region-Kit#credits)
-- [Download](https://github.com/DryCryCrystal/Region-Kit#download)
-- [More Info](https://github.com/DryCryCrystal/Region-Kit#more-info)
+- [The Goal](#the-goal)
+- [Features](#features)
+- [Credits](#credits)
+- [Download](#download)
+- [More Info](#more-info)
 
 
 ## The Goal

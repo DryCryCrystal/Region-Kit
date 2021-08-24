@@ -86,6 +86,9 @@ For more detailed instructions, see: `P_GUIDE.md`
 - LeeMoriya
 	- ARObjects
 
+- Kaeporo
+	- ARObjects
+
 
 ## Download
 Downloads can be found [here](https://github.com/DryCryCrystal/Region-Kit/releases/latest).

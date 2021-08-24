@@ -1,10 +1,10 @@
-#REGIONKIT.PARTICLES user guide
+# REGIONKIT.PARTICLES user guide
 
-##PART 1: I am a mere region builder, how do i use what's already provided
+## PART 1: I am a mere region builder, how do i use what's already provided
 
 Preexisting placed objects include:
 
-###Particle systems:
+### Particle systems:
 
 ***Pre-provided objects:***
 
@@ -20,7 +20,7 @@ Preexisting placed objects include:
   - Unlabeled line handle - determines flight direction. `Direction fluke` is starting angle randomization border, in degrees.
   - `Speed`, `Speed fluke` - default speed settings, native pixels per frame. For reference: a tile is 20x20 px.
 
-###Visuals:
+### Visuals:
 
   `ParticleVisualCustomizer` is used to determine how particles will look. Place one in a room and drag its secondary handle so that main handle of your particle spawner is inside the circle.
   
@@ -37,7 +37,7 @@ Preexisting placed objects include:
   - `Shader` - shader to be applied to the sprite.
   - `Container` - Room camera container code to place your sprite into.
   
-###Behaviour modifiers:
+### Behaviour modifiers:
 
 These allow changing how a particle lives and behaves in arbitrary ways. To apply to a spawner systems, place them like visuals customizer.
 
@@ -54,7 +54,7 @@ Pre-provided objects:
   
   Settings include: apply order (the higher the number, the later will effect apply on the stack); key field to get new effect with.
 
-##PART 2: expand this
+## PART 2: expand this
 
  This section reasonably assumes you have basic c# knowledge.
   Abbreviations used:

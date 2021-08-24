@@ -88,7 +88,7 @@ For more detailed instructions, see: `P_GUIDE.md`
 
 
 ## Download
-Downloads can be found [here](https://github.com/DryCryCrystal/Region-Kit/releases).
+Downloads can be found [here](https://github.com/DryCryCrystal/Region-Kit/releases/latest).
 
 **Requires EnumExtender**
 

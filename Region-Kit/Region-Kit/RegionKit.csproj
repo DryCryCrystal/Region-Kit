@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ARKillRect.cs" />
     <Compile Include="BrokenPatch.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />
     <Compile Include="EchoExtender\EchoExtender.cs" />
@@ -44,6 +45,7 @@
     <Compile Include="MiscPO\MiscPOStatic.cs" />
     <Compile Include="MiscPO\MiscPO_MPO.cs" />
     <Compile Include="MiscPO\WormgrassManager.cs" />
+    <Compile Include="NewObjects.cs" />
     <Compile Include="Objects\ColouredLightSource.cs" />
     <Compile Include="CustomArenaDivisions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -65,8 +67,22 @@
     <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\PWLightRod.cs" />
+    <Compile Include="RainbowNoFade.cs" />
     <Compile Include="RegionKitMod.cs" />
     <Compile Include="RoomLoader.cs" />
+    <Compile Include="APOFSFix.cs" />
+    <Compile Include="TheMast\ArenaBackgrounds.cs" />
+    <Compile Include="TheMast\BetterClouds.cs" />
+    <Compile Include="TheMast\CustomAtlases.cs" />
+    <Compile Include="TheMast\DeerFix.cs" />
+    <Compile Include="TheMast\ElectricGates.cs" />
+    <Compile Include="TheMast\Localization\Strings.Designer.cs" />
+    <Compile Include="TheMast\Localization\Translator.cs" />
+    <Compile Include="TheMast\PearlChains.cs" />
+    <Compile Include="TheMast\RainThreatFix.cs" />
+    <Compile Include="TheMast\SkyDandelionBgFix.cs" />
+    <Compile Include="TheMast\WindSystem.cs" />
+    <Compile Include="TheMast\WormGrassFix.cs" />
     <Compile Include="Utils\ContainerCodes.cs" />
     <Compile Include="Utils\ICanBringDataToKin.cs" />
     <Compile Include="Utils\PetrifiedWood.cs" />
@@ -109,5 +125,17 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Atlases\TheMast.tps" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Atlases\TheMast\Symbol_PearlChain.png" />
+    <Content Include="TheMast\Atlases\TheMast.png" />
+    <Content Include="TheMast\Atlases\TheMast.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -32,7 +32,7 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
   - NOTE: MachineryCustomizer object is used for changing sprite/container/shader settings.
   - A general purpose power level customization system, a related interface to be used. See code: `RegionKit.Machinery.RoomPowerManager`, `RegionKit.Machinery.RoomPowerManager.IRoomPowerModifier`.
 - Echo Extender
-	- Allows adding echoes to custom regions without any coding .
+	- Allows adding echoes to custom regions without any coding.
 - The Mast
 	- Implements all of the contents that went to the mast.
 	- Adds custom wind object.
@@ -73,7 +73,7 @@ For more detailed instructions, see: `P_GUIDE.md`
 	- RegionKit.Machinery
 	- Particle System
 
-- Thriftralas
+- Thrithralas
 	- Echo Extender
 
 - Slime_Cubed

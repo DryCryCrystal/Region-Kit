@@ -281,7 +281,7 @@ public static class PlacedObjectsManager
     /// <param name="name"></param>
     /// <param name="dataType"></param>
     /// <param name="reprType"></param>
-    private static void RegisterEmptyObjectType(string name, Type dataType, Type reprType)
+    public static void RegisterEmptyObjectType(string name, Type dataType, Type reprType)
     {
         ManagedObjectType emptyObjectType = new ManagedObjectType(name, null, dataType, reprType);
         RegisterManagedObject(emptyObjectType);

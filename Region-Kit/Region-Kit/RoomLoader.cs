@@ -58,8 +58,20 @@ namespace RegionKit
             orig(self);
             //ManyMoreFixes Patch
             if (self.game == null) { return; }
+
+            //Load all the effects
+            for (int k = 0; k < self.roomSettings.effects.Count; k++)
+            {
+                if (self.roomSettings.effects[k].type == EnumExt_Effects.PWMalfunction && self.world.rainCycle.brokenAntiGrav == null)
+                {
+                    //Directly adds a brokenAntiGraivty to the world
+                    self.world.rainCycle.brokenAntiGrav = new AntiGravity.BrokenAntiGravity(self.game.setupValues.gravityFlickerCycleMin, self.game.setupValues.gravityFlickerCycleMax, self.game);
+                }
+            }
+
             //Load Objects
-            for (int l = 0; l < self.roomSettings.placedObjects.Count; ++l) {
+            for (int l = 0; l < self.roomSettings.placedObjects.Count; ++l) 
+            {
                 var obj = self.roomSettings.placedObjects[l];
                 if (obj.active) {
                     if (obj.type == EnumExt_Objects.PWLightrod) {

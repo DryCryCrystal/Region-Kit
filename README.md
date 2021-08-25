@@ -99,7 +99,7 @@ For more detailed instructions, see: `P_GUIDE.md`
 ## Download
 Downloads can be found [here](https://github.com/DryCryCrystal/Region-Kit/releases/latest).
 
-**Requires EnumExtender**
+**Requires EnumExtender and Custom Regions Support**
 
 Region Kit also comes packed with auto update support.
 

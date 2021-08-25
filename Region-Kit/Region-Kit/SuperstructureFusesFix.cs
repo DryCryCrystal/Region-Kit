@@ -1,12 +1,26 @@
 ﻿/* Author: Woodensponge and Slime_Cubed */
 
+using System;
+using UnityEngine;
+
 namespace RegionKit 
 {
     class SuperstructureFusesFix 
     {
         public static void Patch() 
         {
-            On.SuperStructureFuses.ctor += SuperStructureFuses_ctor;
+            On.RainWorld.Start += RainWorldOnStart;
+        }
+
+        private static void RainWorldOnStart(On.RainWorld.orig_Start orig, RainWorld self) {
+            orig(self);
+            try {
+                On.SuperStructureFuses.ctor += SuperStructureFuses_ctor;
+            }
+            catch (Exception x) {
+                Debug.Log("There was an issue initializing SuperStructureFusesFix:");
+                Debug.Log(x);
+            }
         }
 
         public static void Disable() 

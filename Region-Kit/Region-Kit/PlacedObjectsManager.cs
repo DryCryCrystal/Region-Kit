@@ -23,7 +23,7 @@ using System.Reflection;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
 
-public static class PlacedObjectsManager
+public static partial class PlacedObjectsManager
 {
     #region HOOKS
     private static bool _hooked = false;
@@ -40,6 +40,7 @@ public static class PlacedObjectsManager
         On.Room.Loaded += Room_Loaded_Patch;
         On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep_Patch;
         On.RainWorldGame.RawUpdate += RainWorldGame_RawUpdate;
+        On.DevInterface.PositionedDevUINode.Move += Vector2ArrayField.OnPositionedDevUINodeMove;
 
         //PlacedObjectsExample();
     }

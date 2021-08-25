@@ -10,6 +10,7 @@ namespace RegionKit.Objects {
         private static readonly PlacedObjectsManager.ManagedField[] Fields = {
             new PlacedObjectsManager.ColorField("lightCol", Color.white, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.slider, "Light Colour"),
             new PlacedObjectsManager.Vector2Field("radius", Vector2.up, PlacedObjectsManager.Vector2Field.VectorReprType.circle),
+            new PlacedObjectsManager.FloatField("alphaChannel", 0f, 1f, 1f, displayName: "Alpha"),
             new PlacedObjectsManager.BooleanField("flatLight", false, PlacedObjectsManager.ManagedFieldWithPanel.ControlType.button, "Flat"),
             new PlacedObjectsManager.FloatField("paletteDarkness", 0f, 1f, 0.5f, displayName: "Darkness Effect"),
             new PlacedObjectsManager.FloatField("flickIntensity", 0f, 1f, 0f, displayName: "Flicker Intensity"),
@@ -30,11 +31,12 @@ namespace RegionKit.Objects {
             base.Update(eu);
 
             float rad = Data.GetValue<Vector2>("radius").magnitude;
+            float alpha = Data.GetValue<float>("alphaChannel");
             bool flat = Data.GetValue<bool>("flatLight");
             Color col = Data.GetValue<Color>("lightCol");
             float darknessEffect = Data.GetValue<float>("paletteDarkness");
 
-            if (!flickering) LightSource.setAlpha = 1f;
+            if (!flickering) LightSource.setAlpha = alpha;
             LightSource.color = col;
             LightSource.setRad = rad;
             LightSource.setPos = LocalPlacedObject.pos;
@@ -48,7 +50,7 @@ namespace RegionKit.Objects {
                 flickering = true;
             }
             else {
-                LightSource.setAlpha = 1f;
+                LightSource.setAlpha = alpha;
                 flickering = false;
             }
         }

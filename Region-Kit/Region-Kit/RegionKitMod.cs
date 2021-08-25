@@ -1,4 +1,5 @@
 ﻿using Partiality.Modloader;
+using RegionKit.Objects;
 using RegionKit.Utils;
 using UnityEngine;
 //TODO0(DELTATIME): Make logging that can be used for entire project
@@ -7,7 +8,7 @@ namespace RegionKit {
     public class RegionKitMod : PartialityMod {
 
         public const string modVersion = "1.0.1";
-        public const string buildVersion = "1"; //Increments for every code change without a version change.
+        public const string buildVersion = "2"; //Increments for every code change without a version change.
 
         public RegionKitMod() {
             ModID = "RegionKit";
@@ -37,10 +38,11 @@ namespace RegionKit {
             TheMast.WormGrassFix.Apply();
 
             //Objects
-            Objects.ColouredLightSource.RegisterAsFullyManagedObject();
+            ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             MiscPO.MiscPOStatic.Enable();
             Particles.ParticlesStatic.Enable();
+            Drawable.Register();
             //Add new things here - remember to add them to OnDisable() as well!
             PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
             // Use this to enable the example managedobjecttypes for testing or debugging

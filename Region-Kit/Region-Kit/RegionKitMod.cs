@@ -6,8 +6,8 @@ using UnityEngine;
 namespace RegionKit {
     public class RegionKitMod : PartialityMod {
 
-        public const string modVersion = "1.0.0";
-        public const string buildVersion = "70"; //Increments for every code change without a version change.
+        public const string modVersion = "1.0.1";
+        public const string buildVersion = "1"; //Increments for every code change without a version change.
 
         public RegionKitMod() {
             ModID = "RegionKit";
@@ -20,7 +20,7 @@ namespace RegionKit {
             
             //VARIOUS PATCHES
             RoomLoader.Patch();
-            BrokenPatch.Patch();
+            SuperstructureFusesFix.Patch();
             CustomArenaDivisions.Patch();
             EchoExtender.EchoExtender.ApplyHooks();
             NewObjects.Hook();
@@ -53,7 +53,7 @@ namespace RegionKit {
         public override void OnDisable() {
             base.OnDisable();
             RoomLoader.Disable();
-            BrokenPatch.Disable();
+            SuperstructureFusesFix.Disable();
             EchoExtender.EchoExtender.RemoveHooks();
             Machinery.MachineryStatic.Disable();
             //PetrifiedWood.ShutDown();

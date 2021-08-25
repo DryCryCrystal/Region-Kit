@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ARKillRect.cs" />
-    <Compile Include="BrokenPatch.cs" />
+    <Compile Include="SuperstructureFusesFix.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />
     <Compile Include="EchoExtender\EchoExtender.cs" />
     <Compile Include="EchoExtender\EchoSettings.cs" />
@@ -126,12 +126,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Atlases\TheMast.tps" />
+    <EmbeddedResource Include="Atlases\TheMast.tps" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Atlases\TheMast\Symbol_PearlChain.png" />
-    <Content Include="TheMast\Atlases\TheMast.png" />
-    <Content Include="TheMast\Atlases\TheMast.txt" />
+    <EmbeddedResource Include="Atlases\TheMast\Symbol_PearlChain.png" />
+    <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
+    <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />

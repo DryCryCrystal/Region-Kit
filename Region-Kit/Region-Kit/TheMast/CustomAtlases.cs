@@ -25,7 +25,7 @@ namespace RegionKit.TheMast
             // Load image from resources
             Texture2D tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
             {
-                Stream atlasImage = asm.GetManifestResourceStream($"TheMast.Atlases.{name}.png");
+                Stream atlasImage = asm.GetManifestResourceStream($"RegionKit.TheMast.Atlases.{name}.png");
                 byte[] data = new byte[atlasImage.Length];
                 atlasImage.Read(data, 0, data.Length);
                 tex.LoadImage(data);
@@ -34,7 +34,7 @@ namespace RegionKit.TheMast
 
             string json;
             {
-                Stream atlasJson = asm.GetManifestResourceStream($"TheMast.Atlases.{name}.txt");
+                Stream atlasJson = asm.GetManifestResourceStream($"RegionKit.TheMast.Atlases.{name}.txt");
                 byte[] data = new byte[atlasJson.Length];
                 atlasJson.Read(data, 0, data.Length);
                 json = System.Text.Encoding.UTF8.GetString(data);

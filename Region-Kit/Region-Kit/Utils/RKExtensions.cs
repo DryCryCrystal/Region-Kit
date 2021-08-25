@@ -62,6 +62,7 @@ namespace RegionKit.Utils
         }
         public static List<T> AddRangeReturnSelf<T>(this List<T> self, IEnumerable<T> range)
         {
+            if (self == null) self = new List<T>();
             self.AddRange(range);
             return self;
         }

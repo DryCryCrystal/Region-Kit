@@ -31,7 +31,7 @@ namespace RegionKit.Particles
         /// <param name="owner"></param>
         /// <param name="addFields">List of additional <see cref="ManagedField"/>. Can be null.</param>
         public ParticleBehaviourProvider(PlacedObject owner, List<ManagedField> addFields) : 
-            base(owner, addFields?.AddRangeReturnSelf(new ManagedField[] 
+            base(owner, addFields.AddRangeReturnSelf(new ManagedField[] 
             {
                 //new Vector2Field("p2", new Vector2(30f, 30f), Vector2Field.VectorReprType.circle)
             }).ToArray())

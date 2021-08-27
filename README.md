@@ -64,7 +64,7 @@ For more detailed instructions, see: `P_GUIDE.md`
 	- Manager and Dev Team Lead
 	- Porting
 
-- DeltaEcho
+- DeltaTime
 	- Initial versions
 	- PWLightRod
 	- PWMalfunction

@@ -87,13 +87,13 @@ For more detailed instructions, see: `P_GUIDE.md`
 	- The Mast
 
 - Doggo
-	- The Mast
+	- The Mast Permission
 
 - LeeMoriya
 	- ARObjects
 
 - Kaeporo
-	- ARObjects
+	- ARObjects Permission
 
 
 ## Download

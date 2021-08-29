@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AridBarrens\ABThing.cs" />
+    <Compile Include="AridBarrens\EnumExt_ABThing.cs" />
+    <Compile Include="AridBarrens\SandPuffs.cs" />
+    <Compile Include="AridBarrens\SandStorm.cs" />
     <Compile Include="ARKillRect.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="Objects\Drawable.cs" />

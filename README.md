@@ -44,6 +44,8 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
 - Flooded Assembly Objects
 	- Ported content out of an uponcoming regionpack
 	- Adds more advanced variations of CustomDecal (FreeformDecalOrSprite) and LightSource (ColouredLightSource)
+- Arid Barrens
+	- Adds Sandstorm Effect
 
   
 ### Particle system
@@ -95,6 +97,8 @@ For more detailed instructions, see: `P_GUIDE.md`
 - Kaeporo
 	- ARObjects Permission
 
+- Dracentis
+	- Arid Barrens Code
 
 ## Download
 Downloads can be found [here](https://github.com/DryCryCrystal/Region-Kit/releases/latest).

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RWCustom;
 
-using static PlacedObjectsManager;
+using static RegionKit.POM.PlacedObjectsManager;
 
 namespace RegionKit.MiscPO
 {

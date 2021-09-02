@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Text;
 using MonoMod.RuntimeDetour;
 using RegionKit.Utils;
+using RegionKit.POM;
 
 namespace RegionKit.Machinery
 {

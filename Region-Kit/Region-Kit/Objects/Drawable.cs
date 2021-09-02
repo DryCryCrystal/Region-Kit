@@ -2,6 +2,7 @@
 using System.IO;
 using RWCustom;
 using UnityEngine;
+using RegionKit.POM;
 
 namespace RegionKit.Objects {
     public class Drawable : CosmeticSprite {

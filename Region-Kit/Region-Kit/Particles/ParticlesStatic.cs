@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using System.Reflection.Emit;
+using RegionKit.POM;
 
 namespace RegionKit.Particles
 {

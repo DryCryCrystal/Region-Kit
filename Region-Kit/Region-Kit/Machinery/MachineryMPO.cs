@@ -4,7 +4,7 @@ using UnityEngine;
 using RWCustom;
 using RegionKit.Utils;
 
-using static PlacedObjectsManager;
+using static RegionKit.POM.PlacedObjectsManager;
 
 namespace RegionKit.Machinery
 {

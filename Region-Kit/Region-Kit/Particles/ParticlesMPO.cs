@@ -10,7 +10,7 @@ using RWCustom;
 using static RegionKit.Utils.RKUtils;
 using static UnityEngine.Mathf;
 using static RWCustom.Custom;
-using static PlacedObjectsManager;
+using static RegionKit.POM.PlacedObjectsManager;
 
 namespace RegionKit.Particles
 {

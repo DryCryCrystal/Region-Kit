@@ -4,7 +4,7 @@ using DevInterface;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using static PlacedObjectsManager;
+using static RegionKit.POM.PlacedObjectsManager;
 
 namespace RegionKit
 {

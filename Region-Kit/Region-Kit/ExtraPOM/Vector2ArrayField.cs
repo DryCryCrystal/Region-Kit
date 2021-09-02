@@ -5,7 +5,9 @@ using DevInterface;
 using RWCustom;
 using UnityEngine;
 
-public static partial class PlacedObjectsManager {
+namespace RegionKit.POM
+{
+    public static partial class PlacedObjectsManager {
     /// <summary>
     /// A <see cref="ManagedField"/> that stores an array of <see cref="Vector2"/>s
     /// </summary>
@@ -142,4 +144,5 @@ public static partial class PlacedObjectsManager {
             }
         }
     }
+}
 }

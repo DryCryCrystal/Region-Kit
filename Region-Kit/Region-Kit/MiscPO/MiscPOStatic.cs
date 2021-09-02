@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MonoMod.RuntimeDetour;
 using RegionKit.Utils;
+using RegionKit.POM;
 
 namespace RegionKit.MiscPO
 {

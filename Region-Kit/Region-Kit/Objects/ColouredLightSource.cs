@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using RegionKit.POM;
+using static RegionKit.POM.PlacedObjectsManager;
 
 namespace RegionKit.Objects {
     public class ColouredLightSource : UpdatableAndDeletable {

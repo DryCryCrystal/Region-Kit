@@ -22,8 +22,9 @@ using System.Reflection;
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
-
-public static partial class PlacedObjectsManager
+namespace RegionKit.POM
+{
+    public static partial class PlacedObjectsManager
 {
     #region HOOKS
     private static bool _hooked = false;
@@ -2256,3 +2257,5 @@ public static partial class PlacedObjectsManager
 
     #endregion CONTROLS
 }
+}
+

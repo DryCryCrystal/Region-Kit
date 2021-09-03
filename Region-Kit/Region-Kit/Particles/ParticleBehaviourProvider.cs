@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using RegionKit.Utils;
 
-using static PlacedObjectsManager;
+using static RegionKit.POM.PlacedObjectsManager;
 
 namespace RegionKit.Particles
 {

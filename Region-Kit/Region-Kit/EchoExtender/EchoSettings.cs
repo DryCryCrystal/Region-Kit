@@ -161,7 +161,7 @@ namespace RegionKit.EchoExtender {
         }
 
         public bool KarmaCondition(int karma, int karmaCap, int diff) {
-            if (GetMinimumKarma(diff) == -1) {
+            if (GetMinimumKarma(diff) == -2) {
                 switch (karmaCap) {
                     case 4:
                         return karma >= 4;

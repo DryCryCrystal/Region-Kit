@@ -98,7 +98,7 @@ namespace RegionKit.EchoExtender {
             Debug.Log($"[Echo Extender : Info] Getting echo conditions for {ghostid}");
             Debug.Log($"[Echo Extender : Info] Using difficulty {gameReference.StoryCharacter}");
             Debug.Log($"[Echo Extender : Info] Spawn On Difficulty : {(SODcondition ? "Met" : "Not Met")} [Required: <{string.Join(", ", (settings.SpawnOnDifficulty.Length > 0 ? settings.SpawnOnDifficulty : EchoSettings.Default.SpawnOnDifficulty).Select(i => i.ToString()).ToArray())}>]");
-            Debug.Log($"[Echo Extender : Info] Minimum Karma : {(karmaCondition ? "Met" : "Not Met")} [Required: {settings.GetMinimumKarma(gameReference.StoryCharacter)}, Having: {karma}]");
+            Debug.Log($"[Echo Extender : Info] Minimum Karma : {(karmaCondition ? "Met" : "Not Met")} [Required: {(settings.GetMinimumKarma(gameReference.StoryCharacter) == -2 ? "Dynamic" : settings.GetMinimumKarma(gameReference.StoryCharacter).ToString())}, Having: {karma}]");
             Debug.Log($"[Echo Extender : Info] Minimum Karma Cap : {(karmaCapCondition ? "Met" : "Not Met")} [Required: {settings.GetMinimumKarmaCap(gameReference.StoryCharacter)}, Having: {karmacap}]");
             bool prime = settings.GetPriming(gameReference.StoryCharacter);
             bool primedCond = prime ? ghostpreviouslyencountered == 1 : ghostpreviouslyencountered != 2;

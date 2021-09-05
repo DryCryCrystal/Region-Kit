@@ -16,7 +16,7 @@ namespace RegionKit
 
         private static void DaddyCorruption_ctorHK(On.DaddyCorruption.orig_ctor orig, DaddyCorruption self, Room room)
 		{
-			if (!room.game.IsStorySession)
+			if (room.game.IsArenaSession)
 			{
 				self.places = new List<PlacedObject>();
 				self.climbTubes = new List<DaddyCorruption.ClimbableCorruptionTube>();

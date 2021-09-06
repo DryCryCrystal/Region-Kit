@@ -36,6 +36,7 @@
     <Compile Include="AridBarrens\SandPuffs.cs" />
     <Compile Include="AridBarrens\SandStorm.cs" />
     <Compile Include="ARKillRect.cs" />
+    <Compile Include="DaddyCorruptionArenaFixHK.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="Objects\Drawable.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using RWCustom;
@@ -6,9 +7,10 @@ using UnityEngine;
 
 namespace RegionKit.EchoExtender {
     public static class EchoExtender {
+        public static int SlugcatNumber { get; private set; }
         public static void ApplyHooks() {
             // Tests for spawn
-            On.World.SpawnGhost += WorldOnSpawnGhost;
+            On.World.LoadWorld += WorldOnLoadWorld;
             On.GhostWorldPresence.ctor += GhostWorldPresenceOnCtor;
             On.GhostWorldPresence.GetGhostID += GhostWorldPresenceOnGetGhostID;
 
@@ -26,7 +28,6 @@ namespace RegionKit.EchoExtender {
         }
 
         public static void RemoveHooks() {
-            On.World.SpawnGhost -= WorldOnSpawnGhost;
             On.GhostWorldPresence.ctor -= GhostWorldPresenceOnCtor;
             On.GhostWorldPresence.GetGhostID -= GhostWorldPresenceOnGetGhostID;
 
@@ -43,10 +44,10 @@ namespace RegionKit.EchoExtender {
             On.PlayerProgression.GetOrInitiateSaveState -= PlayerProgressionOnGetOrInitiateSaveState;
         }
 
-        // A (weak) reference to the game that is required for GhostWorldPresence.GetGhostID static method
-        private static WeakReference gameWeakRef;
-        private static RainWorldGame gameReference => gameWeakRef?.Target as RainWorldGame;
-
+        private static void WorldOnLoadWorld(On.World.orig_LoadWorld orig, World self, int slugcatnumber, List<AbstractRoom> abstractroomslist, int[] swarmrooms, int[] shelters, int[] gates) {
+            SlugcatNumber = slugcatnumber;
+            orig(self, slugcatnumber, abstractroomslist, swarmrooms, shelters, gates);
+        }
         private static float GhostWorldPresenceOnGhostMode(On.GhostWorldPresence.orig_GhostMode_1 orig, GhostWorldPresence self, AbstractRoom testRoom, Vector2 worldPos) {
             var result = orig(self, testRoom, worldPos);
             if (!CRSEchoParser.EchoSettings.TryGetValue(self.ghostID, out var settings)) return result;
@@ -57,12 +58,6 @@ namespace RegionKit.EchoExtender {
             return someValue == -1
                 ? 0.0f
                 : (float)(Mathf.Pow(Mathf.InverseLerp(echoEffectLimit, echoEffectLimit / 8f, Vector2.Distance(worldPos, globalDistance)), 2f) * (double)Custom.LerpMap(someValue, 1f, 3f, 0.6f, 0.15f) * (testRoom.layer != self.ghostRoom.layer ? 0.600000023841858 : 1.0));
-        }
-
-        // SpawnGhost calls static GhostWorldPresence.GetGhostID without a game reference so here we set it
-        private static void WorldOnSpawnGhost(On.World.orig_SpawnGhost orig, World self) {
-            gameWeakRef = new WeakReference(self.game);
-            orig(self);
         }
 
         private static void RoomOnLoaded(On.Room.orig_Loaded orig, Room self) {
@@ -92,15 +87,15 @@ namespace RegionKit.EchoExtender {
             var result = orig(ghostid, karma, karmacap, ghostpreviouslyencountered, playingasred);
             if (!CRSEchoParser.ExtendedEchoIDs.Contains(ghostid)) return result;
             EchoSettings settings = CRSEchoParser.EchoSettings[ghostid];
-            bool SODcondition = settings.SpawnOnThisDifficulty(gameReference.StoryCharacter);
-            bool karmaCondition = settings.KarmaCondition(karma, karmacap, gameReference.StoryCharacter);
-            bool karmaCapCondition = settings.GetMinimumKarmaCap(gameReference.StoryCharacter) <= karmacap;
+            bool SODcondition = settings.SpawnOnThisDifficulty(SlugcatNumber);
+            bool karmaCondition = settings.KarmaCondition(karma, karmacap, SlugcatNumber);
+            bool karmaCapCondition = settings.GetMinimumKarmaCap(SlugcatNumber) <= karmacap;
             Debug.Log($"[Echo Extender : Info] Getting echo conditions for {ghostid}");
-            Debug.Log($"[Echo Extender : Info] Using difficulty {gameReference.StoryCharacter}");
+            Debug.Log($"[Echo Extender : Info] Using difficulty {SlugcatNumber}");
             Debug.Log($"[Echo Extender : Info] Spawn On Difficulty : {(SODcondition ? "Met" : "Not Met")} [Required: <{string.Join(", ", (settings.SpawnOnDifficulty.Length > 0 ? settings.SpawnOnDifficulty : EchoSettings.Default.SpawnOnDifficulty).Select(i => i.ToString()).ToArray())}>]");
-            Debug.Log($"[Echo Extender : Info] Minimum Karma : {(karmaCondition ? "Met" : "Not Met")} [Required: {(settings.GetMinimumKarma(gameReference.StoryCharacter) == -2 ? "Dynamic" : settings.GetMinimumKarma(gameReference.StoryCharacter).ToString())}, Having: {karma}]");
-            Debug.Log($"[Echo Extender : Info] Minimum Karma Cap : {(karmaCapCondition ? "Met" : "Not Met")} [Required: {settings.GetMinimumKarmaCap(gameReference.StoryCharacter)}, Having: {karmacap}]");
-            bool prime = settings.GetPriming(gameReference.StoryCharacter);
+            Debug.Log($"[Echo Extender : Info] Minimum Karma : {(karmaCondition ? "Met" : "Not Met")} [Required: {(settings.GetMinimumKarma(SlugcatNumber) == -2 ? "Dynamic" : settings.GetMinimumKarma(SlugcatNumber).ToString())}, Having: {karma}]");
+            Debug.Log($"[Echo Extender : Info] Minimum Karma Cap : {(karmaCapCondition ? "Met" : "Not Met")} [Required: {settings.GetMinimumKarmaCap(SlugcatNumber)}, Having: {karmacap}]");
+            bool prime = settings.GetPriming(SlugcatNumber);
             bool primedCond = prime ? ghostpreviouslyencountered == 1 : ghostpreviouslyencountered != 2;
             Debug.Log($"[Echo Extender : Info] Primed : {(primedCond ? "Met" : "Not Met")} [Required: {(prime ? 1 : 0)}, Having {ghostpreviouslyencountered}]");
             Debug.Log($"[Echo Extender : Info] Spawning Echo : {primedCond && SODcondition && karmaCondition && karmaCapCondition}");

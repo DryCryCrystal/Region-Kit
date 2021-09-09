@@ -87,6 +87,7 @@ For more detailed instructions, see: `P_GUIDE.md`
 - Slime_Cubed
 	- Superstructure Fuses Fix
 	- The Mast
+	- Conditional Effects
 
 - Doggo
 	- The Mast Permission

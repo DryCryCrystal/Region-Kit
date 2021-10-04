@@ -23,7 +23,7 @@ namespace RegionKit {
 
         public override void OnEnable() {
             base.OnEnable();
-            
+            Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
             //VARIOUS PATCHES
             RoomLoader.Patch();
             SuperstructureFusesFix.Patch();
@@ -37,7 +37,7 @@ namespace RegionKit {
             //bool ARInstalled = false;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (asm.FullName.Contains("AridBarrens")) ABInstalled = true;
+                if (asm.FullName.Contains("ABThing")) ABInstalled = true;
                 if (asm.FullName.Contains("TheMast")) MastInstalled = true;
                 //if (asm.FullName.Contains("ARThings")) ARInstalled = true;
             }
@@ -45,6 +45,7 @@ namespace RegionKit {
             //The Mast
             if (!MastInstalled)
             {
+                Utils.PetrifiedWood.WriteLine("TheMast.dll not loaded; applying related object hooks.");
                 TheMast.ArenaBackgrounds.Apply();
                 TheMast.BetterClouds.Apply();
                 TheMast.DeerFix.Apply();
@@ -57,7 +58,11 @@ namespace RegionKit {
             }
 
             //Arid Barrens
-            if (!ABInstalled) AridBarrens.ABCentral.Register();//On.Room.Loaded += AB_RoomloadDetour;
+            if (!ABInstalled) 
+            {
+                Utils.PetrifiedWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
+                AridBarrens.ABCentral.Register();
+            }//On.Room.Loaded += AB_RoomloadDetour;
 
             //Objects
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();
@@ -66,7 +71,6 @@ namespace RegionKit {
             Particles.ParticlesStatic.Enable();
             Objects.Drawable.Register();
             //Add new things here - remember to add them to OnDisable() as well!
-            Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
 

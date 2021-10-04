@@ -73,7 +73,7 @@ namespace RegionKit.Utils
         public static int Lifetime = 0;
         public static void EternalWrite()
         {
-            string startMessage = $"PETRIFIED_WOOD writer thread {Thread.CurrentThread.ManagedThreadId} booted up: {DateTime.Now}";
+            string startMessage = $"PETRIFIED_WOOD writer thread {Thread.CurrentThread.ManagedThreadId} booted up: {DateTime.Now}\n";
             Console.WriteLine(startMessage);
             WriteQueue.Enqueue(startMessage);
             while (Lifetime > 0)

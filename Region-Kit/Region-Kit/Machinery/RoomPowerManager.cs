@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using RegionKit.Utils;
 
 using static RegionKit.Machinery.MachineryStatic;
 using static UnityEngine.Mathf;
@@ -20,6 +21,7 @@ namespace RegionKit.Machinery
             if (ManagersByRoom.ContainsKey(h)) ManagersByRoom[h] = this;
             else ManagersByRoom.Add(h, this);
             PO = pobj;
+            PetrifiedWood.WriteLine($"({rm.abstractRoom.name}): created a RoomPowerManager.");
         }
         public override void Update(bool eu)
         {

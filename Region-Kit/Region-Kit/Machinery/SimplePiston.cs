@@ -13,10 +13,11 @@ namespace RegionKit.Machinery
     public class SimplePiston : UpdatableAndDeletable, IDrawable
     {
         public SimplePiston(Room rm, PlacedObject pobj) : this(rm, pobj, null) { }
-        public SimplePiston(Room rm, PlacedObject pobj, PistonData mdt = null)// : base (new UselessAbstractPiston(rm.world, rm.GetWorldCoordinate(pobj?.pos ?? mdt?.forcePos ?? default), null))
+        public SimplePiston(Room rm, PlacedObject pobj, PistonData mdt = null)
         {
             PO = pobj;
             this._assignedMData = mdt;
+            PetrifiedWood.WriteLine($"({rm.abstractRoom.name}): Created simplePiston" + mdt == null ? "." : "as a part of an array.");
         }
         public override void Update(bool eu)
         {

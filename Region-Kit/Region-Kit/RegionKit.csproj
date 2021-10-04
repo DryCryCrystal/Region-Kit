@@ -31,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AridBarrens\ABThing.cs" />
+    <Compile Include="AridBarrens\ABCentral.cs" />
     <Compile Include="AridBarrens\EnumExt_ABThing.cs" />
     <Compile Include="AridBarrens\SandPuffs.cs" />
     <Compile Include="AridBarrens\SandStorm.cs" />

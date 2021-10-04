@@ -3,72 +3,72 @@ using System.Collections.Generic;
 using RWCustom;
 using UnityEngine;
 
-// Token: 0x02000474 RID: 1140
-public class SandPuffs : BackgroundScene, INotifyWhenRoomIsReady
+namespace RegionKit.AridBarrens
 {
-    public SandPuffs(RoomSettings.RoomEffect effect, Room room) : base(room)
+    public class SandPuffs : BackgroundScene, INotifyWhenRoomIsReady
     {
-        this.effect = effect;
-    }
-
-
-    public override void Update(bool eu)
-    {
-        base.Update(eu);
-        if (UnityEngine.Random.value < Custom.LerpMap(this.effect.amount, 0f, 1f, 0f, 0.7f))
+        public SandPuffs(RoomSettings.RoomEffect effect, Room room) : base(room)
         {
-            for (int j = 0; j < this.room.physicalObjects.Length; j++)
+            this.effect = effect;
+        }
+        public override void Update(bool eu)
+        {
+            base.Update(eu);
+            if (UnityEngine.Random.value < Custom.LerpMap(this.effect.amount, 0f, 1f, 0f, 0.7f))
             {
-                for (int k = 0; k < this.room.physicalObjects[j].Count; k++)
+                for (int j = 0; j < this.room.physicalObjects.Length; j++)
                 {
-                    for (int l = 0; l < this.room.physicalObjects[j][k].bodyChunks.Length; l++)
+                    for (int k = 0; k < this.room.physicalObjects[j].Count; k++)
                     {
-                        if ((this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.x != 0 || this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.y != 0) && Mathf.Abs(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.y - this.room.physicalObjects[j][k].bodyChunks[l].pos.y) > 5f)
+                        for (int l = 0; l < this.room.physicalObjects[j][k].bodyChunks.Length; l++)
                         {
-                            this.room.AddObject(new SandPuff(this.room.physicalObjects[j][k].bodyChunks[l].pos + new Vector2(0f, -this.room.physicalObjects[j][k].bodyChunks[l].rad), Custom.LerpMap(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.y - this.room.physicalObjects[j][k].bodyChunks[l].pos.y, 5f, 10f, 0.5f, 1f)));
-                        }else if ((this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.x != 0 || this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.y != 0) && Mathf.Abs(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.x - this.room.physicalObjects[j][k].bodyChunks[l].pos.x) > 5f)
-                        {
-                            this.room.AddObject(new SandPuff(this.room.physicalObjects[j][k].bodyChunks[l].pos + new Vector2(0f, -this.room.physicalObjects[j][k].bodyChunks[l].rad), Custom.LerpMap(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.y - this.room.physicalObjects[j][k].bodyChunks[l].pos.y, 5f, 10f, 0.5f, 1f)));
+                            if ((this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.x != 0 || this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.y != 0) && Mathf.Abs(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.y - this.room.physicalObjects[j][k].bodyChunks[l].pos.y) > 5f)
+                            {
+                                this.room.AddObject(new SandPuff(this.room.physicalObjects[j][k].bodyChunks[l].pos + new Vector2(0f, -this.room.physicalObjects[j][k].bodyChunks[l].rad), Custom.LerpMap(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.y - this.room.physicalObjects[j][k].bodyChunks[l].pos.y, 5f, 10f, 0.5f, 1f)));
+                            }
+                            else if ((this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.x != 0 || this.room.physicalObjects[j][k].bodyChunks[l].ContactPoint.y != 0) && Mathf.Abs(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.x - this.room.physicalObjects[j][k].bodyChunks[l].pos.x) > 5f)
+                            {
+                                this.room.AddObject(new SandPuff(this.room.physicalObjects[j][k].bodyChunks[l].pos + new Vector2(0f, -this.room.physicalObjects[j][k].bodyChunks[l].rad), Custom.LerpMap(this.room.physicalObjects[j][k].bodyChunks[l].lastPos.y - this.room.physicalObjects[j][k].bodyChunks[l].pos.y, 5f, 10f, 0.5f, 1f)));
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    public void ShortcutsReady()
-    {
-    }
-
-    public void AIMapReady()
-    {
-        this.closeToWallTiles = new List<IntVector2>();
-        for (int i = 0; i < this.room.TileWidth; i++)
+        public void ShortcutsReady()
         {
-            for (int j = 0; j < this.room.TileHeight; j++)
+        }
+
+        public void AIMapReady()
+        {
+            this.closeToWallTiles = new List<IntVector2>();
+            for (int i = 0; i < this.room.TileWidth; i++)
             {
-                if (this.room.aimap.getAItile(i, j).terrainProximity == 1)
+                for (int j = 0; j < this.room.TileHeight; j++)
                 {
-                    this.closeToWallTiles.Add(new IntVector2(i, j));
+                    if (this.room.aimap.getAItile(i, j).terrainProximity == 1)
+                    {
+                        this.closeToWallTiles.Add(new IntVector2(i, j));
+                    }
                 }
             }
         }
-    }
 
-    private RoomSettings.RoomEffect effect;
+        private RoomSettings.RoomEffect effect;
 
-    public List<IntVector2> closeToWallTiles;
+        public List<IntVector2> closeToWallTiles;
 
-    public bool killedCreatures = true;
+        public bool killedCreatures = true;
 
-    private float sin;
+        private float sin;
 
-    private float lastSin;
+        private float lastSin;
 
-    public DisembodiedDynamicSoundLoop soundLoop;
+        public DisembodiedDynamicSoundLoop soundLoop;
 
-    public DisembodiedDynamicSoundLoop soundLoop2;
-    
+        public DisembodiedDynamicSoundLoop soundLoop2;
+
         public class SandPuff : CosmeticSprite
         {
             // Token: 0x060009AD RID: 2477 RVA: 0x0005BFB4 File Offset: 0x0005A1B4
@@ -96,7 +96,6 @@ public class SandPuffs : BackgroundScene, INotifyWhenRoomIsReady
                 }
             }
 
-            // Token: 0x060009AF RID: 2479 RVA: 0x0005C09C File Offset: 0x0005A29C
             public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
             {
                 sLeaser.sprites = new FSprite[1];
@@ -106,7 +105,6 @@ public class SandPuffs : BackgroundScene, INotifyWhenRoomIsReady
                 base.InitiateSprites(sLeaser, rCam);
             }
 
-            // Token: 0x060009B0 RID: 2480 RVA: 0x0005C10C File Offset: 0x0005A30C
             public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
             {
                 sLeaser.sprites[0].x = Mathf.Lerp(this.lastPos.x, this.pos.x, timeStacker) - camPos.x;
@@ -116,25 +114,21 @@ public class SandPuffs : BackgroundScene, INotifyWhenRoomIsReady
                 base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
             }
 
-            // Token: 0x060009B1 RID: 2481 RVA: 0x0005C1F0 File Offset: 0x0005A3F0
             public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
             {
                 sLeaser.sprites[0].color = palette.texture.GetPixel(9, 5);
                 base.ApplyPalette(sLeaser, rCam, palette);
             }
 
-            // Token: 0x0400087B RID: 2171
             private float life;
 
-            // Token: 0x0400087C RID: 2172
             private float lastLife;
 
-            // Token: 0x0400087D RID: 2173
             private float lifeTime;
 
-            // Token: 0x0400087E RID: 2174
             private float size;
         }
-    
 
+
+    }
 }

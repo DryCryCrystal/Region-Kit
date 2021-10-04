@@ -14,7 +14,10 @@ namespace RegionKit.Machinery
         {
             this.PO = obj;
             this.room = rm;
+            PetrifiedWood.WriteLine($"({rm.abstractRoom.name}): Creating piston array...");
+            PetrifiedWood.Indent();
             GeneratePistons();
+            PetrifiedWood.Unindent();
         }
         public override void Update(bool eu)
         {

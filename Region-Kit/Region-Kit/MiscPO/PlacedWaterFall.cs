@@ -11,6 +11,7 @@ namespace RegionKit.MiscPO
         public PlacedWaterFall(PlacedObject owner, Room room) : base (room, (owner.pos / 20).ToIV2(), (owner.data as PlacedWaterfallData)?.flow ?? 1f, (owner.data as PlacedWaterfallData)?.width ?? 1)
         {
             po = owner;
+            PetrifiedWood.WriteLine($"({room.abstractRoom.name}): created PlacedWaterfall.");
         }
         private PlacedObject po;
         private PlacedWaterfallData pwd => (po?.data as PlacedWaterfallData);

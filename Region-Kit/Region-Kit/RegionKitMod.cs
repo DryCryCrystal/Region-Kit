@@ -1,6 +1,6 @@
 ﻿using Partiality.Modloader;
-using RegionKit.Objects;
-using RegionKit.Utils;
+//using RegionKit.Objects;
+//using RegionKit.Utils;
 using UnityEngine;
 using DevInterface;
 using System;
@@ -32,30 +32,41 @@ namespace RegionKit {
             EchoExtender.EchoExtender.ApplyHooks();
             NewObjects.Hook();
             AddHooks(); //Applies Conditional Effects
-            
+            bool MastInstalled = false;
+            bool ABInstalled = false;
+            //bool ARInstalled = false;
+            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (asm.FullName.Contains("AridBarrens")) ABInstalled = true;
+                if (asm.FullName.Contains("TheMast")) MastInstalled = true;
+                //if (asm.FullName.Contains("ARThings")) ARInstalled = true;
+            }
 
             //The Mast
-            TheMast.ArenaBackgrounds.Apply();
-            TheMast.BetterClouds.Apply();
-            TheMast.DeerFix.Apply();
-            TheMast.ElectricGates.Apply();
-            TheMast.PearlChains.Apply();
-            TheMast.RainThreatFix.Apply();
-            TheMast.SkyDandelionBgFix.Apply();
-            TheMast.WindSystem.Apply();
-            TheMast.WormGrassFix.Apply();
+            if (!MastInstalled)
+            {
+                TheMast.ArenaBackgrounds.Apply();
+                TheMast.BetterClouds.Apply();
+                TheMast.DeerFix.Apply();
+                TheMast.ElectricGates.Apply();
+                TheMast.PearlChains.Apply();
+                TheMast.RainThreatFix.Apply();
+                TheMast.SkyDandelionBgFix.Apply();
+                TheMast.WindSystem.Apply();
+                TheMast.WormGrassFix.Apply();
+            }
 
             //Arid Barrens
-            On.Room.Loaded += RoomLoadedHK;
+            if (!ABInstalled) AridBarrens.ABCentral.Register();//On.Room.Loaded += AB_RoomloadDetour;
 
             //Objects
-            ColouredLightSource.RegisterAsFullyManagedObject();
+            Objects.ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             MiscPO.MiscPOStatic.Enable();
             Particles.ParticlesStatic.Enable();
-            Drawable.Register();
+            Objects.Drawable.Register();
             //Add new things here - remember to add them to OnDisable() as well!
-            PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
+            Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();
 
@@ -70,7 +81,7 @@ namespace RegionKit {
             EchoExtender.EchoExtender.RemoveHooks();
             Machinery.MachineryStatic.Disable();
             //PetrifiedWood.ShutDown();
-            PetrifiedWood.Lifetime = 5;
+            Utils.PetrifiedWood.Lifetime = 5;
             MiscPO.MiscPOStatic.Disable();
             Particles.ParticlesStatic.Disable();
             //Add new things here- remember to add them to OnEnable() as well!
@@ -87,22 +98,21 @@ namespace RegionKit {
         }
 
         //Arid Barrens by Dracentis
-        public void RoomLoadedHK(On.Room.orig_Loaded orig, Room self)
-        {
-            orig(self); // same as this.orig_Loaded();
-                        // then all the rest of the code, but using `self` instead of `this`
-            for (int k = 0; k < self.roomSettings.effects.Count; k++)
-            {
-                if (self.roomSettings.effects[k].type == EnumExt_ABThing.SandStorm)
-                {
-                    self.AddObject(new SandStorm(self.roomSettings.effects[k], self));
-                }
-                else if (self.roomSettings.effects[k].type == EnumExt_ABThing.SandPuffs)
-                {
-                    self.AddObject(new SandPuffs(self.roomSettings.effects[k], self));
-                }
-            }
-        }
+        //public void AB_RoomloadDetour(On.Room.orig_Loaded orig, Room self)
+        //{
+        //    orig(self);
+        //    for (int k = 0; k < self.roomSettings.effects.Count; k++)
+        //    {
+        //        if (self.roomSettings.effects[k].type == AridBarrens.EnumExt_ABThing.SandStorm)
+        //        {
+        //            self.AddObject(new AridBarrens.SandStorm(self.roomSettings.effects[k], self));
+        //        }
+        //        else if (self.roomSettings.effects[k].type == EnumExt_ABThing.SandPuffs)
+        //        {
+        //            self.AddObject(new SandPuffs(self.roomSettings.effects[k], self));
+        //        }
+        //    }
+        //}
 
 
         //Conditional Effects by Slime_Cubed

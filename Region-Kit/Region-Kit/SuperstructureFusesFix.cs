@@ -46,7 +46,22 @@ namespace RegionKit
                 }
             }
             self.broken = room.roomSettings.GetEffectAmount(RoomSettings.RoomEffect.Type.CorruptionSpores);
-            if (room.world.region == null || room.world.region.name != "SS" && room.world.region.name != "UW") 
+            if (room.world.region != null)
+            {
+                switch (room.world.region.name)
+                {
+                    case "SS":
+                    case "UW":
+                    case "ED":
+                    case "CM":
+                        self.broken = 0f;
+                        break;
+                    default:
+                        self.broken = 1f;
+                        break;
+                }
+            }
+            else
             {
                 self.broken = 1f;
             }
@@ -56,7 +71,6 @@ namespace RegionKit
 
             //PWMalfunction needs to hook onto this class as well, so this will go here (this one will not call orig)
             Effects.PWMalfunction.SuperStructureFuses_Ctor(orig, self, placedObject, rect, room);
-
         }
     }
 }

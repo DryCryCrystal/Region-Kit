@@ -7,8 +7,10 @@ using UnityEngine;
 
 namespace RegionKit.EchoExtender {
     public static class EchoExtender {
+
         public static int SlugcatNumber { get; private set; }
         public static void ApplyHooks() {
+
             // Tests for spawn
             On.World.LoadWorld += WorldOnLoadWorld;
             On.GhostWorldPresence.ctor += GhostWorldPresenceOnCtor;
@@ -24,7 +26,7 @@ namespace RegionKit.EchoExtender {
 
             // Save stuff
             On.DeathPersistentSaveData.ctor += DeathPersistentSaveDataOnCtor;
-            On.PlayerProgression.GetOrInitiateSaveState += PlayerProgressionOnGetOrInitiateSaveState;
+            On.StoryGameSession.ctor += StoryGameSessionOnCtor;
         }
 
         public static void RemoveHooks() {
@@ -41,7 +43,14 @@ namespace RegionKit.EchoExtender {
 
             // Save stuff
             On.DeathPersistentSaveData.ctor -= DeathPersistentSaveDataOnCtor;
-            On.PlayerProgression.GetOrInitiateSaveState -= PlayerProgressionOnGetOrInitiateSaveState;
+            On.StoryGameSession.ctor -= StoryGameSessionOnCtor;
+        }
+        
+        
+        private static void StoryGameSessionOnCtor(On.StoryGameSession.orig_ctor orig, StoryGameSession self, int savestatenumber, RainWorldGame game) {
+            Debug.Log("[Echo Extender : Info] Loading Echoes from Region Mods...");
+            CRSEchoParser.LoadAllCRSPacks();
+            orig(self, savestatenumber, game);
         }
 
         private static void WorldOnLoadWorld(On.World.orig_LoadWorld orig, World self, int slugcatnumber, List<AbstractRoom> abstractroomslist, int[] swarmrooms, int[] shelters, int[] gates) {
@@ -51,7 +60,8 @@ namespace RegionKit.EchoExtender {
         private static float GhostWorldPresenceOnGhostMode(On.GhostWorldPresence.orig_GhostMode_1 orig, GhostWorldPresence self, AbstractRoom testRoom, Vector2 worldPos) {
             var result = orig(self, testRoom, worldPos);
             if (!CRSEchoParser.EchoSettings.TryGetValue(self.ghostID, out var settings)) return result;
-            var echoEffectLimit = settings.GetRadius(self.world.game.StoryCharacter) * 1000f; //I think 1 screen is like a 1000 so I'm going with that
+            if (testRoom.index == self.ghostRoom.index) return 1f;
+            var echoEffectLimit = settings.GetRadius(SlugcatNumber) * 1000f; //I think 1 screen is like a 1000 so I'm going with that
             Vector2 globalDistance = Custom.RestrictInRect(worldPos, FloatRect.MakeFromVector2(self.world.RoomToWorldPos(new Vector2(), self.ghostRoom.index), self.world.RoomToWorldPos(self.ghostRoom.size.ToVector2() * 20f, self.ghostRoom.index)));
             if (!Custom.DistLess(worldPos, globalDistance, echoEffectLimit)) return 0;
             var someValue = self.DegreesOfSeparation(testRoom); //No clue what this number does
@@ -71,11 +81,6 @@ namespace RegionKit.EchoExtender {
             orig(self);
             // Unswitcheroo
             if (self.game != null && EEGhostSpot != null) EEGhostSpot.type = EnumExt_EchoExtender.EEGhostSpot;
-        }
-
-        private static SaveState PlayerProgressionOnGetOrInitiateSaveState(On.PlayerProgression.orig_GetOrInitiateSaveState orig, PlayerProgression self, int savestatenumber, RainWorldGame game, ProcessManager.MenuSetup setup, bool saveasdeathorquit) {
-            CRSEchoParser.LoadAllCRSPacks();
-            return orig(self, savestatenumber, game, setup, saveasdeathorquit);
         }
 
         private static  void DeathPersistentSaveDataOnCtor(On.DeathPersistentSaveData.orig_ctor orig, DeathPersistentSaveData self, int slugcat) {
@@ -113,7 +118,7 @@ namespace RegionKit.EchoExtender {
                     if (line.StartsWith("(")) {
                         var difficulties = line.Substring(1, line.IndexOf(")", StringComparison.Ordinal) - 1);
                         foreach (string s in difficulties.Split(',')) {
-                            if (int.Parse(s) == self.ghost.room.world.game.StoryCharacter) {
+                            if (int.Parse(s) == SlugcatNumber) {
                                 self.events.Add(new Conversation.TextEvent(self, 0, Regex.Replace(line, @"^\((\d|(\d+,)+\d)\)", ""), 0));
                                 break;
                             }
@@ -142,10 +147,10 @@ namespace RegionKit.EchoExtender {
         private static void GhostWorldPresenceOnCtor(On.GhostWorldPresence.orig_ctor orig, GhostWorldPresence self, World world, GhostWorldPresence.GhostID ghostid) {
             orig(self, world, ghostid);
             if (self.ghostRoom is null && CRSEchoParser.ExtendedEchoIDs.Contains(self.ghostID)) {
-                self.ghostRoom = world.GetAbstractRoom(CRSEchoParser.EchoSettings[ghostid].GetEchoRoom(world.game.StoryCharacter));
-                self.songName = CRSEchoParser.EchoSettings[ghostid].GetEchoSong(world.game.StoryCharacter);
-                Debug.Log($"[Echo Extender : GWPCtor] Set Song: {self.songName}");
-                Debug.Log($"[Echo Extender : GWPCtor] Set Room {self.ghostRoom?.name}");
+                self.ghostRoom = world.GetAbstractRoom(CRSEchoParser.EchoSettings[ghostid].GetEchoRoom(SlugcatNumber));
+                self.songName = CRSEchoParser.EchoSettings[ghostid].GetEchoSong(SlugcatNumber);
+                Debug.Log($"[Echo Extender : Info] Set Song: {self.songName}");
+                Debug.Log($"[Echo Extender : Info] Set Room {self.ghostRoom?.name}");
             }
         }
 
@@ -153,8 +158,8 @@ namespace RegionKit.EchoExtender {
             orig(self, room, placedobject, worldghost);
             if (!CRSEchoParser.ExtendedEchoIDs.Contains(self.worldGhost.ghostID)) return;
             var settings = CRSEchoParser.EchoSettings[self.worldGhost.ghostID];
-            self.scale = settings.GetSizeMultiplier(room.game.StoryCharacter) * 0.75f;
-            self.defaultFlip = settings.GetDefaultFlip(room.game.StoryCharacter);
+            self.scale = settings.GetSizeMultiplier(SlugcatNumber) * 0.75f;
+            self.defaultFlip = settings.GetDefaultFlip(SlugcatNumber);
         }
     }
 }

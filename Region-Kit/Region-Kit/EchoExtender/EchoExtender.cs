@@ -26,7 +26,7 @@ namespace RegionKit.EchoExtender {
 
             // Save stuff
             On.DeathPersistentSaveData.ctor += DeathPersistentSaveDataOnCtor;
-            On.PlayerProgression.GetOrInitiateSaveState += PlayerProgressionOnGetOrInitiateSaveState;
+            On.StoryGameSession.ctor += StoryGameSessionOnCtor;
         }
 
         public static void RemoveHooks() {
@@ -43,7 +43,14 @@ namespace RegionKit.EchoExtender {
 
             // Save stuff
             On.DeathPersistentSaveData.ctor -= DeathPersistentSaveDataOnCtor;
-            On.PlayerProgression.GetOrInitiateSaveState -= PlayerProgressionOnGetOrInitiateSaveState;
+            On.StoryGameSession.ctor -= StoryGameSessionOnCtor;
+        }
+        
+        
+        private static void StoryGameSessionOnCtor(On.StoryGameSession.orig_ctor orig, StoryGameSession self, int savestatenumber, RainWorldGame game) {
+            Debug.Log("[Echo Extender : Info] Loading Echoes from Region Mods...");
+            CRSEchoParser.LoadAllCRSPacks();
+            orig(self, savestatenumber, game);
         }
 
         private static void WorldOnLoadWorld(On.World.orig_LoadWorld orig, World self, int slugcatnumber, List<AbstractRoom> abstractroomslist, int[] swarmrooms, int[] shelters, int[] gates) {
@@ -53,6 +60,7 @@ namespace RegionKit.EchoExtender {
         private static float GhostWorldPresenceOnGhostMode(On.GhostWorldPresence.orig_GhostMode_1 orig, GhostWorldPresence self, AbstractRoom testRoom, Vector2 worldPos) {
             var result = orig(self, testRoom, worldPos);
             if (!CRSEchoParser.EchoSettings.TryGetValue(self.ghostID, out var settings)) return result;
+            if (testRoom.index == self.ghostRoom.index) return 1f;
             var echoEffectLimit = settings.GetRadius(SlugcatNumber) * 1000f; //I think 1 screen is like a 1000 so I'm going with that
             Vector2 globalDistance = Custom.RestrictInRect(worldPos, FloatRect.MakeFromVector2(self.world.RoomToWorldPos(new Vector2(), self.ghostRoom.index), self.world.RoomToWorldPos(self.ghostRoom.size.ToVector2() * 20f, self.ghostRoom.index)));
             if (!Custom.DistLess(worldPos, globalDistance, echoEffectLimit)) return 0;
@@ -73,11 +81,6 @@ namespace RegionKit.EchoExtender {
             orig(self);
             // Unswitcheroo
             if (self.game != null && EEGhostSpot != null) EEGhostSpot.type = EnumExt_EchoExtender.EEGhostSpot;
-        }
-
-        private static SaveState PlayerProgressionOnGetOrInitiateSaveState(On.PlayerProgression.orig_GetOrInitiateSaveState orig, PlayerProgression self, int savestatenumber, RainWorldGame game, ProcessManager.MenuSetup setup, bool saveasdeathorquit) {
-            CRSEchoParser.LoadAllCRSPacks();
-            return orig(self, savestatenumber, game, setup, saveasdeathorquit);
         }
 
         private static  void DeathPersistentSaveDataOnCtor(On.DeathPersistentSaveData.orig_ctor orig, DeathPersistentSaveData self, int slugcat) {

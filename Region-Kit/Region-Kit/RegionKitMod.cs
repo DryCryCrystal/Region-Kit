@@ -21,6 +21,8 @@ namespace RegionKit {
             Version = modVersion;
         }
 
+        private static SandboxUnlockCore _sbxInstance;
+        
         public override void OnEnable() {
             base.OnEnable();
             Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
@@ -34,11 +36,13 @@ namespace RegionKit {
             AddHooks(); //Applies Conditional Effects
             bool MastInstalled = false;
             bool ABInstalled = false;
+            bool SBXCoreInstalled = false;
             //bool ARInstalled = false;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (asm.FullName.Contains("ABThing")) ABInstalled = true;
                 if (asm.FullName.Contains("TheMast")) MastInstalled = true;
+                if (asm.FullName.Contains("CreatureCore")) SBXCoreInstalled = true;
                 //if (asm.FullName.Contains("ARThings")) ARInstalled = true;
             }
 
@@ -55,6 +59,11 @@ namespace RegionKit {
                 TheMast.SkyDandelionBgFix.Apply();
                 TheMast.WindSystem.Apply();
                 TheMast.WormGrassFix.Apply();
+            }
+
+            if (!SBXCoreInstalled) {
+                Debug.Log("Sandbox Core not found! Apply Sandbox Core hooks.");
+                (_sbxInstance = new SandboxUnlockCore()).ApplyHooks();
             }
 
             //Arid Barrens

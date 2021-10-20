@@ -39,6 +39,7 @@
     <Compile Include="DaddyCorruptionArenaFixHK.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="Objects\Drawable.cs" />
+    <Compile Include="SandboxCore.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />
     <Compile Include="EchoExtender\EchoExtender.cs" />

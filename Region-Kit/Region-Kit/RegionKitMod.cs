@@ -27,7 +27,7 @@ namespace RegionKit {
             //VARIOUS PATCHES
             RoomLoader.Patch();
             SuperstructureFusesFix.Patch();
-            DaddyCorruptionArenaFixHK.ApplyHK();
+            ArenaFixes.ApplyHK();
             CustomArenaDivisions.Patch();
             EchoExtender.EchoExtender.ApplyHooks();
             NewObjects.Hook();

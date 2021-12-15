@@ -28,6 +28,7 @@ namespace RegionKit {
             RoomLoader.Patch();
             SuperstructureFusesFix.Patch();
             ArenaFixes.ApplyHK();
+            SandboxUnlockCore.Main.ApplyHK();
             CustomArenaDivisions.Patch();
             EchoExtender.EchoExtender.ApplyHooks();
             NewObjects.Hook();

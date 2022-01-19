@@ -39,6 +39,8 @@
     <Compile Include="ArenaFixes.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="Objects\Drawable.cs" />
+    <Compile Include="Objects\SpinningFan.cs" />
+    <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />
     <Compile Include="EchoExtender\EchoExtender.cs" />
@@ -142,6 +144,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Sprites\spinningFan.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

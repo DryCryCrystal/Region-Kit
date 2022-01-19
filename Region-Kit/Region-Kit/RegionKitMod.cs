@@ -31,6 +31,7 @@ namespace RegionKit {
             CustomArenaDivisions.Patch();
             EchoExtender.EchoExtender.ApplyHooks();
             NewObjects.Hook();
+            LooseSpriteLoader.LoadSprites();
             AddHooks(); //Applies Conditional Effects
             bool MastInstalled = false;
             bool ABInstalled = false;
@@ -58,7 +59,7 @@ namespace RegionKit {
             }
 
             //Arid Barrens
-            if (!ABInstalled) 
+            if (!ABInstalled)
             {
                 Utils.PetrifiedWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
                 AridBarrens.ABCentral.Register();
@@ -70,6 +71,7 @@ namespace RegionKit {
             MiscPO.MiscPOStatic.Enable();
             Particles.ParticlesStatic.Enable();
             Objects.Drawable.Register();
+            SpinningFanObjRep.SpinningFanRep();
             //Add new things here - remember to add them to OnDisable() as well!
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();

@@ -72,7 +72,7 @@ namespace RegionKit {
             Particles.ParticlesStatic.Enable();
             Objects.Drawable.Register();
             SpinningFanObjRep.SpinningFanRep();
-            SteamObjRep.SteamRep();
+            ShroudObjRep.ShroudRep();
             //Add new things here - remember to add them to OnDisable() as well!
             // Use this to enable the example managedobjecttypes for testing or debugging
             //ManagedObjectExamples.PlacedObjectsExample();

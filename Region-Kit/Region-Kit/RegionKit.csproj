@@ -17,7 +17,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>E:\Games\Rain World\Mods\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,6 +39,7 @@
     <Compile Include="ArenaFixes.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="Objects\Drawable.cs" />
+    <Compile Include="Objects\Shroud.cs" />
     <Compile Include="Objects\SpinningFan.cs" />
     <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />

@@ -23,6 +23,7 @@ public static class SpinningFanObjRep
 public class SpinningFan : UpdatableAndDeletable, IDrawable
 {
     public PlacedObject pObj;
+    public float getToSpeed;
     public Vector2 pos;
     public float speed;
     public float scale;
@@ -39,7 +40,16 @@ public class SpinningFan : UpdatableAndDeletable, IDrawable
     public override void Update(bool eu)
     {
         this.pos = this.pObj.pos;
-        this.speed = Mathf.Lerp(-10f, 10f, (this.pObj.data as ManagedData).GetValue<float>("speed"));
+        this.getToSpeed = Mathf.Lerp(-10f, 10f, (this.pObj.data as ManagedData).GetValue<float>("speed"));
+        if (this.room.world.rainCycle.brokenAntiGrav != null)
+        {
+            float target = (this.room.world.rainCycle.brokenAntiGrav.on ? this.getToSpeed : 0f);
+            this.speed = Custom.LerpAndTick(this.speed, target, 0.035f, 0.0008f);
+        }
+        else
+        {
+            this.speed = this.getToSpeed;
+        }
         this.scale = (this.pObj.data as ManagedData).GetValue<float>("scale");
         this.depth = (this.pObj.data as ManagedData).GetValue<float>("depth");
         base.Update(eu);

@@ -41,6 +41,7 @@
     <Compile Include="Objects\Drawable.cs" />
     <Compile Include="Objects\Shroud.cs" />
     <Compile Include="Objects\SpinningFan.cs" />
+    <Compile Include="Objects\SteamHazard.cs" />
     <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />

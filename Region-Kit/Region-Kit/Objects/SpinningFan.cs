@@ -43,7 +43,7 @@ public class SpinningFan : UpdatableAndDeletable, IDrawable
         this.getToSpeed = Mathf.Lerp(-10f, 10f, (this.pObj.data as ManagedData).GetValue<float>("speed"));
         if (this.room.world.rainCycle.brokenAntiGrav != null)
         {
-            float target = (this.room.world.rainCycle.brokenAntiGrav.on ? this.getToSpeed : 0f);
+            float target = (this.room.world.rainCycle.brokenAntiGrav.CurrentLightsOn > 0f ? this.getToSpeed : 0f);
             this.speed = Custom.LerpAndTick(this.speed, target, 0.035f, 0.0008f);
         }
         else

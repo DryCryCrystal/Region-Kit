@@ -75,21 +75,17 @@ public class Shroud : CosmeticSprite
         base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
     }
 
-    public bool ConnectedAndActive(Shroud shroud)
-    {
-        if (shroud.ID == ID)
-        {
-            if (shroud.playerInside)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public override void Update(bool eu)
     {
         this.quad = (this.pObj.data as ManagedData).GetValue<Vector2[]>("quad");
+        Vector2 camPos = this.room.game.cameras[0].pos;
+        Vector2[] poly = new Vector2[]
+        {
+            this.pObj.pos - camPos,
+            this.pObj.pos + quad[1]- camPos,
+            this.pObj.pos + quad[3]- camPos,
+            this.pObj.pos + quad[2]- camPos,
+        };
 
         if (active)
         {

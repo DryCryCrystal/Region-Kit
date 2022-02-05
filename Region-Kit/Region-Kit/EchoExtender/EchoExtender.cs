@@ -114,7 +114,8 @@ namespace RegionKit.EchoExtender {
         private static void GhostConversationOnAddEvents(On.GhostConversation.orig_AddEvents orig, GhostConversation self) {
             orig(self);
             if (CRSEchoParser.EchoConversations.ContainsKey(self.id)) {
-                foreach (string line in CRSEchoParser.EchoConversations[self.id].Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)) {
+                foreach (string line in Regex.Split(CRSEchoParser.EchoConversations[self.id], "(\r|\n)+")) {
+                    if (line.All(c => char.IsSeparator(c) || c == '\n' || c == '\r')) continue;
                     if (line.StartsWith("(")) {
                         var difficulties = line.Substring(1, line.IndexOf(")", StringComparison.Ordinal) - 1);
                         foreach (string s in difficulties.Split(',')) {

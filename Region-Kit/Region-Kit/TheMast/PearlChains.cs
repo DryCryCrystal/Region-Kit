@@ -91,7 +91,7 @@ namespace RegionKit.TheMast
             if (obj is PearlChain) return (T)(object)1;
             return (T)orig.Method.Invoke(null, new object[] { self, obj });
         }
-        
+
         public static AbstractPhysicalObject SaveState_AbstractPhysicalObjectFromString(On.SaveState.orig_AbstractPhysicalObjectFromString orig, World world, string objString)
         {
             AbstractPhysicalObject apo = orig(world, objString);
@@ -237,7 +237,7 @@ namespace RegionKit.TheMast
                 _ConsumableRepresentation_controlPanel.SetValue(self, cp);
             }
         }
-        
+
         public class PearlChain : PlayerCarryableItem, IDrawable
         {
             public int pearlCount;
@@ -302,7 +302,7 @@ namespace RegionKit.TheMast
                 buoyancy = 0.4f;
                 for (int i = 0; i < bodyChunks.Length; i++)
                     bodyChunks[i].loudness = 3f;
-                
+
                 Random.seed = seed;
             }
 
@@ -440,7 +440,7 @@ namespace RegionKit.TheMast
                 if(!Consumable.isConsumed && Consumable.placedObjectIndex >= 0 && Consumable.placedObjectIndex < placeRoom.roomSettings.placedObjects.Count)
                 {
                     PlacedObject pObj = placeRoom.roomSettings.placedObjects[Consumable.placedObjectIndex];
-                    
+
                     // Attach to ceiling
                     Vector2 center = pObj.pos;
                     for (int i = 0; i < bodyChunks.Length; i++)
@@ -702,7 +702,7 @@ namespace RegionKit.TheMast
                     1//87, 10, 1, 1, 1
                 };
                 private static int _totalWeight = -1;
-                
+
                 public static Color GetColor(int color) => _colors[(color == -1) ? 0 : color * 2];
                 public static Color? GetHighlightColor(int color)
                 {
@@ -732,7 +732,7 @@ namespace RegionKit.TheMast
                 }
             }
         }
-        
+
         public class AbstractPearlChain : AbstractConsumable
         {
             public int length;
@@ -803,7 +803,7 @@ namespace RegionKit.TheMast
                 _decLength = new Button(owner, "PearlChain_DecLen_Button", this, new Vector2(205f, 45f), 40f, "-");
                 subNodes.Add(_decLength);
             }
-            
+
             public override void Refresh()
             {
                 base.Refresh();
@@ -813,7 +813,7 @@ namespace RegionKit.TheMast
                 else
                     _dispLength.Text = length.ToString();
             }
-            
+
             public void Signal(DevUISignalType type, DevUINode sender, string message)
             {
                 PlacedPearlChainData chainData = (parentNode as ConsumableRepresentation).pObj.data as PlacedPearlChainData;

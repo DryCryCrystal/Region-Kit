@@ -14,6 +14,12 @@ public static class NewObjects
         On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData;
         On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
         On.Room.Loaded += Room_Loaded;
+        On.RoomCamera.ctor += RoomCamera_ctor;
+    }
+
+    private static void RoomCamera_ctor(On.RoomCamera.orig_ctor orig, RoomCamera self, RainWorldGame game, int cameraNumber)
+    {
+        orig.Invoke(self, game, cameraNumber);
     }
 
     private static void Room_Loaded(On.Room.orig_Loaded orig, Room self)

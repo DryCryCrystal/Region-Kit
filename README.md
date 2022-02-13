@@ -18,19 +18,21 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
 ## Features
 
 - Superstructure Fuses Fix
-  - Fixes Superstructure fuses in arena mode, preventing crashes.
+  	- Fixes Superstructure fuses in arena mode, preventing crashes.
 - Arena Management
-  - Text file that can be placed inside a subfolder in the levels folder to manage custom arenas.
+  	- Text file that can be placed inside a subfolder in the levels folder to manage custom arenas.
 - PWLightRod
-  - RGB based SSLightRod.
+  	- RGB based SSLightRod.
 - Placed Objects Manager Framework
-  - Framework created by Henpemaz to allow for easy creation of custom objects.
+  	- Framework created by Henpemaz to allow for easy creation of custom objects.
 - Placed Wormgrass
-  - PlacedObject for setting up wormgrass without re-exporting room geometry.
+  	- PlacedObject for setting up wormgrass without re-exporting room geometry.
 - RegionKit.Machinery
-  - A small set of customizable objects for adding moving parts like cogs and pistons to your levels. Can use any loaded sprites and shaders by name.
-  - NOTE: MachineryCustomizer object is used for changing sprite/container/shader settings.
-  - A general purpose power level customization system, a related interface to be used. See code: `RegionKit.Machinery.RoomPowerManager`, `RegionKit.Machinery.RoomPowerManager.IRoomPowerModifier`.
+  	- A small set of customizable objects for adding moving parts like cogs and pistons to your levels. Can use any loaded sprites and shaders by name.
+  	- NOTE: MachineryCustomizer object is used for changing sprite/container/shader settings.
+  	- A general purpose power level customization system, a related interface to be used. See code: `RegionKit.Machinery.RoomPowerManager`, `RegionKit.Machinery.RoomPowerManager.IRoomPowerModifier`.
+- Spinning Fan
+  	- Animated and scalable fan.
 - Echo Extender
 	- Allows adding echoes to custom regions without any coding.
 	- For usage see [this file.](EchoExtender.md)
@@ -90,11 +92,15 @@ For more detailed instructions, see: `P_GUIDE.md`
 	- The Mast
 	- Conditional Effects
 
-- Doggo
-	- The Mast Permission
-
 - LeeMoriya
 	- ARObjects
+	- Spinning Fan
+
+- M4rbleL1ne
+	- Several arena fixes
+
+- Doggo
+	- The Mast Permission
 
 - Kaeporo
 	- ARObjects Permission

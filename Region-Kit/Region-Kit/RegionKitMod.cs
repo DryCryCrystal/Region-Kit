@@ -35,13 +35,23 @@ namespace RegionKit {
             AddHooks(); //Applies Conditional Effects
             bool MastInstalled = false;
             bool ABInstalled = false;
+            bool ForsakenStationInstalled = false;
             //bool ARInstalled = false;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (asm.FullName.Contains("ABThing")) ABInstalled = true;
                 if (asm.FullName.Contains("TheMast")) MastInstalled = true;
+                if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
                 //if (asm.FullName.Contains("ARThings")) ARInstalled = true;
             }
+
+            if (!ForsakenStationInstalled)
+            {
+                Utils.PetrifiedWood.WriteLine("Forsaken Station.dll not loaded; applying related object hooks.");
+                Effects.ReplaceEffectColor.Apply();
+                Effects.ColoredRoomEffect.Apply();
+            }
+            else Utils.PetrifiedWood.WriteLine("Forsaken Station.dll loaded; not applying related object hooks.");
 
             //The Mast
             if (!MastInstalled)
@@ -225,7 +235,7 @@ namespace RegionKit {
             orig.Invoke(self, s);
             try
             {
-                if (s.Length > 4)
+                if (s.Length > 4 && s[4] != "Color")
                 {
                     bool[] flags = new bool[3] { false, false, false };
                     SetWeak(filterFlags, self, flags);

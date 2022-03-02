@@ -37,11 +37,13 @@
     <Compile Include="AridBarrens\SandStorm.cs" />
     <Compile Include="ARKillRect.cs" />
     <Compile Include="ArenaFixes.cs" />
+    <Compile Include="Effects\ColoredRoomEffect.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="Objects\Drawable.cs" />
     <Compile Include="Objects\Shroud.cs" />
     <Compile Include="Objects\SpinningFan.cs" />
     <Compile Include="Objects\SteamHazard.cs" />
+    <Compile Include="Effects\ReplaceEffectColor.cs" />
     <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="TheMast\SkyDandelionBgFix.cs" />
     <Compile Include="TheMast\WindSystem.cs" />
     <Compile Include="TheMast\WormGrassFix.cs" />
+    <Compile Include="Utils\AttachedField.cs" />
     <Compile Include="Utils\ContainerCodes.cs" />
     <Compile Include="Utils\ICanBringDataToKin.cs" />
     <Compile Include="Utils\PetrifiedWood.cs" />

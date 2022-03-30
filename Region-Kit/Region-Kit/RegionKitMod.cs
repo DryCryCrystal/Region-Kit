@@ -30,19 +30,18 @@ namespace RegionKit {
             ArenaFixes.ApplyHK();
             CustomArenaDivisions.Patch();
             EchoExtender.EchoExtender.ApplyHooks();
-            NewObjects.Hook();
             LooseSpriteLoader.LoadSprites();
             AddHooks(); //Applies Conditional Effects
             bool MastInstalled = false;
             bool ABInstalled = false;
             bool ForsakenStationInstalled = false;
-            //bool ARInstalled = false;
+            bool ARInstalled = false;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (asm.FullName.Contains("ABThing")) ABInstalled = true;
                 if (asm.FullName.Contains("TheMast")) MastInstalled = true;
                 if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
-                //if (asm.FullName.Contains("ARThings")) ARInstalled = true;
+                if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
             }
 
             if (!ForsakenStationInstalled)
@@ -74,6 +73,11 @@ namespace RegionKit {
                 Utils.PetrifiedWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
                 AridBarrens.ABCentral.Register();
             }//On.Room.Loaded += AB_RoomloadDetour;
+
+            if (!ARInstalled)
+            {
+                NewObjects.Hook();
+            }
 
             //Objects
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();

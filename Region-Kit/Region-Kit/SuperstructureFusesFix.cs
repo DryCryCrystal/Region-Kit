@@ -30,6 +30,7 @@ namespace RegionKit
 
         private static void SuperStructureFuses_ctor(On.SuperStructureFuses.orig_ctor orig, SuperStructureFuses self, PlacedObject placedObject, RWCustom.IntRect rect, Room room) 
         {
+            orig(self, placedObject, rect, room);
             self.placedObject = placedObject;
             self.pos = placedObject.pos;
             self.rect = rect;

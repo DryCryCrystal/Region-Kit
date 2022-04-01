@@ -1,9 +1,9 @@
-﻿/// <summary>
-/// From LB Gamer.
-/// </summary>
-
-using UnityEngine;
+﻿using UnityEngine;
 using System;
+
+/// <summary>
+/// By LB Gamer/M4rbleL1ne
+/// </summary>
 
 namespace RegionKit
 {

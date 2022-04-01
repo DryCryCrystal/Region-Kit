@@ -28,6 +28,9 @@ namespace RegionKit {
             RoomLoader.Patch();
             SuperstructureFusesFix.Patch();
             ArenaFixes.ApplyHK();
+            SunBlockerFix.Apply();
+            GlowingSwimmersCI.Apply();
+            NoWallSlideZones.Apply();
             CustomArenaDivisions.Patch();
             EchoExtender.EchoExtender.ApplyHooks();
             LooseSpriteLoader.LoadSprites();

@@ -39,12 +39,15 @@
     <Compile Include="ArenaFixes.cs" />
     <Compile Include="Effects\ColoredRoomEffect.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
+    <Compile Include="GlowingSwimmersCI.cs" />
+    <Compile Include="NoWallSlideZones.cs" />
     <Compile Include="Objects\Drawable.cs" />
     <Compile Include="Objects\Shroud.cs" />
     <Compile Include="Objects\SpinningFan.cs" />
     <Compile Include="Objects\SteamHazard.cs" />
     <Compile Include="Effects\ReplaceEffectColor.cs" />
     <Compile Include="Sprites\LooseSpriteLoader.cs" />
+    <Compile Include="SunBlockerFix.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
     <Compile Include="EchoExtender\CRSEchoParser.cs" />
     <Compile Include="EchoExtender\EchoExtender.cs" />

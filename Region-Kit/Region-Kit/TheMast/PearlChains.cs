@@ -35,11 +35,11 @@ namespace RegionKit.TheMast
                 typeof(Player).GetMethod("Grabability", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance),
                 typeof(PearlChains).GetMethod(nameof(Player_Grabability), BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(Type.GetType("Player+ObjectGrabability, Assembly-CSharp"))
             );
-            On.ScavengerAI.CollectScore_1 += ScavengerAI_CollectScore_1;
+            On.ScavengerAI.CollectScore_PhysicalObject_bool += ScavengerAI_CollectScore_1;
             On.ItemSymbol.SpriteNameForItem += ItemSymbol_SpriteNameForItem;
             On.RainWorld.Start += RainWorld_Start;
 
-            APOFSFix.On_SaveState_AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
+            RK_APOFSFix.On_SaveState_AbstractPhysicalObjectFromString += SaveState_AbstractPhysicalObjectFromString;
         }
 
         private static void RainWorld_Start(On.RainWorld.orig_Start orig, RainWorld self)
@@ -58,7 +58,7 @@ namespace RegionKit.TheMast
                 return orig(itemType, intData);
         }
 
-        private static int ScavengerAI_CollectScore_1(On.ScavengerAI.orig_CollectScore_1 orig, ScavengerAI self, PhysicalObject obj, bool weaponFiltered)
+        private static int ScavengerAI_CollectScore_1(On.ScavengerAI.orig_CollectScore_PhysicalObject_bool orig, ScavengerAI self, PhysicalObject obj, bool weaponFiltered)
         {
             if (obj is PearlChain pc)
             {

@@ -65,9 +65,11 @@ namespace RegionKit.Utils
         {
             Lifetime = 125;
             if (wrThr?.IsAlive ?? false) return;
-            wrThr = new Thread(EternalWrite);
-            wrThr.IsBackground = false;
-            wrThr.Priority = ThreadPriority.BelowNormal;
+            wrThr = new Thread(EternalWrite)
+            {
+                IsBackground = false,
+                Priority = ThreadPriority.BelowNormal
+            };
             wrThr.Start();
         }
         public static int Lifetime = 0;

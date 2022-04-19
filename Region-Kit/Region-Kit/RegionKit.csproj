@@ -37,9 +37,12 @@
     <Compile Include="AridBarrens\SandStorm.cs" />
     <Compile Include="ARKillRect.cs" />
     <Compile Include="ArenaFixes.cs" />
+    <Compile Include="ConditionalEffects\CECentral.cs" />
+    <Compile Include="ConditionalEffects\CEExt.cs" />
     <Compile Include="Effects\ColoredRoomEffect.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="GlowingSwimmersCI.cs" />
+    <Compile Include="MiscPO\PlacedHalo.cs" />
     <Compile Include="NoWallSlideZones.cs" />
     <Compile Include="Objects\Drawable.cs" />
     <Compile Include="Objects\Shroud.cs" />
@@ -86,7 +89,7 @@
     <Compile Include="RainbowNoFade.cs" />
     <Compile Include="RegionKitMod.cs" />
     <Compile Include="RoomLoader.cs" />
-    <Compile Include="APOFSFix.cs" />
+    <Compile Include="RK_APOFSFix.cs" />
     <Compile Include="TheMast\ArenaBackgrounds.cs" />
     <Compile Include="TheMast\BetterClouds.cs" />
     <Compile Include="TheMast\CustomAtlases.cs" />
@@ -108,6 +111,9 @@
     <Compile Include="Utils\Tuple.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>lib\BepInEx.dll</HintPath>
+    </Reference>
     <Reference Include="CustomRegions">
       <HintPath>lib\CustomRegions.dll</HintPath>
       <Private>False</Private>
@@ -120,6 +126,9 @@
       <HintPath>lib\HOOKS-Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>lib\Mono.Cecil.dll</HintPath>
+    </Reference>
     <Reference Include="MonoMod">
       <HintPath>lib\MonoMod.dll</HintPath>
       <Private>False</Private>
@@ -130,11 +139,9 @@
     </Reference>
     <Reference Include="Partiality">
       <HintPath>lib\Partiality.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Pstunted">
       <HintPath>lib\Pstunted.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine">
@@ -155,6 +162,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Sprites\spinningFan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

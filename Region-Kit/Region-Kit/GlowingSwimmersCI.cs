@@ -38,7 +38,7 @@ namespace RegionKit
 						}
 					}
 				};
-			On.InsectCoordinator.SpeciesDensity_1 +=
+			On.InsectCoordinator.SpeciesDensity_Type_1 +=
 				(orig, type) => type == EnumExt_GlowingSwimmers.GlowingSwimmerInsect ? .8f : orig(type);
 			On.InsectCoordinator.RoomEffectToInsectType +=
 				(orig, type) => type == EnumExt_GlowingSwimmers.GlowingSwimmers ? EnumExt_GlowingSwimmers.GlowingSwimmerInsect : orig(type);

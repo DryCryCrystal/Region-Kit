@@ -10,6 +10,7 @@
     <RootNamespace>RegionKit</RootNamespace>
     <AssemblyName>RegionKit</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -111,40 +112,37 @@
     <Compile Include="Utils\Tuple.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp.refstub">
-      <HintPath>lib\Assembly-CSharp.refstub.dll</HintPath>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>lib\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
       <HintPath>lib\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="BepInEx.refstub">
-      <HintPath>lib\BepInEx.refstub.dll</HintPath>
+    <Reference Include="CustomRegions">
+      <HintPath>lib\CustomRegions.dll</HintPath>
     </Reference>
-    <Reference Include="CustomRegions.refstub">
-      <HintPath>lib\CustomRegions.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="EnumExtender.refstub">
-      <HintPath>lib\EnumExtender.refstub.dll</HintPath>
+    <Reference Include="EnumExtender">
+      <HintPath>lib\EnumExtender.dll</HintPath>
     </Reference>
     <Reference Include="HOOKS-Assembly-CSharp">
       <HintPath>lib\HOOKS-Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cecil.refstub">
-      <HintPath>lib\Mono.Cecil.refstub.dll</HintPath>
+    <Reference Include="Mono.Cecil">
+      <HintPath>lib\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMod.refstub">
-      <HintPath>lib\MonoMod.refstub.dll</HintPath>
+    <Reference Include="MonoMod">
+      <HintPath>lib\MonoMod.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMod.RuntimeDetour.refstub">
-      <HintPath>lib\MonoMod.RuntimeDetour.refstub.dll</HintPath>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>lib\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
-    <Reference Include="Partiality.refstub">
-      <HintPath>lib\Partiality.refstub.dll</HintPath>
+    <Reference Include="Partiality">
+      <HintPath>lib\Partiality.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="UnityEngine.refstub">
-      <HintPath>lib\UnityEngine.refstub.dll</HintPath>
+    <Reference Include="UnityEngine">
+      <HintPath>lib\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

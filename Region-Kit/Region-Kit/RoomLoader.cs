@@ -14,12 +14,22 @@ namespace RegionKit
     public static class EnumExt_Effects
     {
         public static RoomSettings.RoomEffect.Type PWMalfunction;
+        public static RoomSettings.RoomEffect.Type FogOfWarSolid;
+        public static RoomSettings.RoomEffect.Type FogOfWarDarkened;
     }
     class RoomLoader {
         public static void Patch() {
             On.Room.Loaded += Room_Loaded;
             On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData;
             On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
+            On.DevInterface.RoomSettingsPage.Refresh += RoomSettingsPage_Refresh;
+        }
+
+        private static void RoomSettingsPage_Refresh(On.DevInterface.RoomSettingsPage.orig_Refresh orig, RoomSettingsPage self)
+        {
+            orig(self);
+
+            Effects.FogOfWar.Refresh(self.owner.room);
         }
 
         public static void Disable() {
@@ -59,10 +69,14 @@ namespace RegionKit
             //ManyMoreFixes Patch
             if (self.game == null) { return; }
 
+            Effects.FogOfWar.Refresh(self);
+
             //Load all the effects
             for (int k = 0; k < self.roomSettings.effects.Count; k++)
             {
-                if (self.roomSettings.effects[k].type == EnumExt_Effects.PWMalfunction && self.world.rainCycle.brokenAntiGrav == null)
+                var effect = self.roomSettings.effects[k];
+
+                if (effect.type == EnumExt_Effects.PWMalfunction && self.world.rainCycle.brokenAntiGrav == null)
                 {
                     //Directly adds a brokenAntiGraivty to the world
                     self.world.rainCycle.brokenAntiGrav = new AntiGravity.BrokenAntiGravity(self.game.setupValues.gravityFlickerCycleMin, self.game.setupValues.gravityFlickerCycleMax, self.game);

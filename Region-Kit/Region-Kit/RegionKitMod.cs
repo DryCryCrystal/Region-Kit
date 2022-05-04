@@ -18,16 +18,9 @@ namespace RegionKit {
     public partial class RegionKitMod : BaseUnityPlugin {
 
         public const string modVersion = "1.4";
-        public const string buildVersion = "1"; //Increments for every code change without a version change.
-
-        public RegionKitMod() {
-            //ModID = "RegionKit";
-            //author = "Substratum Dev Team & More";
-            //Version = modVersion;
-        }
+        public const string buildVersion = "2"; //Increments for every code change without a version change.
 
         public void OnEnable() {
-            //base.OnEnable();
             Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
             //VARIOUS PATCHES
             RoomLoader.Patch();
@@ -40,6 +33,7 @@ namespace RegionKit {
             EchoExtender.EchoExtender.ApplyHooks();
             LooseSpriteLoader.LoadSprites();
             ConditionalEffects.CECentral.Enable(); //Applies Conditional Effects
+            Effects.FogOfWar.Patch();
             bool MastInstalled = false;
             bool ABInstalled = false;
             bool ForsakenStationInstalled = false;
@@ -104,8 +98,6 @@ namespace RegionKit {
         }
 
         public void OnDisable() {
-
-            //base.OnDisable();
             RoomLoader.Disable();
             SuperstructureFusesFix.Disable();
             EchoExtender.EchoExtender.RemoveHooks();

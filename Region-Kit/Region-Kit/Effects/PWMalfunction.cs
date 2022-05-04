@@ -19,10 +19,10 @@ namespace RegionKit.Effects {
             //On.ZapCoilLight.ctor += ZapcoilLight_Ctor;
             // Garrakx's code for hooking to a property manually
             new Hook(
-                typeof(RoomCamera).GetProperty("DarkPalette", BindingFlags.Instance | BindingFlags.NonPublic).GetGetMethod(true),
+                typeof(RoomCamera).GetMethod("get_DarkPalette", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public),
                 typeof(PWMalfunction).GetMethod("hook_get_DarkPalette", BindingFlags.Static | BindingFlags.Public));
             new Hook(
-                typeof(Room).GetProperty("ElectricPower", BindingFlags.Instance | BindingFlags.Public).GetGetMethod(),
+                typeof(Room).GetMethod("get_ElectricPower", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public),
                 typeof(PWMalfunction).GetMethod("hook_get_ElectricPower", BindingFlags.Static | BindingFlags.Public));
         }
 

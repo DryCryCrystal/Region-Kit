@@ -38,6 +38,8 @@
     <Compile Include="ARKillRect.cs" />
     <Compile Include="ArenaFixes.cs" />
     <Compile Include="Effects\ColoredRoomEffect.cs" />
+    <Compile Include="Effects\FogOfWar.cs" />
+    <Compile Include="Effects\FogOfWarController.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="GlowingSwimmersCI.cs" />
     <Compile Include="NoWallSlideZones.cs" />
@@ -46,6 +48,11 @@
     <Compile Include="Objects\SpinningFan.cs" />
     <Compile Include="Objects\SteamHazard.cs" />
     <Compile Include="Effects\ReplaceEffectColor.cs" />
+    <Compile Include="Shaders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shaders.resx</DependentUpon>
+    </Compile>
     <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="SunBlockerFix.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
@@ -147,6 +154,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Atlases\TheMast\Symbol_PearlChain.png" />
+    <EmbeddedResource Include="Shaders.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Shaders.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
   </ItemGroup>
@@ -156,5 +167,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Sprites\spinningFan.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FogOfWar.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

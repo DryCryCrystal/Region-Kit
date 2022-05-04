@@ -13,7 +13,7 @@ namespace RegionKit {
     public class RegionKitMod : PartialityMod {
 
         public const string modVersion = "1.3";
-        public const string buildVersion = "1"; //Increments for every code change without a version change.
+        public const string buildVersion = "2"; //Increments for every code change without a version change.
 
         public RegionKitMod() {
             ModID = "RegionKit";
@@ -35,6 +35,7 @@ namespace RegionKit {
             EchoExtender.EchoExtender.ApplyHooks();
             LooseSpriteLoader.LoadSprites();
             AddHooks(); //Applies Conditional Effects
+            Effects.FogOfWar.Patch();
             bool MastInstalled = false;
             bool ABInstalled = false;
             bool ForsakenStationInstalled = false;

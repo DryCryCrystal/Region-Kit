@@ -21,9 +21,9 @@ namespace RegionKit.AridBarrens
             orig(self);
             for (int k = 0; k < self.roomSettings.effects.Count; k++)
             {
-                if (self.roomSettings.effects[k].type == AridBarrens.EnumExt_ABThing.SandStorm)
+                if (self.roomSettings.effects[k].type == EnumExt_ABThing.SandStorm)
                 {
-                    self.AddObject(new AridBarrens.SandStorm(self.roomSettings.effects[k], self));
+                    self.AddObject(new SandStorm(self.roomSettings.effects[k], self));
                 }
                 else if (self.roomSettings.effects[k].type == EnumExt_ABThing.SandPuffs)
                 {

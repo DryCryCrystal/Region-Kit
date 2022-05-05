@@ -165,7 +165,7 @@ namespace RegionKit.Particles
         protected override bool AreaNeedsRefresh => base.AreaNeedsRefresh && c_dir == base.GetValue<Vector2>("sdBase");
         protected override List<IntVector2> GetSuitableTiles(Room rm)
         {
-#warning test this
+            //TODO(thalber): test this
             var res = new List<IntVector2>();
             var rb = new IntRect(0 - margin, 0 - margin, rm.Width + margin, rm.Height + margin);
             var dropVector = GetValue<Vector2>("sdBase");
@@ -254,7 +254,7 @@ namespace RegionKit.Particles
 
         public PVisualState DataForNew()
         {
-#warning finish pvs.datafornew
+            //TODO(thalber): finish pvs.datafornew
             var res = new PVisualState
             {
                 sCol = spriteColor.Deviation(spriteColorFluke),

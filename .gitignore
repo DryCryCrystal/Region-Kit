@@ -359,3 +359,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# RKSPECIFIC
+Region-Kit/Region-Kit/lib/

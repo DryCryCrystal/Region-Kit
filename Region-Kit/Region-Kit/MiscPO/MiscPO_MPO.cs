@@ -21,6 +21,21 @@ namespace RegionKit.MiscPO
         }
     }
 
+    internal class PlacedHaloData : ManagedData
+    {
+        [Vector2Field("rad", 15f, 15f, Vector2Field.VectorReprType.circle, label:"radius")]
+        internal Vector2 rad;
+        [Vector2Field("headpos", 0f, 30f, Vector2Field.VectorReprType.line, label:"head pos")]
+        internal Vector2 headpos;
+        [Vector2Field("headdir", 20f, 0f, Vector2Field.VectorReprType.line, label:"head dir")]
+        internal Vector2 headdir;
+
+        public PlacedHaloData(PlacedObject owner) : base(owner, new ManagedField[] { })
+        {
+
+        }
+    }
+
     internal class WormgrassRectData : ManagedData
     {
         internal IntVector2 p2 => GetValue<IntVector2>("p2");

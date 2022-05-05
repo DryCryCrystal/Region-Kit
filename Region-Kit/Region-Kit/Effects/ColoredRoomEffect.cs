@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DevInterface;
 using RegionKit.Utils;
+using RegionKit.ConditionalEffects;
 
 namespace RegionKit.Effects
 {
@@ -42,7 +43,7 @@ namespace RegionKit.Effects
 				self.amount = savedAmount;
 			}*/
 			string ret = "";
-			if (RegionKitMod.TryGetWeak(RegionKitMod.filterFlags, self, out bool[] flags))
+			if (CEExt.TryGetWeak(CECentral.filterFlags, self, out bool[] flags))
 			{
 				int bitMask = 0;
 				bool allTrue = true;

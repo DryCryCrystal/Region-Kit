@@ -22,7 +22,7 @@ namespace RegionKit.EchoExtender {
             On.Ghost.StartConversation += GhostOnStartConversation;
             On.GhostConversation.AddEvents += GhostConversationOnAddEvents;
             On.GhostWorldPresence.SpawnGhost += GhostWorldPresenceOnSpawnGhost;
-            On.GhostWorldPresence.GhostMode_1 += GhostWorldPresenceOnGhostMode;
+            On.GhostWorldPresence.GhostMode_AbstractRoom_Vector2 += GhostWorldPresenceOnGhostMode;
 
             // Save stuff
             On.DeathPersistentSaveData.ctor += DeathPersistentSaveDataOnCtor;
@@ -39,7 +39,7 @@ namespace RegionKit.EchoExtender {
             On.Ghost.StartConversation -= GhostOnStartConversation;
             On.GhostConversation.AddEvents -= GhostConversationOnAddEvents;
             On.GhostWorldPresence.SpawnGhost -= GhostWorldPresenceOnSpawnGhost;
-            On.GhostWorldPresence.GhostMode_1 -= GhostWorldPresenceOnGhostMode;
+            On.GhostWorldPresence.GhostMode_AbstractRoom_Vector2 -= GhostWorldPresenceOnGhostMode;
 
             // Save stuff
             On.DeathPersistentSaveData.ctor -= DeathPersistentSaveDataOnCtor;
@@ -57,7 +57,7 @@ namespace RegionKit.EchoExtender {
             SlugcatNumber = slugcatnumber;
             orig(self, slugcatnumber, abstractroomslist, swarmrooms, shelters, gates);
         }
-        private static float GhostWorldPresenceOnGhostMode(On.GhostWorldPresence.orig_GhostMode_1 orig, GhostWorldPresence self, AbstractRoom testRoom, Vector2 worldPos) {
+        private static float GhostWorldPresenceOnGhostMode(On.GhostWorldPresence.orig_GhostMode_AbstractRoom_Vector2 orig, GhostWorldPresence self, AbstractRoom testRoom, Vector2 worldPos) {
             var result = orig(self, testRoom, worldPos);
             if (!CRSEchoParser.EchoSettings.TryGetValue(self.ghostID, out var settings)) return result;
             if (testRoom.index == self.ghostRoom.index) return 1f;

@@ -87,5 +87,8 @@ namespace RegionKit.Utils
             //var R = new System.Random(l.GetHashCode());
             return l[UnityEngine.Random.Range(0, l.Count)];
         }
+
+        public static FContainer ReturnFContainer(this RoomCamera rcam, ContainerCodes cc) 
+            => rcam.ReturnFContainer(cc.ToString());
     }
 }

@@ -69,18 +69,26 @@ For more detailed instructions, see: `P_GUIDE.md`
 	- Manager and Dev Team Lead
 	- Porting
 
+- Thalber
+	- BepInEx migration
+	- RegionKit.Machinery
+	- Particle System
+
 - DeltaTime
 	- Initial versions
 	- PWLightRod
 	- PWMalfunction
 	- Arena Management
 
+- M4rbleL1ne
+	- Several arena fixes
+	- Customisable Effect Colors
+	- NoWallSlideZones
+	- GlowingSwimmers
+	- SunblockerFix
+
 - Henpemaz
 	- Placed Objects Manager Framework
-
-- Thalber
-	- RegionKit.Machinery
-	- Particle System
 
 - Thrithralas
 	- Echo Extender
@@ -91,13 +99,11 @@ For more detailed instructions, see: `P_GUIDE.md`
 	- Superstructure Fuses Fix
 	- The Mast
 	- Conditional Effects
+	- Fog of War Effects (Line of Sight)
 
 - LeeMoriya
 	- ARObjects
 	- Spinning Fan
-
-- M4rbleL1ne
-	- Several arena fixes
 
 - Doggo
 	- The Mast Permission

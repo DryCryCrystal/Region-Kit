@@ -32,6 +32,6 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 #warning are you pushing an update? update assembly version here VVV
-[assembly: AssemblyVersion("1.4.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion(RegionKit.RegionKitMod.modVersion + "." + RegionKit.RegionKitMod.buildVersion)]
 [assembly: AssemblyInformationalVersion(RegionKit.RegionKitMod.modVersion)]

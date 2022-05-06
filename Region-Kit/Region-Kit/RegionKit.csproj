@@ -1,7 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!--No debug conf since never a reason to build on debug-->
+  <!--No debug conf since never a reason to build on debug-->
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A8D4F157-97E1-4CB6-9F79-7EDA989EC893}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RegionKit</RootNamespace>
+    <AssemblyName>RegionKit</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
@@ -11,7 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-  <!--Code-->
+    <!--Code-->
     <Compile Include="Shaders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -19,7 +32,13 @@
     </Compile>
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="*.cs" />
+    <Compile Include="Shaders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shaders.resx</DependentUpon>
+    </Compile>
     <Compile Include="Sprites\LooseSpriteLoader.cs" />
+    <Compile Include="TheMast\Localization\*.cs" />
     <Compile Include="ConditionalEffects\*.cs" />
     <Compile Include="EchoExtender\*.cs" />
     <Compile Include="AridBarrens\*.cs" />
@@ -33,23 +52,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-  <!-- ER -->
+    <!-- ER -->
     <EmbeddedResource Include="Atlases\TheMast.tps" />
     <EmbeddedResource Include="Atlases\TheMast\Symbol_PearlChain.png" />
     <EmbeddedResource Include="Shaders.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Shaders.Designer.cs</LastGenOutput>
-	  </EmbeddedResource>
+    </EmbeddedResource>
     <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
     <EmbeddedResource Include="Sprites\spinningFan.png" />
   </ItemGroup>
   <ItemGroup>
-  <!-- other stuff -->
+    <!-- other stuff -->
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <None Include="app.config" />
     <None Include="Resources\FogOfWar.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -57,8 +77,4 @@
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

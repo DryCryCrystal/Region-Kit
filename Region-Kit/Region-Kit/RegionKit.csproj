@@ -203,6 +203,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\MonoMod.RuntimeDetour.refstub.dll</HintPath>
     </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>lib\MonoMod.Utils.dll</HintPath>
+    </Reference>
     <Reference Include="Partiality, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Partiality.dll</HintPath>

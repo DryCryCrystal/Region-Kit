@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using static RegionKit.RegionKitMod;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -9,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Substratum Dev Team & More")]
 [assembly: AssemblyProduct("Region-Kit")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Copyright © 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,6 +33,6 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 #warning are you pushing an update? update assembly version here VVV
-[assembly: AssemblyVersion("2.0.0.0")]
-[assembly: AssemblyFileVersion(RegionKit.RegionKitMod.modVersion + "." + RegionKit.RegionKitMod.buildVersion)]
-[assembly: AssemblyInformationalVersion(RegionKit.RegionKitMod.modVersion)]
+[assembly: AssemblyVersion(modVersion + "." + buildVersion)]
+[assembly: AssemblyFileVersion(modVersion + "." + buildVersion)]
+[assembly: AssemblyInformationalVersion(modVersion)]

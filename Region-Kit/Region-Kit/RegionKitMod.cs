@@ -14,11 +14,11 @@ using BepInEx;
 //TODO0(DELTATIME): Make logging that can be used for entire project
 //TODO0: done but untested. see Utils.PetrifiedWood.
 namespace RegionKit {
-    [BepInPlugin("RegionKit", "RegionKit", "2.0")]
+    [BepInPlugin("RegionKit", "RegionKit", modVersion + "." + buildVersion)]
     public partial class RegionKitMod : BaseUnityPlugin {
 
-        public const string modVersion = "2.0";
-        public const string buildVersion = "1"; //Increments for every code change without a version change.
+        public const string modVersion = "2.0"; //used for assembly version!
+        public const string buildVersion = "2"; //Increments for every code change without a version change.
 
         public void OnEnable() {
             Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");

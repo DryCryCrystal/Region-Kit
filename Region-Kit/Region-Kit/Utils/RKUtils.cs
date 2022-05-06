@@ -2,10 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RWCustom;
+using System.Reflection;
+using RegionKit.Machinery;
 using UnityEngine;
+using RWCustom;
+using Mono.Cecil.Cil;
+using MonoMod;
+using MonoMod.Cil;
+using System.IO;
 
+using static RWCustom.Custom;
 using static UnityEngine.Mathf;
+
+using URand = UnityEngine.Random;
 
 namespace RegionKit.Utils
 {
@@ -13,14 +22,138 @@ namespace RegionKit.Utils
     {
         public static int ClampedIntDeviation(int start, int mDev, int minRes = int.MinValue, int maxRes = int.MaxValue)
         {
-            return (Custom.IntClamp(UnityEngine.Random.Range(start - mDev, start + mDev), minRes, maxRes));
+            return (IntClamp(UnityEngine.Random.Range(start - mDev, start + mDev), minRes, maxRes));
         }
 
         public static float ClampedFloatDeviation(float start, float mDev, float minRes = float.MinValue, float maxRes = float.MaxValue)
         {
-            return Mathf.Clamp(Mathf.Lerp(start - mDev, start + mDev, UnityEngine.Random.value), minRes, maxRes);
+            return Clamp(Lerp(start - mDev, start + mDev, UnityEngine.Random.value), minRes, maxRes);
         }
 
         public static IntRect ConstructIR(IntVector2 p1, IntVector2 p2) => new IntRect(Min(p1.x, p2.x), Min(p1.y, p2.y), Max(p1.x, p2.x), Max(p1.y, p2.y));
+
+        #region refl flag templates
+        public const BindingFlags allContexts = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+        internal const BindingFlags allContextsInstance = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+        internal const BindingFlags allContextsStatic = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+        internal const BindingFlags allContextsCtor = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.CreateInstance;
+        #endregion
+
+        #region refl helpers
+        public static MethodInfo GetMethodAllContexts(this Type self, string name)
+        {
+            return self.GetMethod(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic);
+        }
+        public static PropertyInfo GetPropertyAllContexts(this Type self, string name)
+        {
+            return self.GetProperty(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic);
+        }
+        /// <summary>
+        /// returns prop backing field name
+        /// </summary>
+        internal static string pbfiname(string propname) => $"<{propname}>k__BackingField";
+        /// <summary>
+        /// takes methodinfo from T, defaults to <see cref="allContextsInstance"/>
+        /// </summary>
+        /// <typeparam name="T">target type</typeparam>
+        /// <param name="mname">methodname</param>
+        /// <param name="context">binding flags, default private+public+instance</param>
+        /// <returns></returns>
+        internal static MethodInfo methodof<T>(string mname, BindingFlags context = allContextsInstance)
+            => typeof(T).GetMethod(mname, context);
+        /// <summary>
+        /// takes methodinfo from t, defaults to <see cref="allContextsStatic"/>
+        /// </summary>
+        /// <param name="t">target type</param>
+        /// <param name="mname">method name</param>
+        /// <param name="context">binding flags, default private+public+static</param>
+        /// <returns></returns>
+        internal static MethodInfo methodof(Type t, string mname, BindingFlags context = allContextsStatic)
+            => t.GetMethod(mname, context);
+        /// <summary>
+        /// Mother method of a delegate
+        /// </summary>
+        /// <typeparam name="Tm"></typeparam>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        internal static MethodInfo methodofdel<Tm>(Tm m) where Tm : Delegate => m.Method;
+        /// <summary>
+        /// gets constructorinfo from T. no cctors by default.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="pms"></param>
+        /// <returns></returns>
+        internal static ConstructorInfo ctorof<T>(BindingFlags context = allContextsCtor, params Type[] pms)
+            => typeof(T).GetConstructor(context, null, pms, null);
+        /// <summary>
+        /// gets constructorinfo from T.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="pms"></param>
+        /// <returns></returns>
+        internal static ConstructorInfo ctorof<T>(params Type[] pms)
+            => typeof(T).GetConstructor(pms);
+        
+        /// <summary>
+        /// takes fieldinfo from T, defaults to <see cref="allContextsInstance"/>
+        /// </summary>
+        /// <typeparam name="T">target type</typeparam>
+        /// <param name="name">field name</param>
+        /// <param name="context">context, default private+public+instance</param>
+        /// <returns></returns>
+        internal static FieldInfo fieldof<T>(string name, BindingFlags context = allContextsInstance)
+            => typeof(T).GetField(name, context);
+        /// <summary>
+        /// searches loaded asms by name
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        internal static IEnumerable<Assembly> FindAssembliesByName(string n)
+        {
+            var lasms = AppDomain.CurrentDomain.GetAssemblies();
+            for (int i = lasms.Length - 1; i > -1; i--)
+                if (lasms[i].FullName.Contains(n)) yield return lasms[i];
+        }
+        /// <summary>
+        /// force clones an object instance
+        /// </summary>
+        /// <typeparam name="T">tar type</typeparam>
+        /// <param name="from">source object</param>
+        /// <param name="to">target object</param>
+        /// <param name="context">specifies context of fields to be cloned</param>
+        internal static void CloneInstance<T>(T from, T to, BindingFlags context = allContextsInstance)
+        {
+            var tt = typeof(T);
+            foreach (FieldInfo field in tt.GetFields(context))
+            {
+                if (field.IsStatic) continue;
+                //field.SetValueDirect(__makeref(to), field.GetValue(from));
+                field.SetValue(to, field.GetValue(from), context, null, System.Globalization.CultureInfo.CurrentCulture);
+            }
+        }
+        #endregion
+
+
+        #region randomization extensions
+        internal static float RandSign() => URand.value > 0.5f ? -1f : 1f;
+        internal static Vector2 V2RandLerp(Vector2 a, Vector2 b) => Vector2.Lerp(a, b, URand.value);
+        internal static float NextFloat01(this System.Random r) => (float)(r.NextDouble() / double.MaxValue);
+        internal static Color Clamped(this Color bcol) => new(Clamp01(bcol.r), Clamp01(bcol.g), Clamp01(bcol.b));
+        internal static Color RandDev(this Color bcol, Color dbound, bool clamped = true)
+        {
+            Color res = default;
+            for (int i = 0; i < 3; i++) res[i] = bcol[i] + dbound[i] * URand.Range(-1f, 1f);
+            return clamped ? res.Clamped() : res;
+        }
+        #endregion
+
+        #region misc bs
+        internal static string combinePath(params string[] parts) => parts.Aggregate(Path.Combine);
+        internal static RainWorld CRW => UnityEngine.Object.FindObjectOfType<RainWorld>();
+        internal static CreatureTemplate GetCreatureTemplate(CreatureTemplate.Type t) => StaticWorld.creatureTemplates[(int)t];
+        internal static Vector2 MiddleOfRoom(this Room rm) => new((float)rm.PixelWidth * 0.5f, (float)rm.PixelHeight * 0.5f);
+        #endregion
+
     }
 }

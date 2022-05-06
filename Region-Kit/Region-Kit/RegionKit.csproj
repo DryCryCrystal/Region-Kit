@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+  <!--Code-->
     <Compile Include="Shaders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -53,24 +54,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+  <!-- ER -->
     <EmbeddedResource Include="Atlases\TheMast.tps" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Atlases\TheMast\Symbol_PearlChain.png" />
     <EmbeddedResource Include="Shaders.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Shaders.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+	  </EmbeddedResource>
     <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Sprites\spinningFan.png" />
   </ItemGroup>
   <ItemGroup>
+  <!-- other stuff -->
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>

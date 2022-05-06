@@ -32,91 +32,40 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AridBarrens\ABCentral.cs" />
-    <Compile Include="AridBarrens\EnumExt_ABThing.cs" />
-    <Compile Include="AridBarrens\SandPuffs.cs" />
-    <Compile Include="AridBarrens\SandStorm.cs" />
     <Compile Include="ARKillRect.cs" />
     <Compile Include="ArenaFixes.cs" />
-    <Compile Include="ConditionalEffects\CECentral.cs" />
-    <Compile Include="ConditionalEffects\CEExt.cs" />
-    <Compile Include="Effects\ColoredRoomEffect.cs" />
-    <Compile Include="Effects\FogOfWar.cs" />
-    <Compile Include="Effects\FogOfWarController.cs" />
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="GlowingSwimmersCI.cs" />
-    <Compile Include="MiscPO\PlacedHalo.cs" />
     <Compile Include="NoWallSlideZones.cs" />
-    <Compile Include="Objects\Drawable.cs" />
-    <Compile Include="Objects\Shroud.cs" />
-    <Compile Include="Objects\SpinningFan.cs" />
-    <Compile Include="Objects\SteamHazard.cs" />
-    <Compile Include="Effects\ReplaceEffectColor.cs" />
     <Compile Include="Shaders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Shaders.resx</DependentUpon>
     </Compile>
-    <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="SunBlockerFix.cs" />
     <Compile Include="SuperstructureFusesFix.cs" />
-    <Compile Include="EchoExtender\CRSEchoParser.cs" />
-    <Compile Include="EchoExtender\EchoExtender.cs" />
-    <Compile Include="EchoExtender\EchoSettings.cs" />
-    <Compile Include="EchoExtender\EnumExt_EchoExtender.cs" />
-    <Compile Include="EchoExtender\ExtensionMethods.cs" />
-    <Compile Include="Effects\PWMalfunction.cs" />
     <Compile Include="INotifyWhenRoomIsViewed.cs" />
-    <Compile Include="Machinery\OscillationParams.cs" />
-    <Compile Include="MiscPO\PlacedWaterFall.cs" />
-    <Compile Include="MiscPO\MiscPOStatic.cs" />
-    <Compile Include="MiscPO\MiscPO_MPO.cs" />
-    <Compile Include="MiscPO\WormgrassManager.cs" />
     <Compile Include="NewObjects.cs" />
-    <Compile Include="Objects\ColouredLightSource.cs" />
     <Compile Include="CustomArenaDivisions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Machinery\MachineryMPO.cs" />
-    <Compile Include="Machinery\MachineryStatic.cs" />
-    <Compile Include="Machinery\PistonArray.cs" />
-    <Compile Include="Machinery\RoomPowerManager.cs" />
-    <Compile Include="Machinery\SimpleCog.cs" />
-    <Compile Include="Machinery\SimplePiston.cs" />
     <Compile Include="ManagedObjectExamples.cs" />
-    <Compile Include="Particles\GenericParticle.cs" />
-    <Compile Include="Particles\ParticleBehaviourProvider.cs" />
-    <Compile Include="Particles\PBehaviourModule.cs" />
-    <Compile Include="Particles\PMoveState.cs" />
-    <Compile Include="Particles\ParticlesMPO.cs" />
-    <Compile Include="Particles\ParticlesStatic.cs" />
-    <Compile Include="Particles\PVisualState.cs" />
-    <Compile Include="Particles\RoomParticleSystem.cs" />
     <Compile Include="PlacedObjectsManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Objects\PWLightRod.cs" />
     <Compile Include="RainbowNoFade.cs" />
     <Compile Include="RegionKitMod.cs" />
     <Compile Include="RoomLoader.cs" />
     <Compile Include="RK_APOFSFix.cs" />
-    <Compile Include="TheMast\ArenaBackgrounds.cs" />
-    <Compile Include="TheMast\BetterClouds.cs" />
-    <Compile Include="TheMast\CustomAtlases.cs" />
-    <Compile Include="TheMast\DeerFix.cs" />
-    <Compile Include="TheMast\ElectricGates.cs" />
-    <Compile Include="TheMast\Localization\Strings.Designer.cs" />
-    <Compile Include="TheMast\Localization\Translator.cs" />
-    <Compile Include="TheMast\PearlChains.cs" />
-    <Compile Include="TheMast\RainThreatFix.cs" />
-    <Compile Include="TheMast\SkyDandelionBgFix.cs" />
-    <Compile Include="TheMast\WindSystem.cs" />
-    <Compile Include="TheMast\WormGrassFix.cs" />
-    <Compile Include="Utils\AttachedField.cs" />
-    <Compile Include="Utils\ContainerCodes.cs" />
-    <Compile Include="Utils\ICanBringDataToKin.cs" />
-    <Compile Include="Utils\PetrifiedWood.cs" />
-    <Compile Include="Utils\RKExtensions.cs" />
-    <Compile Include="Utils\RKUtils.cs" />
-    <Compile Include="Utils\Tuple.cs" />
+    <Compile Include="Sprites\LooseSpriteLoader.cs" />
+    <Compile Include="ConditionalEffects\*.cs" />
+    <Compile Include="EchoExtender\*.cs" />
+    <Compile Include="AridBarrens\*.cs" />
+    <Compile Include="Machinery\*.cs" />
+    <Compile Include="Particles\*.cs" />
+    <Compile Include="Effects\*.cs" />
+    <Compile Include="Objects\*.cs" />
+    <Compile Include="TheMast\*.cs" />
+    <Compile Include="MiscPO\*.cs" />
+    <Compile Include="Utils\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Atlases\TheMast.tps" />

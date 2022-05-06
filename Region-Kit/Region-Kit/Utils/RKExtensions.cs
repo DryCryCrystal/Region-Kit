@@ -91,6 +91,7 @@ namespace RegionKit.Utils
                 catch { }
 
             }
+            foreach (var child in t.GetNestedTypes()) child.CleanUpStatic();
         }
 
         /// <summary>

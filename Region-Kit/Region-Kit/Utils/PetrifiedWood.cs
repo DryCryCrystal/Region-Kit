@@ -73,6 +73,7 @@ namespace RegionKit.Utils
             wrThr.Start();
         }
         public static int Lifetime = 0;
+        public static bool selfDestruct = false;
         public static void EternalWrite()
         {
             string startMessage = $"PETRIFIED_WOOD writer thread {Thread.CurrentThread.ManagedThreadId} booted up: {DateTime.Now}\n";
@@ -124,6 +125,7 @@ namespace RegionKit.Utils
                 wt.Write(endMessage);
                 wt.Flush();
             }
+            if (selfDestruct) typeof(PetrifiedWood).CleanUpStatic();
         }
         public static Thread wrThr;
         

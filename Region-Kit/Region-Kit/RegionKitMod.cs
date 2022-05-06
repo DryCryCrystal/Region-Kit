@@ -10,6 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
+using RegionKit.Utils;
+using System.Reflection;
+
+using PWood = RegionKit.Utils.PetrifiedWood;
 
 //TODO0(DELTATIME): Make logging that can be used for entire project
 //TODO0: done but untested. see Utils.PetrifiedWood.
@@ -103,22 +107,18 @@ namespace RegionKit {
             EchoExtender.EchoExtender.RemoveHooks();
             Machinery.MachineryStatic.Disable();
             //PetrifiedWood.ShutDown();
-            Utils.PetrifiedWood.Lifetime = 5;
+            PWood.Lifetime = 5;
             MiscPO.MiscPOStatic.Disable();
             Particles.ParticlesStatic.Disable();
             ConditionalEffects.CECentral.Disable();
             //Add new things here- remember to add them to OnEnable() as well!
+            var casm = Assembly.GetExecutingAssembly();
+            foreach (var t in casm.GetTypes()) if (t != typeof(PWood)) t.CleanUpStatic();
+                else {
+                    PWood.selfDestruct |= PWood.wrThr?.ThreadState == System.Threading.ThreadState.Running;
+                    if (!PWood.selfDestruct) t.CleanUpStatic();
+                }
         }
-
-        //private void MainMenu_ctor(On.Menu.MainMenu.orig_ctor orig, Menu.MainMenu self, ProcessManager manager, bool showRegionSpecificBkg)
-        //{
-        //    orig(self, manager, showRegionSpecificBkg);
-        //    if (TheMast.EnumExt_WindSystem.PlacedWind == 0)
-        //    {
-        //        Debug.Log("EnumExtender is not installed!!!");
-        //        self.pages[0].subObjects.Add(new Menu.MenuLabel(self, self.pages[0], "Region Kit requires EnumExtender!", new Vector2(683f + 20f, 370f - 10f), new Vector2(300f, 50f), false));
-        //    }
-        //}
 
         // Code for AutoUpdate support --------------------
         // This URL is specific to this mod, and identifies it on AUDB.

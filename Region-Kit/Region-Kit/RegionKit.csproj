@@ -147,33 +147,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp.refstub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Assembly-CSharp.refstub.dll</HintPath>
-    </Reference>
     <Reference Include="BepInEx, Version=5.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\BepInEx.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.refstub, Version=5.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\BepInEx.refstub.dll</HintPath>
     </Reference>
     <Reference Include="CustomRegions, Version=0.8.41.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\CustomRegions.dll</HintPath>
     </Reference>
-    <Reference Include="CustomRegions.refstub, Version=0.8.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\CustomRegions.refstub.dll</HintPath>
-    </Reference>
     <Reference Include="EnumExtender, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\EnumExtender.dll</HintPath>
-    </Reference>
-    <Reference Include="EnumExtender.refstub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\EnumExtender.refstub.dll</HintPath>
     </Reference>
     <Reference Include="HOOKS-Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -183,25 +167,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Mono.Cecil.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Cecil.refstub, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Mono.Cecil.refstub.dll</HintPath>
-    </Reference>
     <Reference Include="MonoMod, Version=20.5.21.5, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\MonoMod.dll</HintPath>
     </Reference>
-    <Reference Include="MonoMod.refstub, Version=20.5.21.5, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MonoMod.refstub.dll</HintPath>
-    </Reference>
     <Reference Include="MonoMod.RuntimeDetour, Version=19.11.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\MonoMod.RuntimeDetour.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour.refstub, Version=19.11.5.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MonoMod.RuntimeDetour.refstub.dll</HintPath>
     </Reference>
     <Reference Include="MonoMod.Utils">
       <HintPath>lib\MonoMod.Utils.dll</HintPath>
@@ -210,18 +182,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Partiality.dll</HintPath>
     </Reference>
-    <Reference Include="Partiality.refstub, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Partiality.refstub.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.refstub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\UnityEngine.refstub.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

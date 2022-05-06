@@ -238,6 +238,10 @@ namespace RegionKit.Particles
         public string shader = "Basic";
         public Vector2 p2 => GetValue<Vector2>("p2");
         public ContainerCodes cc => GetValue<ContainerCodes>("cc");
+        [FloatField("z_scalemin", 0.1f, 2f, 1f, 0.05f, ManagedFieldWithPanel.ControlType.slider, displayName:"scale min")]
+        public float scalemin = 1f;
+        [FloatField("z_scalemax", 0.1f, 2f, 1f, 0.05f, ManagedFieldWithPanel.ControlType.slider, displayName: "scale max")]
+        public float scalemax = 1f;
 
         public ParticleVisualCustomizer(PlacedObject owner) : base(owner, new ManagedField[]
         {
@@ -265,7 +269,8 @@ namespace RegionKit.Particles
                 aElm = elmName,
                 shader = shader,
                 container = cc,
-                flat = flatLight
+                flat = flatLight,
+                scale = Lerp(scalemin, scalemax, UnityEngine.Random.value)
             };
             res.sCol.ClampToNormal();
             res.lCol.ClampToNormal();

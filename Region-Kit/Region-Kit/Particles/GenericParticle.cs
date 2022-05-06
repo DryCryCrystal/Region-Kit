@@ -194,13 +194,14 @@ namespace RegionKit.Particles
             }
             catch (Exception fue)
             {
-                PetrifiedWood.WriteLine($"Invalid atlas element {visuals.aElm}!");
-                PetrifiedWood.WriteLine(fue);
+                WriteLine($"Invalid atlas element {visuals.aElm}!");
+                WriteLine(fue);
                 sLeaser.sprites[0] = new FSprite("SkyDandelion", true);// .element = Futile.atlasManager.GetElementWithName("SkyDandelion");
             }
             room.game.rainWorld.Shaders.TryGetValue("Basic", out var sh);
             sLeaser.sprites[0].color = visuals.sCol;
             sLeaser.sprites[0].shader = sh;
+            sLeaser.sprites[0].scale = visuals.scale;
             AddToContainer(sLeaser, rCam, rCam.ReturnFContainer(visuals.container.ToString()));
         }
         public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)

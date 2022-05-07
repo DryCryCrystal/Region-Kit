@@ -72,16 +72,16 @@ namespace RegionKit {
 
             if (!ForsakenStationInstalled)
             {
-                Utils.PetrifiedWood.WriteLine("Forsaken Station.dll not loaded; applying related object hooks.");
+                PWood.WriteLine("Forsaken Station.dll not loaded; applying related object hooks.");
                 Effects.ReplaceEffectColor.Apply();
                 Effects.ColoredRoomEffect.Apply();
             }
-            else Utils.PetrifiedWood.WriteLine("Forsaken Station.dll loaded; not applying related object hooks.");
+            else PWood.WriteLine("Forsaken Station.dll loaded; not applying related object hooks.");
 
             //The Mast
             if (!MastInstalled)
             {
-                Utils.PetrifiedWood.WriteLine("TheMast.dll not loaded; applying related object hooks.");
+                PWood.WriteLine("TheMast.dll not loaded; applying related object hooks.");
                 TheMast.ArenaBackgrounds.Apply();
                 TheMast.BetterClouds.Apply();
                 TheMast.DeerFix.Apply();
@@ -96,12 +96,13 @@ namespace RegionKit {
             //Arid Barrens
             if (!ABInstalled)
             {
-                Utils.PetrifiedWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
+                PWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
                 AridBarrens.ABCentral.Register();
             }//On.Room.Loaded += AB_RoomloadDetour;
 
             if (!ARInstalled)
             {
+                PWood.WriteLine("AR objects not installed; applying related object hooks.");
                 NewObjects.Hook();
             }
 

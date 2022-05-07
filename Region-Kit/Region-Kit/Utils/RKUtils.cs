@@ -94,7 +94,7 @@ namespace RegionKit.Utils
         /// <returns></returns>
         internal static ConstructorInfo ctorof<T>(params Type[] pms)
             => typeof(T).GetConstructor(pms);
-        
+
         /// <summary>
         /// takes fieldinfo from T, defaults to <see cref="allContextsInstance"/>
         /// </summary>
@@ -153,6 +153,28 @@ namespace RegionKit.Utils
         internal static RainWorld CRW => UnityEngine.Object.FindObjectOfType<RainWorld>();
         internal static CreatureTemplate GetCreatureTemplate(CreatureTemplate.Type t) => StaticWorld.creatureTemplates[(int)t];
         internal static Vector2 MiddleOfRoom(this Room rm) => new((float)rm.PixelWidth * 0.5f, (float)rm.PixelHeight * 0.5f);
+
+        /// <summary>
+        /// Gets an ER of RK assembly and returns it as string. Default encoding is UTF-8
+        /// </summary>
+        /// <param name="resname">Name of ER</param>
+        /// <param name="enc">Encoding. If none is specified, UTF-8</param>
+        /// <returns>Resulting string. If none is found, <c>null</c> </returns>
+        internal static string ResourceAsString(string resname, Encoding enc = null)
+        {
+            var encToUse = enc ?? Encoding.UTF8;
+            try
+            {
+                var casm = Assembly.GetExecutingAssembly();
+                var str = casm.GetManifestResourceStream(resname);
+                var bf = new byte[str.Length];
+                str.Read(bf, 0, (int)str.Length);
+
+                return encToUse.GetString(bf);
+            }
+            catch (Exception ee) { PetrifiedWood.WriteLine($"Error getting ER: {ee}"); return null; }
+            
+        }
         #endregion
 
     }

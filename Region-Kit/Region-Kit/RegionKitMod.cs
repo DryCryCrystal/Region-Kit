@@ -51,6 +51,8 @@ namespace RegionKit {
             bool ABInstalled = false;
             bool ForsakenStationInstalled = false;
             bool ARInstalled = false;
+            //0 - none, 1 - any, 3 - 1.3 and higher
+            byte CSLInstalled = default;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (asm.FullName.Contains("ABThing")) ABInstalled = true;
@@ -58,6 +60,15 @@ namespace RegionKit {
                 if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
                 if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
             }
+            foreach (var mod in Partiality.PartialityManager.Instance.modManager.loadedMods)
+            {
+                if (mod.ModID == Sprites.CSLCentral.csl_modid)
+                {
+                    CSLInstalled |= 0x01;
+                    if (new Version(mod.Version) >= new Version("1.3")) CSLInstalled |= 0x10;
+                }
+            }
+            PWood.WriteLine($"CSL check results: {CSLInstalled}");
 
             if (!ForsakenStationInstalled)
             {
@@ -94,6 +105,9 @@ namespace RegionKit {
                 NewObjects.Hook();
             }
 
+            //CSL
+            if (RKEnv.RulesDet.TryGetValue("CSLForceState", out prm)) byte.TryParse(prm.First(), out CSLInstalled);
+            if ((CSLInstalled & 0x10) == 0x00) Sprites.CSLCentral.Enable((CSLInstalled & 0x01) == 0x01);
             //Objects
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
@@ -111,6 +125,7 @@ namespace RegionKit {
         }
 
         public void OnDisable() {
+            Sprites.CSLCentral.Disable();
             RoomLoader.Disable();
             SuperstructureFusesFix.Disable();
             EchoExtender.EchoExtender.RemoveHooks();

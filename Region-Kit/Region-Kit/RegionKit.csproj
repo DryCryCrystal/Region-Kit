@@ -37,7 +37,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Shaders.resx</DependentUpon>
     </Compile>
-    <Compile Include="Sprites\LooseSpriteLoader.cs" />
     <Compile Include="TheMast\Localization\*.cs" />
     <Compile Include="ConditionalEffects\*.cs" />
     <Compile Include="EchoExtender\*.cs" />
@@ -47,6 +46,7 @@
     <Compile Include="Effects\*.cs" />
     <Compile Include="Objects\*.cs" />
     <Compile Include="TheMast\*.cs" />
+    <Compile Include="Sprites\*.cs" />
     <Compile Include="MiscPO\*.cs" />
     <Compile Include="Utils\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +63,7 @@
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
     <EmbeddedResource Include="Sprites\spinningFan.png" />
+    <EmbeddedResource Include="Resources\*.txt" />
   </ItemGroup>
   <ItemGroup>
     <!-- other stuff -->
@@ -70,10 +71,12 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="app.config" />
-    <None Include="Resources\FogOfWar.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="lib/*.dll" />
+    <Reference Include="lib\*.dll">
+      <Private>False</Private>
+    </Reference>
+    
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

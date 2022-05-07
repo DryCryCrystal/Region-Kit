@@ -62,6 +62,9 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
 	- Basework for making new types of emitters, particle classes and behaviour modifier classes
 For more detailed instructions, see: `P_GUIDE.md`
 
+### CustomSpritesLoader
+RegionKit packs an instance of CSL by Henpemaz. It allows the user to easily load arbitrary sprites.
+Region makers can place atlases into `[regpack]/Assets/Load/` directory to easily access new sprites for things like particle systems.
 
 ## Credits
 

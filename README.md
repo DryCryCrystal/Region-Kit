@@ -72,7 +72,8 @@ For more detailed instructions, see: `P_GUIDE.md`
 - Thalber
 	- BepInEx migration
 	- RegionKit.Machinery
-	- Particle System
+	- Particle Systems
+	- Misc internal janitoring
 
 - DeltaTime
 	- Initial versions
@@ -89,6 +90,7 @@ For more detailed instructions, see: `P_GUIDE.md`
 
 - Henpemaz
 	- Placed Objects Manager Framework
+	- CustomSpritesLoader
 
 - Thrithralas
 	- Echo Extender

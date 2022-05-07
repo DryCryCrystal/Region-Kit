@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
+using BepInEx.Logging;
 using RegionKit.Utils;
 using System.Reflection;
 
@@ -25,7 +26,15 @@ namespace RegionKit {
         public const string buildVersion = "2"; //Increments for every code change without a version change.
 
         public void OnEnable() {
-            Utils.PetrifiedWood.SetNewPathAndErase("RegionKitLog.txt");
+            __me = new(this);
+            Logger.Log(LogLevel.Debug, Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
+            //wood setup
+            string woodpath = "RegionKitLog.txt";
+            if (RKEnv.RulesDet.TryGetValue("RKLogOutput", out var prm))
+            {
+                woodpath = prm.FirstOrDefault();
+            }
+            PWood.SetNewPathAndErase(woodpath, RKEnv.Rules.Contains("NoRKLog"));
             //VARIOUS PATCHES
             RoomLoader.Patch();
             SuperstructureFusesFix.Patch();
@@ -119,6 +128,11 @@ namespace RegionKit {
                     if (!PWood.selfDestruct) t.CleanUpStatic();
                 }
         }
+
+        internal ManualLogSource publog => Logger;
+
+        private static WeakReference __me;
+        internal static RegionKitMod ME => __me?.Target as RegionKitMod;
 
         // Code for AutoUpdate support --------------------
         // This URL is specific to this mod, and identifies it on AUDB.

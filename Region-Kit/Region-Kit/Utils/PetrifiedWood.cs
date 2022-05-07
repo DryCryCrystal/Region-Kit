@@ -33,7 +33,6 @@ namespace RegionKit.Utils
             string result = string.Empty;
             for (int i = 0; i < IndentLevel; i++) { result += "\t"; }
             result += o?.ToString() ?? "null";
-            result += "\n";
             Write(result);
         }
         public static void WriteLine()
@@ -42,14 +41,19 @@ namespace RegionKit.Utils
         }
         public static void Write(object o)
         {
-
-            Console.Write(o);
-            SpinUp();
-            lock (WriteQueue) WriteQueue.Enqueue(o ?? "null");
+            if (routeback) RegionKitMod.ME.publog.Log(BepInEx.Logging.LogLevel.Debug, o);
+            else
+            {
+                Console.Write(o);
+                SpinUp();
+                lock (WriteQueue) WriteQueue.Enqueue(o ?? "null");
+            }
         }
 
-        public static void SetNewPathAndErase(string tar)
+        public static void SetNewPathAndErase(string tar, bool noFile = false)
         {
+            //todo(thalber): add option to not actually use the file
+            routeback = noFile;
             LogPath = tar;
             File.CreateText(tar).Dispose();
         }
@@ -58,6 +62,7 @@ namespace RegionKit.Utils
         private static Queue<Tuple<Exception, DateTime>> _encEx = new Queue<Tuple<Exception, DateTime>>();
         public static string LogPath { get => LogTarget?.FullName; set { LogTarget = new FileInfo(value); } }
         public static FileInfo LogTarget;
+        internal static bool routeback;
         public static int IndentLevel { get { return _indl; } set { _indl = Math.Max(value, 0); } }
         private static int _indl = 0;
 

@@ -27,7 +27,7 @@ namespace RegionKit {
 
         public void OnEnable() {
             __me = new(this);
-            Logger.Log(LogLevel.Debug, Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
+            Logger.Log(LogLevel.Debug, "running RK ruleset:" + Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
             //wood setup
             string woodpath = "RegionKitLog.txt";
             if (RKEnv.RulesDet.TryGetValue("RKLogOutput", out var prm))
@@ -51,7 +51,7 @@ namespace RegionKit {
             bool ABInstalled = false;
             bool ForsakenStationInstalled = false;
             bool ARInstalled = false;
-            //0 - none, 1 - any, 3 - 1.3 and higher
+            //0 - none, 1 - any, 2 - 1.3 and higher
             byte CSLInstalled = default;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -64,8 +64,8 @@ namespace RegionKit {
             {
                 if (mod.ModID == Sprites.CSLCentral.csl_modid)
                 {
-                    CSLInstalled |= 0x01;
-                    if (new Version(mod.Version) >= new Version("1.3")) CSLInstalled |= 0x10;
+                    CSLInstalled++;
+                    if (new Version(mod.Version) >= new Version("1.3")) CSLInstalled++;
                 }
             }
             PWood.WriteLine($"CSL check results: {CSLInstalled}");
@@ -108,7 +108,7 @@ namespace RegionKit {
 
             //CSL
             if (RKEnv.RulesDet.TryGetValue("CSLForceState", out prm)) byte.TryParse(prm.First(), out CSLInstalled);
-            if ((CSLInstalled & 0x10) == 0x00) Sprites.CSLCentral.Enable((CSLInstalled & 0x01) == 0x01);
+            if (CSLInstalled < 2) Sprites.CSLCentral.Enable(CSLInstalled == 1);
             //Objects
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();

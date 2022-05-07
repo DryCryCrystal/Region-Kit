@@ -70,13 +70,12 @@
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
-    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <!--refs-->
     <Reference Include="lib\*.dll">
       <Private>False</Private>
     </Reference>
-    
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

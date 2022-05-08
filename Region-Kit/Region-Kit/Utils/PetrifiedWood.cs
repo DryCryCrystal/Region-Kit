@@ -30,9 +30,11 @@ namespace RegionKit.Utils
         }
         public static void WriteLine(object o)
         {
-            string result = string.Empty;
-            for (int i = 0; i < IndentLevel; i++) { result += "\t"; }
-            result += o?.ToString() ?? "null";
+            //string result = string.Empty;
+            StringBuilder result = new();
+            for (int i = 0; i < IndentLevel; i++) { result.Append("\t"); }
+            result.Append(o?.ToString() ?? "null");
+            if (!routeback) result.Append("\n");
             Write(result);
         }
         public static void WriteLine()
@@ -52,7 +54,7 @@ namespace RegionKit.Utils
 
         public static void SetNewPathAndErase(string tar, bool noFile = false)
         {
-            //todo(thalber): add option to not actually use the file
+            //todo(thalber): make routeback the default?
             routeback = noFile;
             LogPath = tar;
             File.CreateText(tar).Dispose();
@@ -68,6 +70,7 @@ namespace RegionKit.Utils
 
         public static void SpinUp()
         {
+            //todo(thalber): improve threading?
             Lifetime = 125;
             if (wrThr?.IsAlive ?? false) return;
             wrThr = new Thread(EternalWrite)

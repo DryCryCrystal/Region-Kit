@@ -7,7 +7,7 @@ namespace RegionKit.Utils
 {
     internal static class RKEnv
     {
-        internal const string RKENVKEY = "RainWorld_RegionKit_Rules";
+        internal const string RKENVKEY = "RW_RKRules";
         internal static string[] Rules
         { get { __c_rules ??= Environment.GetEnvironmentVariable(RKENVKEY)?.Split(';'); return __c_rules; } }
         internal static Dictionary<string, IEnumerable<string>> RulesDet { get

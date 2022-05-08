@@ -19,12 +19,13 @@ namespace RegionKit.Sprites
     //TODO(thalber): remove collisions with standalone CSL
     internal static class CSLCentral
     {
-        internal const string csl_modid = "CustomSpritesLoader";
+        internal const string csl_modid = "CSL";
         internal static string description => RKUtils.ResourceAsString("RegionKit.Resources.CSLDesc.txt") ?? "grug";
 
-        internal static bool CRSOnly;
+        internal static bool CRSOnlyMode;
         public static void Enable(bool CRSOnly = true)
         {
+            CRSOnlyMode = CRSOnly;
             CheckMyFolders();
 
             //initialLoadLock = true;
@@ -130,7 +131,7 @@ namespace RegionKit.Sprites
             var alreadyLoaded = Futile.atlasManager.GetAtlasWithName(atlasname);
             if (alreadyLoaded != null)
             {
-                Debug.Log("texture : " + atlasname + "already loaded");
+                PetrifiedWood.WriteLine("texture : " + atlasname + "already loaded");
                 return alreadyLoaded;
             }
 
@@ -143,14 +144,14 @@ namespace RegionKit.Sprites
             else if (!DoIHaveAReplacementForThis(atlasname)) return null;
             try
             {
-                Debug.Log("CustomSpritesLoader: Loading replacement for " + atlasname);
+                PetrifiedWood.WriteLine("CSL: Loading replacement for " + atlasname);
                 string actualatlasname = ShouldAtlasBeLoadedWithPrefix(atlasname) ? "Atlases/" + atlasname : atlasname;
                 return CustomAtlasLoader.ReadAndLoadCustomAtlas(atlasname, new FileInfo(knownAtlasReplacements[atlasname]).DirectoryName, actualatlasname);
             }
             catch (Exception e)
             {
-                Debug.LogError("CustomSpritesLoader: Error loading replacement atlas " + atlasname + ", skipping");
-                Debug.LogException(e);
+                PetrifiedWood.WriteLine("CSL: Error loading replacement atlas " + atlasname + ", skipping");
+                PetrifiedWood.WriteLine(e);
                 return null;
             }
         }
@@ -167,26 +168,35 @@ namespace RegionKit.Sprites
 
         private static void CheckMyFolders()
         {
-            Directory.CreateDirectory(CustomSpritesLoaderFolder);
-            FileInfo readme = new FileInfo(Path.Combine(CustomSpritesLoaderFolder, "Readme.txt"));
-            if (!readme.Exists || readme.Length != description.Length)
+            if (CRSOnlyMode)
             {
-                StreamWriter readmeWriter = readme.CreateText();
-                readmeWriter.Write(description);
-                readmeWriter.Flush();
-                readmeWriter.Close();
+                PetrifiedWood.WriteLine("CSL Running in CRS-only mode. Ignoring own dirs");
             }
-            Directory.CreateDirectory(LoadAtlasesFolder);
-            File.Create(Path.Combine(LoadAtlasesFolder, "Place new atlases to be automatically loaded here"));
-            Directory.CreateDirectory(ReplaceAtlasesFolder);
-            File.Create(Path.Combine(ReplaceAtlasesFolder, "Place full atlas or image replacements here"));
+            else
+            {
+                PetrifiedWood.WriteLine("CSL Running full folder scan.");
+                Directory.CreateDirectory(CustomSpritesLoaderFolder);
+                FileInfo readme = new FileInfo(Path.Combine(CustomSpritesLoaderFolder, "Readme.txt"));
+                if (!readme.Exists || readme.Length != description.Length)
+                {
+                    StreamWriter readmeWriter = readme.CreateText();
+                    readmeWriter.Write(description);
+                    readmeWriter.Flush();
+                    readmeWriter.Close();
+                }
+                Directory.CreateDirectory(LoadAtlasesFolder);
+                File.Create(Path.Combine(LoadAtlasesFolder, "Place new atlases to be automatically loaded here"));
+                Directory.CreateDirectory(ReplaceAtlasesFolder);
+                File.Create(Path.Combine(ReplaceAtlasesFolder, "Place full atlas or image replacements here"));
 
-            CheckFolder(ReplaceAtlasesFolder);
+                CheckFolder(ReplaceAtlasesFolder);
+            }
+            
         }
 
         private static void CheckFolder(string folderToCheck)
         {
-            Debug.Log("CustomSpritesLoader: Scanning for atlas replacements");
+            PetrifiedWood.WriteLine("CSL: Scanning for atlas replacements");
             DirectoryInfo atlasesFolder = new DirectoryInfo(folderToCheck);
             FileInfo[] atlasFiles = atlasesFolder.GetFiles("*.png", SearchOption.AllDirectories);
             foreach (FileInfo atlasFile in atlasFiles)
@@ -195,9 +205,9 @@ namespace RegionKit.Sprites
                 if (!atlasFile.Name.EndsWith(".png")) continue; // fake results ffs
                 string basename = atlasFile.Name.Substring(0, atlasFile.Name.Length - 4); // remove .png
                 knownAtlasReplacements.Add(basename, atlasFile.FullName);
-                Debug.Log("CustomSpritesLoader: Atlas replacement " + basename + " registered");
+                PetrifiedWood.WriteLine("CSL: Atlas replacement " + basename + " registered");
             }
-            Debug.Log("CustomSpritesLoader: Done scanning");
+            PetrifiedWood.WriteLine("CSL: Done scanning");
         }
 
         private static bool IsDirectoryDisabled(FileInfo file, DirectoryInfo root)
@@ -224,7 +234,7 @@ namespace RegionKit.Sprites
             }
             foreach (KeyValuePair<string, FAtlasElement> dupe in duplicates)
             {
-                Debug.Log("CustomSpritesLoader: Preventing duplicate element '" + dupe.Key + "' from being loaded");
+                PetrifiedWood.WriteLine("CSL: Preventing duplicate element '" + dupe.Key + "' from being loaded");
                 atlas._elements.Remove(dupe.Value);
                 atlas._elementsByName.Remove(dupe.Key);
             }
@@ -290,7 +300,7 @@ namespace RegionKit.Sprites
             catch { }
 
             orig(self);
-            if (!CRSOnly) LoadCustomAtlases(LoadAtlasesFolder);
+            if (!CRSOnlyMode) LoadCustomAtlases(LoadAtlasesFolder);
 
             try
             {
@@ -306,7 +316,7 @@ namespace RegionKit.Sprites
             {
                 foreach (KeyValuePair<string, string> keyValues in CustomRegions.Mod.CustomWorldMod.activatedPacks)
                 {
-                    Debug.Log("CustomSpritesLoader: Checking pack " + keyValues.Key);
+                    PetrifiedWood.WriteLine("CSL: Checking pack " + keyValues.Key);
                     var dir = new DirectoryInfo(CustomRegions.Mod.CRExtras.BuildPath(keyValues.Value, CustomRegions.Mod.CRExtras.CustomFolder.Assets, folder: "Replace"));
                     if (dir.Exists)
                     {
@@ -316,7 +326,7 @@ namespace RegionKit.Sprites
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                PetrifiedWood.WriteLine("CSL: Error checking CRS folders!" + e);
             }
         }
 
@@ -326,7 +336,7 @@ namespace RegionKit.Sprites
             {
                 foreach (KeyValuePair<string, string> keyValues in CustomRegions.Mod.CustomWorldMod.activatedPacks)
                 {
-                    Debug.Log("CustomSpritesLoader: Checking pack " + keyValues.Key);
+                    PetrifiedWood.WriteLine("CSL: Checking pack " + keyValues.Key);
                     var dir = new DirectoryInfo(CustomRegions.Mod.CRExtras.BuildPath(keyValues.Value, CustomRegions.Mod.CRExtras.CustomFolder.Assets, folder: "Load"));
                     if (dir.Exists)
                     {
@@ -336,7 +346,7 @@ namespace RegionKit.Sprites
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                PetrifiedWood.WriteLine("CSL: Error loading CRS atlases! " + e);
             }
         }
 
@@ -351,7 +361,7 @@ namespace RegionKit.Sprites
 
         private static void LoadCustomAtlases(string folderToLoadFrom)
         {
-            Debug.Log("CustomSpritesLoader: LoadCustomAtlases from folder " + folderToLoadFrom);
+            PetrifiedWood.WriteLine("CSL: LoadCustomAtlases from folder " + folderToLoadFrom);
             DirectoryInfo atlasesFolder = new DirectoryInfo(folderToLoadFrom);
             FileInfo[] atlasFiles = atlasesFolder.GetFiles("*.png", SearchOption.AllDirectories);
             foreach (FileInfo atlasFile in atlasFiles)
@@ -366,8 +376,8 @@ namespace RegionKit.Sprites
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("CustomSpritesLoader: Error loading custom atlas data for file " + atlasFile.Name + ", skipping");
-                    Debug.LogException(e);
+                    PetrifiedWood.WriteLine("CSL: Error loading custom atlas data for file " + atlasFile.Name + ", skipping");
+                    PetrifiedWood.WriteLine(e);
                 }
             }
             //initialLoadLock = false;

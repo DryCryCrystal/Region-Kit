@@ -8,6 +8,7 @@ using System.Collections;
 using System.IO;
 using System.Text;
 using System.Linq;
+using RegionKit.Utils;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -40,20 +41,20 @@ namespace RegionKit.Sprites
         /// <returns>A reference to the loaded atlas, which is available through futile</returns>
         public static FAtlas ReadAndLoadCustomAtlas(string basename, string folder, string atlasName = null)
         {
-            Debug.Log("CustomAtlasLoader: Loading atlas " + basename + " from " + folder);
+            PetrifiedWood.WriteLine("CSL_CAL: Loading atlas " + basename + " from " + folder);
             Texture2D imageData = new Texture2D(0, 0, TextureFormat.ARGB32, false);
             imageData.LoadImage(File.ReadAllBytes(Path.Combine(folder, basename + ".png")));
 
             Dictionary<string, object> slicerData = null;
             if (File.Exists(Path.Combine(folder, basename + ".txt")))
             {
-                Debug.Log("CustomAtlasLoader: found slicer data");
+                PetrifiedWood.WriteLine("CSL_CAL: found slicer data");
                 slicerData = File.ReadAllText(Path.Combine(folder, basename + ".txt")).dictionaryFromJson();
             }
             Dictionary<string, string> metaData = null;
             if (File.Exists(Path.Combine(folder, basename + ".png.meta")))
             {
-                Debug.Log("CustomAtlasLoader: found metadata");
+                PetrifiedWood.WriteLine("CSL_CAL: found metadata");
                 metaData = File.ReadAllLines(Path.Combine(folder, basename + ".png.meta")).ToList().ConvertAll(MetaEntryToKeyVal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
 
@@ -149,10 +150,10 @@ namespace RegionKit.Sprites
                 // Done
                 if (Futile.atlasManager.DoesContainAtlas(atlasName))
                 {
-                    Debug.Log("Single-image atlas '" + atlasName + "' being replaced.");
+                    PetrifiedWood.WriteLine("Single-image atlas '" + atlasName + "' being replaced.");
                     Futile.atlasManager.ActuallyUnloadAtlasOrImage(atlasName); // Unload previous version if present
                 }
-                if (Futile.atlasManager._allElementsByName.Remove(atlasName)) Debug.Log("Element '" + atlasName + "' being replaced with new one from atlas " + atlasName);
+                if (Futile.atlasManager._allElementsByName.Remove(atlasName)) PetrifiedWood.WriteLine("Element '" + atlasName + "' being replaced with new one from atlas " + atlasName);
                 FAtlasManager._nextAtlasIndex++; // is this guy even used
                 Futile.atlasManager.AddAtlas(fatlas); // Simple
                 return fatlas;
@@ -223,7 +224,7 @@ namespace RegionKit.Sprites
                 // remove duplicated elements and add atlas
                 foreach (FAtlasElement fae in fatlas._elements)
                 {
-                    if (Futile.atlasManager._allElementsByName.Remove(fae.name)) Debug.Log("Element '" + fae.name + "' being replaced with new one from atlas " + atlasName);
+                    if (Futile.atlasManager._allElementsByName.Remove(fae.name)) PetrifiedWood.WriteLine("Element '" + fae.name + "' being replaced with new one from atlas " + atlasName);
                 }
                 FAtlasManager._nextAtlasIndex++;
                 Futile.atlasManager.AddAtlas(fatlas);
@@ -239,7 +240,7 @@ namespace RegionKit.Sprites
                 if (isFullReplacement)
                 {
                     // Done, we're good, unload the old and load the new
-                    Debug.Log("Atlas '" + atlasName + "' being fully replaced with custom one");
+                    PetrifiedWood.WriteLine("Atlas '" + atlasName + "' being fully replaced with custom one");
                     Futile.atlasManager.ActuallyUnloadAtlasOrImage(atlasName); // Unload previous version if present
                     FAtlasManager._nextAtlasIndex++;
                     Futile.atlasManager.AddAtlas(fatlas); // Simple
@@ -250,7 +251,7 @@ namespace RegionKit.Sprites
                     // partially unload the old
                     foreach (FAtlasElement fae in fatlas._elements)
                     {
-                        if (Futile.atlasManager._allElementsByName.Remove(fae.name)) Debug.Log("Element '" + fae.name + "' being replaced with new one from atlas " + atlasName);
+                        if (Futile.atlasManager._allElementsByName.Remove(fae.name)) PetrifiedWood.WriteLine("Element '" + fae.name + "' being replaced with new one from atlas " + atlasName);
                     }
                     // load the new with a salted name
                     do

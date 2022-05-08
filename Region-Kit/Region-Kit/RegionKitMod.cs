@@ -107,7 +107,11 @@ namespace RegionKit {
             }
 
             //CSL
-            if (RKEnv.RulesDet.TryGetValue("CSLForceState", out prm)) byte.TryParse(prm.First(), out CSLInstalled);
+            if (RKEnv.RulesDet.TryGetValue("CSLForceState", out prm))
+            {
+                byte.TryParse(prm.First(), out CSLInstalled);
+                PWood.WriteLine("Forcing CSL mode: " + CSLInstalled);
+            }
             if (CSLInstalled < 2) Sprites.CSLCentral.Enable(CSLInstalled == 1);
             //Objects
             Objects.ColouredLightSource.RegisterAsFullyManagedObject();

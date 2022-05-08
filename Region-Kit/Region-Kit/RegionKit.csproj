@@ -80,4 +80,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+	<RunPostBuildEvent>Always</RunPostBuildEvent>
+    <PostBuildEvent>if defined RWMods (copy /Y "$(TargetPath)" "%25RWMods%25")</PostBuildEvent>
+  </PropertyGroup>
 </Project>

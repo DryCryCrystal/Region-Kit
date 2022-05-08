@@ -43,7 +43,7 @@ namespace RegionKit.Utils
         }
         public static void Write(object o)
         {
-            if (routeback) RegionKitMod.ME.publog.Log(BepInEx.Logging.LogLevel.Debug, o);
+            if (routeback) RegionKitMod.ME.publog.Log(BepInEx.Logging.LogLevel.Info, o);
             else
             {
                 Console.Write(o);

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using RWCustom;
 using UnityEngine;
+using RegionKit.Utils;
+
 
 namespace RegionKit.EchoExtender {
     public static class EchoExtender {
@@ -48,7 +50,7 @@ namespace RegionKit.EchoExtender {
         
         
         private static void StoryGameSessionOnCtor(On.StoryGameSession.orig_ctor orig, StoryGameSession self, int savestatenumber, RainWorldGame game) {
-            Debug.Log("[Echo Extender : Info] Loading Echoes from Region Mods...");
+            PetrifiedWood.WriteLine("[Echo Extender : Info] Loading Echoes from Region Mods...");
             CRSEchoParser.LoadAllCRSPacks();
             orig(self, savestatenumber, game);
         }
@@ -95,15 +97,15 @@ namespace RegionKit.EchoExtender {
             bool SODcondition = settings.SpawnOnThisDifficulty(SlugcatNumber);
             bool karmaCondition = settings.KarmaCondition(karma, karmacap, SlugcatNumber);
             bool karmaCapCondition = settings.GetMinimumKarmaCap(SlugcatNumber) <= karmacap;
-            Debug.Log($"[Echo Extender : Info] Getting echo conditions for {ghostid}");
-            Debug.Log($"[Echo Extender : Info] Using difficulty {SlugcatNumber}");
-            Debug.Log($"[Echo Extender : Info] Spawn On Difficulty : {(SODcondition ? "Met" : "Not Met")} [Required: <{string.Join(", ", (settings.SpawnOnDifficulty.Length > 0 ? settings.SpawnOnDifficulty : EchoSettings.Default.SpawnOnDifficulty).Select(i => i.ToString()).ToArray())}>]");
-            Debug.Log($"[Echo Extender : Info] Minimum Karma : {(karmaCondition ? "Met" : "Not Met")} [Required: {(settings.GetMinimumKarma(SlugcatNumber) == -2 ? "Dynamic" : settings.GetMinimumKarma(SlugcatNumber).ToString())}, Having: {karma}]");
-            Debug.Log($"[Echo Extender : Info] Minimum Karma Cap : {(karmaCapCondition ? "Met" : "Not Met")} [Required: {settings.GetMinimumKarmaCap(SlugcatNumber)}, Having: {karmacap}]");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Getting echo conditions for {ghostid}");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Using difficulty {SlugcatNumber}");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Spawn On Difficulty : {(SODcondition ? "Met" : "Not Met")} [Required: <{string.Join(", ", (settings.SpawnOnDifficulty.Length > 0 ? settings.SpawnOnDifficulty : EchoSettings.Default.SpawnOnDifficulty).Select(i => i.ToString()).ToArray())}>]");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Minimum Karma : {(karmaCondition ? "Met" : "Not Met")} [Required: {(settings.GetMinimumKarma(SlugcatNumber) == -2 ? "Dynamic" : settings.GetMinimumKarma(SlugcatNumber).ToString())}, Having: {karma}]");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Minimum Karma Cap : {(karmaCapCondition ? "Met" : "Not Met")} [Required: {settings.GetMinimumKarmaCap(SlugcatNumber)}, Having: {karmacap}]");
             bool prime = settings.GetPriming(SlugcatNumber);
             bool primedCond = prime ? ghostpreviouslyencountered == 1 : ghostpreviouslyencountered != 2;
-            Debug.Log($"[Echo Extender : Info] Primed : {(primedCond ? "Met" : "Not Met")} [Required: {(prime ? 1 : 0)}, Having {ghostpreviouslyencountered}]");
-            Debug.Log($"[Echo Extender : Info] Spawning Echo : {primedCond && SODcondition && karmaCondition && karmaCapCondition}");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Primed : {(primedCond ? "Met" : "Not Met")} [Required: {(prime ? 1 : 0)}, Having {ghostpreviouslyencountered}]");
+            PetrifiedWood.WriteLine($"[Echo Extender : Info] Spawning Echo : {primedCond && SODcondition && karmaCondition && karmaCapCondition}");
             return
                 primedCond &&
                 SODcondition &&
@@ -150,8 +152,8 @@ namespace RegionKit.EchoExtender {
             if (self.ghostRoom is null && CRSEchoParser.ExtendedEchoIDs.Contains(self.ghostID)) {
                 self.ghostRoom = world.GetAbstractRoom(CRSEchoParser.EchoSettings[ghostid].GetEchoRoom(SlugcatNumber));
                 self.songName = CRSEchoParser.EchoSettings[ghostid].GetEchoSong(SlugcatNumber);
-                Debug.Log($"[Echo Extender : Info] Set Song: {self.songName}");
-                Debug.Log($"[Echo Extender : Info] Set Room {self.ghostRoom?.name}");
+                PetrifiedWood.WriteLine($"[Echo Extender : Info] Set Song: {self.songName}");
+                PetrifiedWood.WriteLine($"[Echo Extender : Info] Set Room {self.ghostRoom?.name}");
             }
         }
 

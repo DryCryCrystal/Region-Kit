@@ -18,6 +18,7 @@ using UnityEngine;
 using System.Security;
 using System.Security.Permissions;
 using System.Reflection;
+using RegionKit.Utils;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -747,7 +748,7 @@ namespace RegionKit.POM
             {
                 if(array.Length == datastart + i)
                 {
-                    Debug.LogError("Error: Not enough fields for managed data type for " + owner.type.ToString() + "\nMaybe there's a version missmatch between the settings and the running version of the mod.");
+                    PetrifiedWood.WriteLine("Error: Not enough fields for managed data type for " + owner.type.ToString() + "\nMaybe there's a version missmatch between the settings and the running version of the mod.");
                     break;
                 }
                 try
@@ -757,7 +758,7 @@ namespace RegionKit.POM
                 }
                 catch (Exception)
                 {
-                    Debug.LogError("Error parsing field " + fields[i].key + " from managed data type for " + owner.type.ToString() + "\nMaybe there's a version missmatch between the settings and the running version of the mod.");
+                    PetrifiedWood.WriteLine("Error parsing field " + fields[i].key + " from managed data type for " + owner.type.ToString() + "\nMaybe there's a version missmatch between the settings and the running version of the mod.");
                 }
             }
         }

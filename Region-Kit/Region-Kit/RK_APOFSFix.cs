@@ -3,6 +3,8 @@ using System;
 using System.Reflection;
 using System.IO;
 using UnityEngine;
+using RegionKit.Utils;
+
 
 //Made by Slime_Cubed and Doggo
 public static class RK_APOFSFix
@@ -18,7 +20,7 @@ public static class RK_APOFSFix
             {
                 if (redirectHooks == null)
                 {
-                    Debug.Log($"{nameof(RK_APOFSFix)} using custom hook manager from {Assembly.GetExecutingAssembly().FullName}");
+                    PetrifiedWood.WriteLine($"{nameof(RK_APOFSFix)} using custom hook manager from {Assembly.GetExecutingAssembly().FullName}");
                     foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
                     {
                         try
@@ -38,7 +40,7 @@ public static class RK_APOFSFix
 
                 if (apofsDetour == null)
                 {
-                    Debug.Log("Creating native detour for SaveState.AbstractPhysicalObjectFromString...");
+                    PetrifiedWood.WriteLine("Creating native detour for SaveState.AbstractPhysicalObjectFromString...");
                     apofsDetour = new NativeDetour(apofs, typeof(RK_APOFSFix).GetMethod(nameof(Hook_AbstractPhysicalObjectFromString)));
                 }
 

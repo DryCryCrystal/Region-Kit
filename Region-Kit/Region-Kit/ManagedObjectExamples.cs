@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using static RegionKit.POM.PlacedObjectsManager;
+using RegionKit.Utils;
+
 
 namespace RegionKit
 {
@@ -77,14 +79,14 @@ namespace RegionKit
             {
                 this.room = room;
                 this.placedObject = pObj;
-                UnityEngine.Debug.Log("SillyObject create");
+                PetrifiedWood.WriteLine("SillyObject create");
             }
 
             public override void Update(bool eu)
             {
                 base.Update(eu);
                 if (room.game.clock % 100 == 0)
-                    Debug.Log("SillyObject vf1.x is " + (placedObject.data as ManagedData).GetValue<Vector2>("vf1").x); // This is how you access those fields you created when using ManagedData directly.
+                    PetrifiedWood.WriteLine("SillyObject vf1.x is " + (placedObject.data as ManagedData).GetValue<Vector2>("vf1").x); // This is how you access those fields you created when using ManagedData directly.
             }
         }
 
@@ -146,7 +148,7 @@ namespace RegionKit
                             otherPlaces.Add(pobj);
                     }
 
-                    UnityEngine.Debug.Log("CuriousObject started and found " + otherPlaces.Count + " location");
+                    PetrifiedWood.WriteLine("CuriousObject started and found " + otherPlaces.Count + " location");
                 }
                  // IDrawable stuff
                 public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
@@ -238,13 +240,13 @@ namespace RegionKit
                 // Serialization has to include our manual field
                 public override string ToString()
                 {
-                    //Debug.Log("CuriousData serializing as " + base.ToString() + "~" + rotation);
+                    //PetrifiedWood.WriteLine("CuriousData serializing as " + base.ToString() + "~" + rotation);
                     return base.ToString() + "~" + rotation;
                 }
 
                 public override void FromString(string s)
                 {
-                    //Debug.Log("CuriousData deserializing from "+ s);
+                    //PetrifiedWood.WriteLine("CuriousData deserializing from "+ s);
                     base.FromString(s);
                     string[] arr = Regex.Split(s, "~");
                     try
@@ -252,7 +254,7 @@ namespace RegionKit
                         rotation = float.Parse(arr[base.FieldsWhenSerialized + 0]);
                     }
                     catch { } // bad data, hopefully the default is fine :)
-                    //Debug.Log("CuriousData got rotation = " + rotation);
+                    //PetrifiedWood.WriteLine("CuriousData got rotation = " + rotation);
                 }
             }
 

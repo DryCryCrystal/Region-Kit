@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using RWCustom;
+using RegionKit.Utils;
 
 /* Author: Deltatime
 /* Allows for the creation of configurable arena dividers through text files
@@ -48,11 +49,11 @@ namespace RegionKit {
         }
 
         public static void LogError(string message) {
-            Debug.Log("[ERROR] Region-Kit:CustomArenaDivisions - " + message);
+            PetrifiedWood.WriteLine("[ERROR] Region-Kit:CustomArenaDivisions - " + message);
         }
 
         public static void Log(string message) {
-            Debug.Log("Region-Kit:CustomArenaDivisions - " + message);
+            PetrifiedWood.WriteLine("Region-Kit:CustomArenaDivisions - " + message);
         }
         #endregion hooksAndLogs
 

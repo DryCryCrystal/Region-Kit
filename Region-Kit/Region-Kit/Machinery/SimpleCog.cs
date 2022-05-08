@@ -17,7 +17,7 @@ namespace RegionKit.Machinery
             PO = pobj;
             this.room = rm;
             _assignedCD = acd;
-            //Debug.Log($"Cog created in {rm.abstractRoom?.name}");
+            //PetrifiedWood.WriteLine($"Cog created in {rm.abstractRoom?.name}");
             PetrifiedWood.WriteLine($"({rm.abstractRoom.name}): Created a Cog.");
         }
         public override void Update(bool eu)

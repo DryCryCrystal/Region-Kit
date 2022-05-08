@@ -97,7 +97,7 @@ namespace RegionKit.Effects
 						}
 					}
 				}
-				catch { Debug.Log("[Error  :ForsakenStation.ColoredRoomEffect] Wrong syntax effect loaded: " + s[0]); }
+				catch { PetrifiedWood.WriteLine("[Error  :ForsakenStation.ColoredRoomEffect] Wrong syntax effect loaded: " + s[0]); }
 			};
             On.DevInterface.EffectPanel.ctor += delegate(On.DevInterface.EffectPanel.orig_ctor orig, EffectPanel self, DevUI owner, DevUINode parentNode, Vector2 pos, RoomSettings.RoomEffect effect)
 			{

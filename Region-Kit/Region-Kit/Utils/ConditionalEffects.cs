@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using DevInterface;
 using RWCustom;
+using RegionKit.Utils;
 
 public class ConditionalEffects : Partiality.Modloader.PartialityMod
 {
@@ -135,7 +136,7 @@ public class ConditionalEffects : Partiality.Modloader.PartialityMod
         }
         } catch
         {
-            Debug.Log("Wrong syntax effect loaded for filter: " + s[0]);
+            PetrifiedWood.WriteLine("Wrong syntax effect loaded for filter: " + s[0]);
         }
         RainWorld rw = UnityEngine.Object.FindObjectOfType<RainWorld>();
         if (TryGetWeak(filterFlags, self, out bool[] testFlags))

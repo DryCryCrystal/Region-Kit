@@ -4,6 +4,8 @@ using System.IO;
 using PastebinMachine.EnumExtender;
 using RWCustom;
 using UnityEngine;
+using RegionKit.Utils;
+
 
 namespace RegionKit.EchoExtender {
     public static class CRSEchoParser {
@@ -39,14 +41,14 @@ namespace RegionKit.EchoExtender {
         // ReSharper disable once InconsistentNaming
         public static void LoadAllCRSPacks() {
             foreach (var kvp in CustomRegions.Mod.CustomWorldMod.activatedPacks) {
-                Debug.Log($"[Echo Extender : Info] Checking pack {kvp.Key} for Echo.");
+                PetrifiedWood.WriteLine($"[Echo Extender : Info] Checking pack {kvp.Key} for Echo.");
                 var resPath = CustomRegions.Mod.CustomWorldMod.resourcePath + kvp.Value + Path.DirectorySeparatorChar;
                 var regPath = resPath + Path.DirectorySeparatorChar + "World" + Path.DirectorySeparatorChar + "Regions";
                 if (Directory.Exists(regPath)) {
                     foreach (var region in Directory.GetDirectories(regPath)) {
                         string regInitials = region.Substring(region.Length - 2);
                         string convPath = region + Path.DirectorySeparatorChar + "echoConv.txt";
-                        Debug.Log($"[Echo Extender : Info] Checking region {regInitials} for Echo.");
+                        PetrifiedWood.WriteLine($"[Echo Extender : Info] Checking region {regInitials} for Echo.");
                         if (File.Exists(convPath)) {
                             string convText = File.ReadAllText(convPath);
                             convText = ManageXOREncryption(convText, convPath);
@@ -58,28 +60,28 @@ namespace RegionKit.EchoExtender {
                                 EnumExtender.ExtendEnumsAgain();
                                 ExtendedEchoIDs.Add(GetEchoID(regInitials));
                                 EchoConversations.Add(GetConversationID(regInitials), convText);
-                                Debug.Log("[Echo Extender : Info] Added conversation for echo in region " + regInitials);
+                                PetrifiedWood.WriteLine("[Echo Extender : Info] Added conversation for echo in region " + regInitials);
                             }
                             else {
-                                Debug.Log("[Echo Extender : Warning] An echo for this region already exists, skipping.");
+                                PetrifiedWood.WriteLine("[Echo Extender : Warning] An echo for this region already exists, skipping.");
                             }
 
                             EchoSettings.TryAdd(GetEchoID(regInitials), settings);
                         }
                         else {
-                            Debug.Log("[Echo Extender : Info] No conversation file found!");
+                            PetrifiedWood.WriteLine("[Echo Extender : Info] No conversation file found!");
                         }
                     }
                 }
                 else {
-                    Debug.Log("[Echo Extender : Info] Pack doesn't have a regions folder, skipping.");
+                    PetrifiedWood.WriteLine("[Echo Extender : Info] Pack doesn't have a regions folder, skipping.");
                 }
             }
         }
 
 
         public static string ManageXOREncryption(string text, string path) {
-            Debug.Log("[Echo Extender : Info] Managing XOR Encryption, only supports English so far");
+            PetrifiedWood.WriteLine("[Echo Extender : Info] Managing XOR Encryption, only supports English so far");
             string xor = Custom.xorEncrypt(text, 54 + 1 + (int)InGameTranslator.LanguageID.English * 7);
             if (xor.StartsWith("###ENCRYPTED")) return xor.Substring("###ENCRYPTED".Length);
             File.WriteAllText(path, Custom.xorEncrypt("###ENCRYPTED" + text, 54 + 1 + (int)InGameTranslator.LanguageID.English * 7));

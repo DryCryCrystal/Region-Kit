@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using RegionKit.Utils;
+
 
 namespace RegionKit.EchoExtender {
     public struct EchoSettings {
@@ -93,7 +95,7 @@ namespace RegionKit.EchoExtender {
         };
 
         public static EchoSettings FromFile(string path) {
-            Debug.Log("[Echo Extender : Info] Found settings file: " + path);
+            PetrifiedWood.WriteLine("[Echo Extender : Info] Found settings file: " + path);
             string[] rows = File.ReadAllLines(path);
             EchoSettings settings = Empty;
             foreach (string row in rows) {
@@ -105,7 +107,7 @@ namespace RegionKit.EchoExtender {
                     if (pass.StartsWith("(")) {
                         foreach (string rawNum in pass.Substring(1, pass.IndexOf(')') - 1).SplitAndREE(",")) {
                             if (!int.TryParse(rawNum, out int result)) {
-                                Debug.Log($"[Echo Extender : Warning] Found a non-integer difficulty '{rawNum}'! Skipping : " + row);
+                                PetrifiedWood.WriteLine($"[Echo Extender : Warning] Found a non-integer difficulty '{rawNum}'! Skipping : " + row);
                                 continue;
                             }
 
@@ -147,13 +149,13 @@ namespace RegionKit.EchoExtender {
                             settings.DefaultFlip.AddMultiple(float.Parse(split[1]), difficulties);
                             break;
                         default:
-                            Debug.Log($"[Echo Extender : Warning] Setting '{pass.Trim().ToLower()}' not found! Skipping : " + row);
+                            PetrifiedWood.WriteLine($"[Echo Extender : Warning] Setting '{pass.Trim().ToLower()}' not found! Skipping : " + row);
                             break;
                     }
                 }
 
                 catch (Exception) {
-                    Debug.Log("[Echo Extender : Error] Failed to parse line " + row);
+                    PetrifiedWood.WriteLine("[Echo Extender : Error] Failed to parse line " + row);
                 }
             }
 

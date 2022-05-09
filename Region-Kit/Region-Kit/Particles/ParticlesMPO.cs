@@ -259,18 +259,29 @@ namespace RegionKit.Particles
         public PVisualState DataForNew()
         {
             //TODO(thalber): finish pvs.datafornew
-            var res = new PVisualState
+            var res = new PVisualState(
+                elmName,
+                shader,
+                cc,
+                spriteColor.Deviation(spriteColorFluke),
+                lightColor.Deviation(lightColorFluke),
+                ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
+                ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
+                ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
+                0f,
+                flatLight,
+                Lerp(scalemin, scalemax, UnityEngine.Random.value))
             {
-                sCol = spriteColor.Deviation(spriteColorFluke),
-                lCol = lightColor.Deviation(lightColorFluke),
-                lRadMin = ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
-                lRadMax = ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
-                lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
-                aElm = elmName,
-                shader = shader,
-                container = cc,
-                flat = flatLight,
-                scale = Lerp(scalemin, scalemax, UnityEngine.Random.value)
+                //sCol = spriteColor.Deviation(spriteColorFluke),
+                //lCol = lightColor.Deviation(lightColorFluke),
+                //lRadMin = ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
+                //lRadMax = ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
+                //lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
+                //aElm = elmName,
+                //shader = shader,
+                //container = cc,
+                //flat = flatLight,
+                //scale = Lerp(scalemin, scalemax, UnityEngine.Random.value),
             };
             res.sCol.ClampToNormal();
             res.lCol.ClampToNormal();

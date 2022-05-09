@@ -44,6 +44,7 @@ namespace RegionKit.Particles
             //every frame, velocity is set to initial. Make sure to treat it accordingly in your custom behaviour modules
             var cpw = CurrentPower;
             var crd = cRad(cpw);
+            var cLInt = (visuals.lInt > 0f)? Lerp(0f, visuals.lInt, cpw) : 0f;
             if (!SetUpRan)
             {
                 foreach (var m in Modules) m.Enable();
@@ -52,7 +53,7 @@ namespace RegionKit.Particles
                 {
                     myLight = new LightSource(pos, false, visuals.lCol, this);
                     myLight.requireUpKeep = true;
-                    myLight.HardSetAlpha(cpw);
+                    myLight.HardSetAlpha(cLInt);
                     myLight.HardSetRad(crd);
                     myLight.flat = visuals.flat;
                     room.AddObject(myLight);
@@ -62,11 +63,12 @@ namespace RegionKit.Particles
             ProgressLifecycle();
             if (myLight != null)
             {
-                myLight.setAlpha = cpw;
+                myLight.setAlpha = cLInt;
                 myLight.setRad = crd;
                 myLight.setPos = this.pos;
                 myLight.stayAlive = true;
                 myLight.color = visuals.lCol;
+                myLight.flat = this.visuals.flat;
             }
             vel = DegToVec(start.dir) * start.speed;
             OnUpdatePreMove?.Invoke();

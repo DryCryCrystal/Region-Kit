@@ -66,7 +66,7 @@ namespace RegionKit.EchoExtender {
                                 PetrifiedWood.WriteLine("[Echo Extender : Warning] An echo for this region already exists, skipping.");
                             }
 
-                            EchoSettings.TryAdd(GetEchoID(regInitials), settings);
+                            EchoSettings.SetKey(GetEchoID(regInitials), settings);
                         }
                         else {
                             PetrifiedWood.WriteLine("[Echo Extender : Info] No conversation file found!");

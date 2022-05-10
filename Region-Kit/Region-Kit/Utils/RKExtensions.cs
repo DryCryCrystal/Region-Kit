@@ -74,6 +74,8 @@ namespace RegionKit.Utils
         
         public static FContainer ReturnFContainer(this RoomCamera rcam, ContainerCodes cc) 
             => rcam.ReturnFContainer(cc.ToString());
+        public static string[] SplitAndREE(this string target, string seperator) => target.Split(new[] { seperator }, StringSplitOptions.RemoveEmptyEntries);
+
         #region refl extensions
         /// <summary>
         /// cleans up all non valuetype fields in a type. for realm cleanups
@@ -118,11 +120,20 @@ namespace RegionKit.Utils
         /// <param name="dict"></param>
         /// <param name="key"></param>
         /// <param name="val"></param>
-        internal static void SetKey<tKey, tValue>(this IDictionary<tKey, tValue> dict, tKey key, tValue val)
+        internal static bool SetKey<tKey, tValue>(this IDictionary<tKey, tValue> dict, tKey key, tValue val)
         {
             if (dict == null) throw new ArgumentNullException();
-            if (!dict.ContainsKey(key)) dict.Add(key, val);
-            else dict[key] = val;
+            try
+            {
+                if (!dict.ContainsKey(key)) dict.Add(key, val);
+                else dict[key] = val;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            
         }
         /// <summary>
         /// removes a keypair if key present
@@ -131,9 +142,10 @@ namespace RegionKit.Utils
         /// <typeparam name="tVal"></typeparam>
         /// <param name="dict"></param>
         /// <param name="key"></param>
-        internal static void TryRemoveKey<tKey, tVal>(this IDictionary<tKey, tVal> dict, tKey key)
+        internal static bool TryRemoveKey<tKey, tVal>(this IDictionary<tKey, tVal> dict, tKey key)
         {
-            if (dict.ContainsKey(key)) dict.Remove(key);
+            if (dict.ContainsKey(key)) { dict.Remove(key); return true; }
+            else return false;
         }
         internal static bool IndexInRange(this object[] arr, int index) => index > -1 && index < arr.Length;
         internal static T RandomOrDefault<T>(this T[] arr)
@@ -148,6 +160,31 @@ namespace RegionKit.Utils
             //var R = new System.Random(l.GetHashCode());
             return l[URand.Range(0, l.Count)];
         }
+
+        public static void AddMultiple<TKey, TValue>(this Dictionary<TKey, TValue> dict, TValue value, params TKey[] keys)
+        {
+            dict.AddMultiple(value, ieKeys: keys);
+        }
+
+        public static void AddMultiple<TKey, TValue>(this Dictionary<TKey, TValue> dict, TValue value, IEnumerable<TKey> ieKeys)
+        {
+            foreach (TKey key in ieKeys)
+            {
+                dict.SetKey(key, value);
+            }
+        }
+        //public static bool TryAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, TValue value)
+        //{
+        //    try
+        //    {
+        //        dict.Add(key, value);
+        //        return true;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return false;
+        //    }
+        //}
 
         #endregion
     }

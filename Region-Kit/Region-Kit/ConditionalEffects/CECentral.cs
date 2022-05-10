@@ -7,7 +7,7 @@ using Menu;
 using DevInterface;
 using RegionKit.Utils;
 
-using static RegionKit.ConditionalEffects.CEExt;
+using static RegionKit.Utils.RKUtils;
 
 namespace RegionKit.ConditionalEffects
 {

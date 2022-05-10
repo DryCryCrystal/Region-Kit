@@ -49,7 +49,17 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
 	- Adds more advanced variations of CustomDecal (FreeformDecalOrSprite) and LightSource (ColouredLightSource)
 - Arid Barrens
 	- Adds Sandstorm Effect
-
+- ShelterBehaviors
+	- Adds placed objects to control and customize how your shelters act
+	(standalone version will take priority if present)
+- ExtendedGates
+	- Enables you to set additional gate pass requirements: karma above 5, mark of communication etc
+	- Features a set of new holograms
+	(for instructions see https://github.com/henpemaz/PartModPartMeme/blob/master/ExtendedGates/Resources/README.txt)
+	(standalone version will take priority if present)
+- CustomSpritesLoader
+	- Allows easily loading in atlases or separate sprites without additional code (as a region maker, put things into `[regpack]/Assets/Load/`)
+	(standalone version will take priority if needed)
   
 ### Particle system
 
@@ -94,6 +104,7 @@ Region makers can place atlases into `[regpack]/Assets/Load/` directory to easil
 - Henpemaz
 	- Placed Objects Manager Framework
 	- CustomSpritesLoader
+	- ShelterBehaviors
 
 - Thrithralas
 	- Echo Extender
@@ -118,6 +129,8 @@ Region makers can place atlases into `[regpack]/Assets/Load/` directory to easil
 
 - Dracentis
 	- Arid Barrens Code
+
+**Initial ExtendedGates authors**: Henpemaz (code); Mehri'Kairotep, Thalber, LB/M4rbleL1ne and Nautillo (spritework).
 
 ## Download
 Downloads can be found [here](https://github.com/DryCryCrystal/Region-Kit/releases/latest).

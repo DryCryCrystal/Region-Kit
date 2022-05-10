@@ -4,6 +4,8 @@ using DevInterface;
 using RegionKit.Utils;
 using RegionKit.ConditionalEffects;
 
+using static RegionKit.Utils.RKUtils;
+
 namespace RegionKit.Effects
 {
 	public static class ColoredRoomEffect /// By M4rbleL1ne/LB Gamer
@@ -43,7 +45,7 @@ namespace RegionKit.Effects
 				self.amount = savedAmount;
 			}*/
 			string ret = "";
-			if (CEExt.TryGetWeak(CECentral.filterFlags, self, out bool[] flags))
+			if (TryGetWeak(CECentral.filterFlags, self, out bool[] flags))
 			{
 				int bitMask = 0;
 				bool allTrue = true;

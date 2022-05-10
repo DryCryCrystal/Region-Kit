@@ -156,27 +156,38 @@ namespace RegionKit.Utils
         public static RainWorld CRW => UnityEngine.Object.FindObjectOfType<RainWorld>();
         public static CreatureTemplate GetCreatureTemplate(CreatureTemplate.Type t) => StaticWorld.creatureTemplates[(int)t];
         public static Vector2 MiddleOfRoom(this Room rm) => new((float)rm.PixelWidth * 0.5f, (float)rm.PixelHeight * 0.5f);
-
         /// <summary>
-        /// Gets an ER of RK assembly and returns it as string. Default encoding is UTF-8
+        /// Gets bytes from ER of an assembly.
+        /// </summary>
+        /// <param name="resname">name of the resource</param>
+        /// <param name="casm">target assembly. If unspecified, RK asm</param>
+        /// <returns>resulting byte array</returns>
+        public static byte[] ResourceBytes(string resname, Assembly casm = null)
+        {
+            if (resname is null) throw new ArgumentNullException("can not get with a null name");
+            casm ??= Assembly.GetExecutingAssembly();
+            var str = casm.GetManifestResourceStream(resname);
+            byte[] bf = (str is null) ? null : new byte[str.Length];
+            str?.Read(bf, 0, (int)str.Length);
+            return bf;
+        }
+        /// <summary>
+        /// Gets an ER of an assembly and returns it as string. Default encoding is UTF-8
         /// </summary>
         /// <param name="resname">Name of ER</param>
         /// <param name="enc">Encoding. If none is specified, UTF-8</param>
+        /// <param name="casm">assembly to get resource from. If unspecified, RK asm.</param> 
         /// <returns>Resulting string. If none is found, <c>null</c> </returns>
-        public static string ResourceAsString(string resname, Encoding enc = null)
+        public static string ResourceAsString(string resname, Encoding enc = null, Assembly casm = null)
         {
-            var encToUse = enc ?? Encoding.UTF8;
+            enc ??= Encoding.UTF8;
+            casm ??= Assembly.GetExecutingAssembly();
             try
             {
-                var casm = Assembly.GetExecutingAssembly();
-                var str = casm.GetManifestResourceStream(resname);
-                var bf = new byte[str.Length];
-                str.Read(bf, 0, (int)str.Length);
-
-                return encToUse.GetString(bf);
+                var bf = ResourceBytes(resname, casm);
+                return (bf is null) ? null : enc.GetString(bf);
             }
             catch (Exception ee) { PetrifiedWood.WriteLine($"Error getting ER: {ee}"); return null; }
-            
         }
         #endregion
 

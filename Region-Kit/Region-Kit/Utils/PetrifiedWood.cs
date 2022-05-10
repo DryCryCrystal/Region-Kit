@@ -57,7 +57,7 @@ namespace RegionKit.Utils
             //todo(thalber): make routeback the default?
             routeback = noFile;
             LogPath = tar;
-            File.CreateText(tar).Dispose();
+            if (!routeback) File.CreateText(tar).Dispose();
         }
         public static Queue<object> WriteQueue { get { _wc ??= new Queue<object>(); return _wc; } set { _wc = value; } }
         private static Queue<Object> _wc = new();

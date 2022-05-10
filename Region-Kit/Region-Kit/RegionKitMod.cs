@@ -17,8 +17,6 @@ using System.Reflection;
 using PWood = RegionKit.Utils.PetrifiedWood;
 using RegionKit.Objects;
 
-//TODO0(DELTATIME): Make logging that can be used for entire project
-//TODO0: done but untested. see Utils.PetrifiedWood.
 namespace RegionKit
 {
     [BepInPlugin("RegionKit", "RegionKit", modVersion + "." + buildVersion)]
@@ -36,7 +34,7 @@ namespace RegionKit
             {
                 woodpath = prm.FirstOrDefault();
             }
-            PWood.SetNewPathAndErase(woodpath, RKEnv.Rules.Contains("NoRKLog"));
+            PWood.SetNewPathAndErase(woodpath, !RKEnv.Rules.Contains("RKLogFile"));
             //VARIOUS PATCHES
             RoomLoader.Patch();
             SuperstructureFusesFix.Patch();
@@ -49,6 +47,8 @@ namespace RegionKit
             LooseSpriteLoader.LoadSprites();
             ConditionalEffects.CECentral.Enable(); //Applies Conditional Effects
             Effects.FogOfWar.Patch();
+
+
             bool MastInstalled = false;
             bool ABInstalled = false;
             bool ForsakenStationInstalled = false;
@@ -56,8 +56,10 @@ namespace RegionKit
             //0 - none, 1 - any, 2 - 1.3 and higher
             byte CSLInstalled = default;
             byte SBehInstalled = default;
+            byte EGInstalled = default;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
+                if (asm.FullName.Contains("ExtendedGates")) EGInstalled++;
                 if (asm.FullName.Contains("ABThing")) ABInstalled = true;
                 if (asm.FullName.Contains("TheMast")) MastInstalled = true;
                 if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
@@ -110,8 +112,8 @@ namespace RegionKit
                 PWood.WriteLine("AR objects not installed; applying related object hooks.");
                 NewObjects.Hook();
             }
-
-            //CSL
+            //henpemods:
+            //CSL, extendedgates, shelterbehaviours
             if (RKEnv.RulesDet.TryGetValue("CSLForceState", out prm))
             {
                 byte.TryParse(prm.First(), out CSLInstalled);
@@ -126,6 +128,11 @@ namespace RegionKit
                     1 => $"found CSL below break ver, only scanning CRS folders",
                     _ => "found CSL equal or greater than self, not enabling"
                 });
+            }
+            if (EGInstalled == 0)
+            {
+                PWood.WriteLine("ExtendedGates not found, applying related hooks");
+                ExtendedGates.Enable();
             }
             if (SBehInstalled == 0)
             {
@@ -150,6 +157,7 @@ namespace RegionKit
         }
 
         public void OnDisable() {
+            ExtendedGates.Disable();
             SBeh.SBehCentral.Disable();
             Sprites.CSLCentral.Disable();
             RoomLoader.Disable();

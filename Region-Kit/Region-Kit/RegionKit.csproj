@@ -55,8 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <!-- ER -->
-    <EmbeddedResource Include="Atlases\TheMast.tps" />
-    <EmbeddedResource Include="Atlases\TheMast\Symbol_PearlChain.png" />
+	<EmbeddedResource Include="Atlases\*" />
+    <EmbeddedResource Include="Atlases\*\*" />
     <EmbeddedResource Include="Shaders.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Shaders.Designer.cs</LastGenOutput>

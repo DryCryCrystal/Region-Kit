@@ -49,7 +49,8 @@
     <Compile Include="TheMast\*.cs" />
     <Compile Include="Sprites\*.cs" />
     <Compile Include="MiscPO\*.cs" />
-    <Compile Include="Utils\*.cs" />
+	<Compile Include="Utils\*.cs" />
+    <Compile Include="SBeh\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

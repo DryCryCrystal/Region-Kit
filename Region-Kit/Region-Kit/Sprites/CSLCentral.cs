@@ -20,6 +20,7 @@ namespace RegionKit.Sprites
     internal static class CSLCentral
     {
         internal const string csl_modid = "CSL";
+        internal const string breakVer = "1.3";
         internal static string description => RKUtils.ResourceAsString("RegionKit.Resources.CSLDesc.txt") ?? "grug";
 
         internal static bool CRSOnlyMode;

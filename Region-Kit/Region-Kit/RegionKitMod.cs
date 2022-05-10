@@ -55,20 +55,23 @@ namespace RegionKit
             bool ARInstalled = false;
             //0 - none, 1 - any, 2 - 1.3 and higher
             byte CSLInstalled = default;
+            byte SBehInstalled = default;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (asm.FullName.Contains("ABThing")) ABInstalled = true;
                 if (asm.FullName.Contains("TheMast")) MastInstalled = true;
                 if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
                 if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
+                if (asm.FullName.Contains("ShelterBehaviors")) SBehInstalled++;
             }
             foreach (var mod in Partiality.PartialityManager.Instance.modManager.loadedMods)
             {
                 if (mod.ModID == Sprites.CSLCentral.csl_modid)
                 {
                     CSLInstalled++;
-                    if (new Version(mod.Version) >= new Version("1.3")) CSLInstalled++;
+                    if (new Version(mod.Version) >= new Version(Sprites.CSLCentral.breakVer)) CSLInstalled++;
                 }
+                //if (mod.ModID == SBeh.SBehCentral.ModID) SBehInstalled++;
             }
             PWood.WriteLine($"CSL check results: {CSLInstalled}");
 
@@ -114,13 +117,28 @@ namespace RegionKit
                 byte.TryParse(prm.First(), out CSLInstalled);
                 PWood.WriteLine("Forcing CSL mode: " + CSLInstalled);
             }
-            if (CSLInstalled < 2) Sprites.CSLCentral.Enable(CSLInstalled == 1);
+            if (CSLInstalled < 2)
+            {
+                Sprites.CSLCentral.Enable(CSLInstalled == 1);
+                PWood.WriteLine(CSLInstalled switch
+                {
+                    0 => "CSL not installed, full apply",
+                    1 => $"found CSL below break ver, only scanning CRS folders",
+                    _ => "found CSL equal or greater than self, not enabling"
+                });
+            }
+            if (SBehInstalled == 0)
+            {
+                PWood.WriteLine("ShelterBehaviors not installed, applying related hooks");
+                SBeh.SBehCentral.Enable();
+            }
+
             //Objects
-            Objects.ColouredLightSource.RegisterAsFullyManagedObject();
+            ColouredLightSource.RegisterAsFullyManagedObject();
             Machinery.MachineryStatic.Enable();
             MiscPO.MiscPOStatic.Enable();
             Particles.ParticlesStatic.Enable();
-            Objects.Drawable.Register();
+            Drawable.Register();
             SpinningFanObjRep.SpinningFanRep();
             //ShroudObjRep.ShroudRep();
             //Add new things here - remember to add them to OnDisable() as well!
@@ -132,6 +150,7 @@ namespace RegionKit
         }
 
         public void OnDisable() {
+            SBeh.SBehCentral.Disable();
             Sprites.CSLCentral.Disable();
             RoomLoader.Disable();
             SuperstructureFusesFix.Disable();

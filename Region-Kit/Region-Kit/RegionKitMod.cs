@@ -15,10 +15,12 @@ using RegionKit.Utils;
 using System.Reflection;
 
 using PWood = RegionKit.Utils.PetrifiedWood;
+using RegionKit.Objects;
 
 //TODO0(DELTATIME): Make logging that can be used for entire project
 //TODO0: done but untested. see Utils.PetrifiedWood.
-namespace RegionKit {
+namespace RegionKit
+{
     [BepInPlugin("RegionKit", "RegionKit", modVersion + "." + buildVersion)]
     public partial class RegionKitMod : BaseUnityPlugin {
 

@@ -6,157 +6,158 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using RWCustom;
 using UnityEngine;
+using DevInterface;
 
-//Made By LeeMoriya
-public class EnumExt_RainbowNoFade
+
+namespace RegionKit
 {
-    public static PlacedObject.Type RainbowNoFade;
-}
-
-public class RainbowNoFade : CosmeticSprite
-{
-    public RainbowNoFade(Room room, PlacedObject placedObject)
+    //Made By LeeMoriya
+    public class EnumExt_RainbowNoFade
     {
-        this.room = room;
-        this.placedObject = placedObject;
-        Futile.atlasManager.LoadAtlasFromTexture("rainbow", Resources.Load("Atlases/rainbow") as Texture2D);
-        this.Refresh();
-        this.alwaysShow = true;
+        public static PlacedObject.Type RainbowNoFade;
     }
 
-    private RainbowNoFade.RainbowNoFadeData RBData
+    public class RainbowNoFade : CosmeticSprite
     {
-        get
+        public RainbowNoFade(Room room, PlacedObject placedObject)
         {
-            return this.placedObject.data as RainbowNoFade.RainbowNoFadeData;
+            this.room = room;
+            this.placedObject = placedObject;
+            Futile.atlasManager.LoadAtlasFromTexture("rainbow", Resources.Load("Atlases/rainbow") as Texture2D);
+            this.Refresh();
+            this.alwaysShow = true;
         }
-    }
 
-    public override void Update(bool eu)
-    {
-        base.Update(eu);
-        if (this.alwaysShow)
-        {
-            this.fade = 1f;
-        }
-        else
-        {
-            this.fade = Mathf.Pow(Mathf.Clamp01(Mathf.Sin(Mathf.Pow(this.room.world.rainCycle.CycleStartUp, 0.75f) * 3.14159274f)), 0.6f);
-            if (this.room.world.rainCycle.CycleStartUp >= 1f)
-            {
-                this.Destroy();
-            }
-        }
-    }
-
-    public void Refresh()
-    {
-        this.pos = this.placedObject.pos - this.RBData.handlePos;
-        this.rad = this.RBData.handlePos.magnitude * 2f;
-    }
-
-    public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
-    {
-        sLeaser.sprites = new FSprite[1];
-        sLeaser.sprites[0] = new CustomFSprite("rainbow");
-        sLeaser.sprites[0].shader = rCam.game.rainWorld.Shaders["Rainbow"];
-        this.AddToContainer(sLeaser, rCam, null);
-    }
-
-    public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
-    {
-        float num = this.fade * Mathf.InverseLerp(0.2f, 0f, rCam.ghostMode);
-        for (int i = 0; i < 4; i++)
-        {
-            (sLeaser.sprites[0] as CustomFSprite).MoveVertice(i, this.pos + Custom.eightDirections[1 + i * 2].ToVector2() * this.rad - camPos);
-            (sLeaser.sprites[0] as CustomFSprite).verticeColors[i] = new Color(this.RBData.fades[4], 0f, 0f, num * this.RBData.fades[i]);
-        }
-        base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
-    }
-
-    public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
-    {
-    }
-
-    public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
-    {
-        if (newContatiner == null)
-        {
-            newContatiner = rCam.ReturnFContainer("GrabShaders");
-        }
-        base.AddToContainer(sLeaser, rCam, newContatiner);
-    }
-
-    public PlacedObject placedObject;
-    private float rad;
-    private float fade;
-    public bool alwaysShow;
-
-    public class RainbowNoFadeData : PlacedObject.ResizableObjectData
-    {
-        public RainbowNoFadeData(PlacedObject owner) : base(owner)
-        {
-            this.fades = new float[6];
-            for (int i = 0; i < 4; i++)
-            {
-                this.fades[i] = 1f;
-            }
-            this.fades[4] = 0.5f;
-            this.fades[5] = 0.15f;
-        }
-        public float Chance
+        private RainbowNoFade.RainbowNoFadeData RBData
         {
             get
             {
-                return this.fades[5];
+                return this.placedObject.data as RainbowNoFade.RainbowNoFadeData;
             }
         }
-        public override void FromString(string s)
+
+        public override void Update(bool eu)
         {
-            string[] array = Regex.Split(s, "~");
-            this.handlePos.x = float.Parse(array[0], NumberStyles.Any, CultureInfo.InvariantCulture);
-            this.handlePos.y = float.Parse(array[1], NumberStyles.Any, CultureInfo.InvariantCulture);
-            this.panelPos.x = float.Parse(array[2], NumberStyles.Any, CultureInfo.InvariantCulture);
-            this.panelPos.y = float.Parse(array[3], NumberStyles.Any, CultureInfo.InvariantCulture);
-            string[] array2 = array[4].Split(new char[]
+            base.Update(eu);
+            if (this.alwaysShow)
             {
-                ','
-            });
-            int num = 0;
-            while (num < this.fades.Length && num < array2.Length)
-            {
-                this.fades[num] = float.Parse(array2[num], NumberStyles.Any, CultureInfo.InvariantCulture);
-                num++;
+                this.fade = 1f;
             }
-        }
-        public override string ToString()
-        {
-            string text = string.Empty;
-            for (int i = 0; i < this.fades.Length; i++)
+            else
             {
-                text += string.Format(CultureInfo.InvariantCulture, "{0}{1}", new object[]
+                this.fade = Mathf.Pow(Mathf.Clamp01(Mathf.Sin(Mathf.Pow(this.room.world.rainCycle.CycleStartUp, 0.75f) * 3.14159274f)), 0.6f);
+                if (this.room.world.rainCycle.CycleStartUp >= 1f)
                 {
+                    this.Destroy();
+                }
+            }
+        }
+
+        public void Refresh()
+        {
+            this.pos = this.placedObject.pos - this.RBData.handlePos;
+            this.rad = this.RBData.handlePos.magnitude * 2f;
+        }
+
+        public override void InitiateSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam)
+        {
+            sLeaser.sprites = new FSprite[1];
+            sLeaser.sprites[0] = new CustomFSprite("rainbow");
+            sLeaser.sprites[0].shader = rCam.game.rainWorld.Shaders["Rainbow"];
+            this.AddToContainer(sLeaser, rCam, null);
+        }
+
+        public override void DrawSprites(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, float timeStacker, Vector2 camPos)
+        {
+            float num = this.fade * Mathf.InverseLerp(0.2f, 0f, rCam.ghostMode);
+            for (int i = 0; i < 4; i++)
+            {
+                (sLeaser.sprites[0] as CustomFSprite).MoveVertice(i, this.pos + Custom.eightDirections[1 + i * 2].ToVector2() * this.rad - camPos);
+                (sLeaser.sprites[0] as CustomFSprite).verticeColors[i] = new Color(this.RBData.fades[4], 0f, 0f, num * this.RBData.fades[i]);
+            }
+            base.DrawSprites(sLeaser, rCam, timeStacker, camPos);
+        }
+
+        public override void ApplyPalette(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, RoomPalette palette)
+        {
+        }
+
+        public override void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner)
+        {
+            if (newContatiner == null)
+            {
+                newContatiner = rCam.ReturnFContainer("GrabShaders");
+            }
+            base.AddToContainer(sLeaser, rCam, newContatiner);
+        }
+
+        public PlacedObject placedObject;
+        private float rad;
+        private float fade;
+        public bool alwaysShow;
+
+        public class RainbowNoFadeData : PlacedObject.ResizableObjectData
+        {
+            public RainbowNoFadeData(PlacedObject owner) : base(owner)
+            {
+                this.fades = new float[6];
+                for (int i = 0; i < 4; i++)
+                {
+                    this.fades[i] = 1f;
+                }
+                this.fades[4] = 0.5f;
+                this.fades[5] = 0.15f;
+            }
+            public float Chance
+            {
+                get
+                {
+                    return this.fades[5];
+                }
+            }
+            public override void FromString(string s)
+            {
+                string[] array = Regex.Split(s, "~");
+                this.handlePos.x = float.Parse(array[0], NumberStyles.Any, CultureInfo.InvariantCulture);
+                this.handlePos.y = float.Parse(array[1], NumberStyles.Any, CultureInfo.InvariantCulture);
+                this.panelPos.x = float.Parse(array[2], NumberStyles.Any, CultureInfo.InvariantCulture);
+                this.panelPos.y = float.Parse(array[3], NumberStyles.Any, CultureInfo.InvariantCulture);
+                string[] array2 = array[4].Split(new char[]
+                {
+                ','
+                });
+                int num = 0;
+                while (num < this.fades.Length && num < array2.Length)
+                {
+                    this.fades[num] = float.Parse(array2[num], NumberStyles.Any, CultureInfo.InvariantCulture);
+                    num++;
+                }
+            }
+            public override string ToString()
+            {
+                string text = string.Empty;
+                for (int i = 0; i < this.fades.Length; i++)
+                {
+                    text += string.Format(CultureInfo.InvariantCulture, "{0}{1}", new object[]
+                    {
                     this.fades[i],
                     (i >= this.fades.Length - 1) ? string.Empty : ","
-                });
-            }
-            return string.Format(CultureInfo.InvariantCulture, "{0}~{1}~{2}~{3}~{4}", new object[]
-            {
+                    });
+                }
+                return string.Format(CultureInfo.InvariantCulture, "{0}~{1}~{2}~{3}~{4}", new object[]
+                {
                 this.handlePos.x,
                 this.handlePos.y,
                 this.panelPos.x,
                 this.panelPos.y,
                 text
-            });
+                });
+            }
+            public Vector2 panelPos;
+            public float[] fades;
         }
-        public Vector2 panelPos;
-        public float[] fades;
     }
-}
 
-
-namespace DevInterface
-{
     public class RainbowNoFadeRepresentation : ResizeableObjectRepresentation
     {
         public RainbowNoFadeRepresentation(DevUI owner, string IDstring, DevUINode parentNode, PlacedObject pObj) : base(owner, IDstring, parentNode, pObj, "RainbowNoFade", false)

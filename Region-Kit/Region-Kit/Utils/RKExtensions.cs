@@ -33,8 +33,8 @@ namespace RegionKit.Utils
             return self.world?.rainCycle?.brokenAntiGrav?.CurrentLightsOn ?? 1f;
         }
 
-        public static IntVector2 ToIV2(this Vector2 sv) => new IntVector2((int)sv.x, (int)sv.y);
-        public static Vector2 ToV2(this IntVector2 sv) => new Vector2(sv.x, sv.y);
+        public static IntVector2 ToIV2(this Vector2 sv) => new((int)sv.x, (int)sv.y);
+        public static Vector2 ToV2(this IntVector2 sv) => new(sv.x, sv.y);
         
         public static List<IntVector2> ReturnTiles (this IntRect ir)
         {

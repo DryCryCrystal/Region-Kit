@@ -16,7 +16,7 @@ namespace RegionKit.Particles
     /// </summary>
     public abstract class PBehaviourModule
     {
-        GenericParticle owner;
+        readonly GenericParticle owner;
 
         /// <summary>
         /// Use this to indicate how computationally heavy is your <see cref="PBehaviourModule"/> derivative. Used to smoothen loading process.
@@ -204,7 +204,8 @@ namespace RegionKit.Particles
                 myosp = osp;
                 angVelBase = angVb;
             }
-            float angVelBase;
+
+            readonly float angVelBase;
             Machinery.OscillationParams myosp;
             public override void Disable()
             {

@@ -59,9 +59,9 @@ namespace RegionKit.Utils
             LogPath = tar;
             File.CreateText(tar).Dispose();
         }
-        public static Queue<object> WriteQueue { get { _wc = _wc ?? new Queue<object>(); return _wc; } set { _wc = value; } }
-        private static Queue<Object> _wc = new Queue<object>();
-        private static Queue<Tuple<Exception, DateTime>> _encEx = new Queue<Tuple<Exception, DateTime>>();
+        public static Queue<object> WriteQueue { get { _wc ??= new Queue<object>(); return _wc; } set { _wc = value; } }
+        private static Queue<Object> _wc = new();
+        private static readonly Queue<Tuple<Exception, DateTime>> _encEx = new();
         public static string LogPath { get => LogTarget?.FullName; set { LogTarget = new FileInfo(value); } }
         public static FileInfo LogTarget;
         internal static bool routeback;
@@ -93,30 +93,28 @@ namespace RegionKit.Utils
                 if (LogTarget == null) continue;
                 try
                 {
-                    using (var wt = LogTarget.AppendText())
+                    using var wt = LogTarget.AppendText();
+                    while (WriteQueue.Count > 0)
                     {
-                        while (WriteQueue.Count > 0)
+                        lock (WriteQueue)
                         {
-                            lock (WriteQueue)
-                            {
-                                var toWrite = WriteQueue.Dequeue();
-                                wt.Write(toWrite.ToString());
-                                wt.Flush();
-                            }
-                            Thread.Sleep(10);
+                            var toWrite = WriteQueue.Dequeue();
+                            wt.Write(toWrite.ToString());
+                            wt.Flush();
                         }
+                        Thread.Sleep(10);
+                    }
 
-                        while (_encEx.Count > 0)
+                    while (_encEx.Count > 0)
+                    {
+                        lock (_encEx)
                         {
-                            lock (_encEx)
-                            {
-                                var oldex = _encEx.Dequeue();
-                                wt.Write($"\nWrite exc encountered on {oldex.Item2}:\n{oldex.Item1}");
-                                wt.Flush();
-                            }
-                            Thread.Sleep(10);
-
+                            var oldex = _encEx.Dequeue();
+                            wt.Write($"\nWrite exc encountered on {oldex.Item2}:\n{oldex.Item1}");
+                            wt.Flush();
                         }
+                        Thread.Sleep(10);
+
                     }
                 }
                 catch (Exception e)

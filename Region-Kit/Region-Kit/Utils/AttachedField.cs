@@ -21,7 +21,7 @@ namespace RegionKit.Utils
         /// Called after a key is garbage collected.
         /// </summary>
         public event Action<WeakReference, TValue> OnCulled;
-        private Dictionary<object, TValue> _dict = new Dictionary<object, TValue>(_comparer);
+        private Dictionary<object, TValue> _dict = new(_comparer);
         private int _lastGCCount = 0;
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace RegionKit.Utils
         /// </summary>
         public int Count => _dict.Count;
 
-        private List<KeyValuePair<object, TValue>> _toRemove = new List<KeyValuePair<object, TValue>>();
+        private List<KeyValuePair<object, TValue>> _toRemove = new();
         /// <summary>
         /// Removes entries for which the key has been garbage collected.
         /// </summary>

@@ -33,7 +33,7 @@ namespace RegionKit.Utils
             return Clamp(Lerp(start - mDev, start + mDev, UnityEngine.Random.value), minRes, maxRes);
         }
 
-        public static IntRect ConstructIR(IntVector2 p1, IntVector2 p2) => new IntRect(Min(p1.x, p2.x), Min(p1.y, p2.y), Max(p1.x, p2.x), Max(p1.y, p2.y));
+        public static IntRect ConstructIR(IntVector2 p1, IntVector2 p2) => new(Min(p1.x, p2.x), Min(p1.y, p2.y), Max(p1.x, p2.x), Max(p1.y, p2.y));
 
         #region refl flag templates
         public const BindingFlags allContexts = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;

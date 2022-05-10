@@ -50,14 +50,14 @@ namespace RegionKit.Particles
         //there are probably better ways to go about this, but i can't be bothered with them right now
 
         //max particle density before force rate starts decreasing
-        static int ComfortableParticleDensity = 35;
+        public static int ComfortableParticleDensity = 35;
         //comfortable rate "force frames per frame" for self and particles created on warmup
-        static int BaseComfortableFpF = 200;
+        public static int BaseComfortableFpF = 200;
         //add load frames upper border
-        static int TotalForceFrameLimit = 25;
+        public static int TotalForceFrameLimit = 25;
         #endregion
         //how many force updates should be ran per warmup frame
-        int ForceFramesMultiplier;
+        readonly int ForceFramesMultiplier;
         int DelayRequestedByMe;
         public int AverageDensity()
         {
@@ -69,7 +69,6 @@ namespace RegionKit.Particles
         }
         public float AverageComputeCost()
         {
-            var result = 1f;
             var TotalModCost = 1f;
             var dummy = new GenericParticle(default, default);
             foreach (var mod in Modifiers)
@@ -78,6 +77,7 @@ namespace RegionKit.Particles
             }
             var pBirths = BirthEvent?.GetInvocationList() ?? new Delegate[0];
             float[] birthcosts = new float[pBirths.Length];
+            float result;
             if (birthcosts.Length != 0)
             {
                 float sum = 0f;
@@ -96,7 +96,7 @@ namespace RegionKit.Particles
             return result;
         }
 
-        readonly List<GenericParticle> forceupdatelist = new List<GenericParticle>();
+        readonly List<GenericParticle> forceupdatelist = new();
         public override void Update(bool eu)
         {
             if (room.waitToEnterAfterFullyLoaded > 0 && DelayRequestedByMe > 0)
@@ -189,8 +189,8 @@ namespace RegionKit.Particles
                     else if (x.applyOrder == y.applyOrder) return 0;
                     else return -1; }));
         }
-        protected readonly List<ParticleVisualCustomizer> Visuals = new List<ParticleVisualCustomizer>();
-        protected readonly List<ParticleBehaviourProvider> Modifiers = new List<ParticleBehaviourProvider>();
+        protected readonly List<ParticleVisualCustomizer> Visuals = new();
+        protected readonly List<ParticleBehaviourProvider> Modifiers = new();
         /// <summary>
         /// 
         /// </summary>

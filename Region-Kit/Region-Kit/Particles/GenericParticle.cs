@@ -29,7 +29,7 @@ namespace RegionKit.Particles
         public GenericParticle(PMoveState bSt, PVisualState vSt) : base()
         {
             //throw null;
-            vSt.aElm = vSt.aElm ?? "SkyDandelion";
+            vSt.aElm ??= "SkyDandelion";
             start = bSt;
             visuals = vSt;
             vel = DegToVec(bSt.dir).normalized * bSt.speed;
@@ -51,8 +51,10 @@ namespace RegionKit.Particles
                 OnCreate?.Invoke();
                 if (visuals.lInt > 0f && visuals.lRadMax > 0f)
                 {
-                    myLight = new LightSource(pos, false, visuals.lCol, this);
-                    myLight.requireUpKeep = true;
+                    myLight = new(pos, false, visuals.lCol, this)
+                    {
+                        requireUpKeep = true
+                    };
                     myLight.HardSetAlpha(cLInt);
                     myLight.HardSetRad(crd);
                     myLight.flat = visuals.flat;
@@ -86,7 +88,7 @@ namespace RegionKit.Particles
 
         #region modules
         public void addModule(PBehaviourModule m) { Modules.Add(m); }
-        public readonly List<PBehaviourModule> Modules = new List<PBehaviourModule>();
+        public readonly List<PBehaviourModule> Modules = new();
 
         public delegate void lcStages();
         /// <summary>
@@ -117,13 +119,13 @@ namespace RegionKit.Particles
         {
             get
             {
-                switch (phase)
+                return phase switch
                 {
-                    case 0: return Lerp(0f, 1f, (float)progress / (float)GetPhaseLimit(0));
-                    case 1: return 1f;
-                    case 2: return Lerp(1f, 0f, (float)progress / (float)GetPhaseLimit(2));
-                    default: return 0f;
-                }
+                    0 => Lerp(0f, 1f, (float)progress / (float)GetPhaseLimit(0)),
+                    1 => 1f,
+                    2 => Lerp(1f, 0f, (float)progress / (float)GetPhaseLimit(2)),
+                    _ => 0f,
+                };
             }
         }
         /// <summary>
@@ -152,13 +154,13 @@ namespace RegionKit.Particles
         /// <returns></returns>
         private int GetPhaseLimit(byte phase)
         {
-            switch (phase)
+            return phase switch
             {
-                case 0: return start.fadeIn;
-                case 1: return start.lifetime;
-                case 2: return start.fadeOut;
-                default: return 0;
-            }
+                0 => start.fadeIn,
+                1 => start.lifetime,
+                2 => start.fadeOut,
+                _ => 0,
+            };
         }
         public byte phase = 0;
         #endregion

@@ -128,8 +128,8 @@ namespace RegionKit.Particles
             [FloatField("phsFluke", -5f, 5f, 0f, displayName:"Phase fluke")]
             public float phaseFluke;
 
-            protected Machinery.OscillationParams default_op => new Machinery.OscillationParams(amp, frq, phase, Mathf.Sin);
-            protected Machinery.OscillationParams dev_op => new Machinery.OscillationParams(ampFluke, frqFluke, phaseFluke, Mathf.Cos); 
+            protected Machinery.OscillationParams default_op => new(amp, frq, phase, Mathf.Sin);
+            protected Machinery.OscillationParams dev_op => new(ampFluke, frqFluke, phaseFluke, Mathf.Cos); 
 
             public Machinery.OscillationParams GetOscParams()
             {

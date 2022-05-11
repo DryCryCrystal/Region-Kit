@@ -16,7 +16,6 @@ using RegionKit.Utils;
 
 namespace RegionKit.Sprites
 {
-    //TODO(thalber): remove collisions with standalone CSL
     internal static class CSLCentral
     {
         internal const string csl_modid = "CSL";

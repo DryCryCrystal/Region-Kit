@@ -54,7 +54,6 @@ namespace RegionKit.Utils
 
         public static void SetNewPathAndErase(string tar, bool noFile = false)
         {
-            //todo(thalber): make routeback the default?
             routeback = noFile;
             LogPath = tar;
             if (!routeback) File.CreateText(tar).Dispose();

@@ -22,138 +22,149 @@ namespace RegionKit
     [BepInPlugin("RegionKit", "RegionKit", modVersion + "." + buildVersion)]
     public partial class RegionKitMod : BaseUnityPlugin {
 
-        public const string modVersion = "2.0"; //used for assembly version!
-        public const string buildVersion = "2"; //Increments for every code change without a version change.
+        public const string modVersion = "2.1"; //used for assembly version!
+        public const string buildVersion = "40"; //Increments for every code change without a version change.
 
         public void OnEnable() {
             __me = new(this);
-            Logger.Log(LogLevel.Debug, "running RK ruleset:" + Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
+            Logger.Log(LogLevel.Info, "running RK ruleset:" + Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
             //wood setup
             string woodpath = "RegionKitLog.txt";
-            if (RKEnv.RulesDet.TryGetValue("RKLogOutput", out var prm))
+            try
             {
-                woodpath = prm.FirstOrDefault();
-            }
-            PWood.SetNewPathAndErase(woodpath, !RKEnv.Rules.Contains("RKLogFile"));
-            //VARIOUS PATCHES
-            RoomLoader.Patch();
-            SuperstructureFusesFix.Patch();
-            ArenaFixes.ApplyHK();
-            SunBlockerFix.Apply();
-            GlowingSwimmersCI.Apply();
-            NoWallSlideZones.Apply();
-            CustomArenaDivisions.Patch();
-            EchoExtender.EchoExtender.ApplyHooks();
-            LooseSpriteLoader.LoadSprites();
-            ConditionalEffects.CECentral.Enable(); //Applies Conditional Effects
-            Effects.FogOfWar.Patch();
-
-
-            bool MastInstalled = false;
-            bool ABInstalled = false;
-            bool ForsakenStationInstalled = false;
-            bool ARInstalled = false;
-            //0 - none, 1 - any, 2 - 1.3 and higher
-            byte CSLInstalled = default;
-            byte SBehInstalled = default;
-            byte EGInstalled = default;
-            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                if (asm.FullName.Contains("ExtendedGates")) EGInstalled++;
-                if (asm.FullName.Contains("ABThing")) ABInstalled = true;
-                if (asm.FullName.Contains("TheMast")) MastInstalled = true;
-                if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
-                if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
-                if (asm.FullName.Contains("ShelterBehaviors")) SBehInstalled++;
-            }
-            foreach (var mod in Partiality.PartialityManager.Instance.modManager.loadedMods)
-            {
-                if (mod.ModID == Sprites.CSLCentral.csl_modid)
+                if (RKEnv.RulesDet?.TryGetValue("RKLogOutput", out var prm) ?? false)
                 {
-                    CSLInstalled++;
-                    if (new Version(mod.Version) >= new Version(Sprites.CSLCentral.breakVer)) CSLInstalled++;
+                    woodpath = prm?.FirstOrDefault();
                 }
-                //if (mod.ModID == SBeh.SBehCentral.ModID) SBehInstalled++;
-            }
-            PWood.WriteLine($"CSL check results: {CSLInstalled}");
+                var lsf = RKEnv.Rules?.Contains("RKLogFile") ?? false;// ?? false;
+                Logger.LogInfo((lsf) ? "Writing RKlogs to file" : "rerouting Rk logs to normal listener");
+                PWood.SetNewPathAndErase(woodpath, !lsf);
+                //VARIOUS PATCHES
+                RoomLoader.Patch();
+                SuperstructureFusesFix.Patch();
+                ArenaFixes.ApplyHK();
+                SunBlockerFix.Apply();
+                GlowingSwimmersCI.Apply();
+                NoWallSlideZones.Apply();
+                CustomArenaDivisions.Patch();
+                EchoExtender.EchoExtender.ApplyHooks();
+                LooseSpriteLoader.LoadSprites();
+                ConditionalEffects.CECentral.Enable(); //Applies Conditional Effects
+                Effects.FogOfWar.Patch();
 
-            if (!ForsakenStationInstalled)
-            {
-                PWood.WriteLine("Forsaken Station.dll not loaded; applying related object hooks.");
-                Effects.ReplaceEffectColor.Apply();
-                Effects.ColoredRoomEffect.Apply();
-            }
-            else PWood.WriteLine("Forsaken Station.dll loaded; not applying related object hooks.");
 
-            //The Mast
-            if (!MastInstalled)
-            {
-                PWood.WriteLine("TheMast.dll not loaded; applying related object hooks.");
-                TheMast.ArenaBackgrounds.Apply();
-                TheMast.BetterClouds.Apply();
-                TheMast.DeerFix.Apply();
-                TheMast.ElectricGates.Apply();
-                TheMast.PearlChains.Apply();
-                TheMast.RainThreatFix.Apply();
-                TheMast.SkyDandelionBgFix.Apply();
-                TheMast.WindSystem.Apply();
-                TheMast.WormGrassFix.Apply();
-            }
-
-            //Arid Barrens
-            if (!ABInstalled)
-            {
-                PWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
-                AridBarrens.ABCentral.Register();
-            }//On.Room.Loaded += AB_RoomloadDetour;
-
-            if (!ARInstalled)
-            {
-                PWood.WriteLine("AR objects not installed; applying related object hooks.");
-                NewObjects.Hook();
-            }
-            //henpemods:
-            //CSL, extendedgates, shelterbehaviours
-            if (RKEnv.RulesDet.TryGetValue("CSLForceState", out prm))
-            {
-                byte.TryParse(prm.First(), out CSLInstalled);
-                PWood.WriteLine("Forcing CSL mode: " + CSLInstalled);
-            }
-            if (CSLInstalled < 2)
-            {
-                Sprites.CSLCentral.Enable(CSLInstalled == 1);
-                PWood.WriteLine(CSLInstalled switch
+                bool MastInstalled = false;
+                bool ABInstalled = false;
+                bool ForsakenStationInstalled = false;
+                bool ARInstalled = false;
+                //0 - none, 1 - any, 2 - 1.3 and higher
+                byte CSLInstalled = default;
+                byte SBehInstalled = default;
+                byte EGInstalled = default;
+                foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    0 => "CSL not installed, full apply",
-                    1 => $"found CSL below break ver, only scanning CRS folders",
-                    _ => "found CSL equal or greater than self, not enabling"
-                });
+                    if (asm.FullName.Contains("ExtendedGates")) EGInstalled++;
+                    if (asm.FullName.Contains("ABThing")) ABInstalled = true;
+                    if (asm.FullName.Contains("TheMast")) MastInstalled = true;
+                    if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
+                    if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
+                    if (asm.FullName.Contains("ShelterBehaviors")) SBehInstalled++;
+                }
+                foreach (var mod in Partiality.PartialityManager.Instance.modManager.loadedMods)
+                {
+                    if (mod.ModID == Sprites.CSLCentral.csl_modid)
+                    {
+                        CSLInstalled++;
+                        if (new Version(mod.Version) >= new Version(Sprites.CSLCentral.breakVer)) CSLInstalled++;
+                    }
+                    //if (mod.ModID == SBeh.SBehCentral.ModID) SBehInstalled++;
+                }
+                PWood.WriteLine($"CSL check results: {CSLInstalled}");
+
+                if (!ForsakenStationInstalled)
+                {
+                    PWood.WriteLine("Forsaken Station.dll not loaded; applying related object hooks.");
+                    Effects.ReplaceEffectColor.Apply();
+                    Effects.ColoredRoomEffect.Apply();
+                }
+                else PWood.WriteLine("Forsaken Station.dll loaded; not applying related object hooks.");
+
+                //The Mast
+                if (!MastInstalled)
+                {
+                    PWood.WriteLine("TheMast.dll not loaded; applying related object hooks.");
+                    TheMast.ArenaBackgrounds.Apply();
+                    TheMast.BetterClouds.Apply();
+                    TheMast.DeerFix.Apply();
+                    TheMast.ElectricGates.Apply();
+                    TheMast.PearlChains.Apply();
+                    TheMast.RainThreatFix.Apply();
+                    TheMast.SkyDandelionBgFix.Apply();
+                    TheMast.WindSystem.Apply();
+                    TheMast.WormGrassFix.Apply();
+                }
+
+                //Arid Barrens
+                if (!ABInstalled)
+                {
+                    PWood.WriteLine("ABThing.dll not loaded; applying related object hooks.");
+                    AridBarrens.ABCentral.Register();
+                }//On.Room.Loaded += AB_RoomloadDetour;
+
+                if (!ARInstalled)
+                {
+                    PWood.WriteLine("AR objects not installed; applying related object hooks.");
+                    NewObjects.Hook();
+                }
+                //henpemods:
+                //CSL, extendedgates, shelterbehaviours
+                if (RKEnv.RulesDet?.TryGetValue("CSLForceState", out prm) ?? false)
+                {
+                    byte.TryParse(prm.First(), out CSLInstalled);
+                    PWood.WriteLine("Forcing CSL mode: " + CSLInstalled);
+                }
+                if (CSLInstalled < 2)
+                {
+                    Sprites.CSLCentral.Enable(CSLInstalled == 1);
+                    PWood.WriteLine(CSLInstalled switch
+                    {
+                        0 => "CSL not installed, full apply",
+                        1 => $"found CSL below break ver, only scanning CRS folders",
+                        _ => "found CSL equal or greater than self, not enabling"
+                    });
+                }
+                if (EGInstalled == 0)
+                {
+                    PWood.WriteLine("ExtendedGates not found, applying related hooks");
+                    ExtendedGates.Enable();
+                }
+                if (SBehInstalled == 0)
+                {
+                    PWood.WriteLine("ShelterBehaviors not installed, applying related hooks");
+                    SBeh.SBehCentral.Enable();
+                }
+
+                //Objects
+                ColouredLightSource.RegisterAsFullyManagedObject();
+                Machinery.MachineryStatic.Enable();
+                MiscPO.MiscPOStatic.Enable();
+                Particles.ParticlesStatic.Enable();
+                Drawable.Register();
+                SpinningFanObjRep.SpinningFanRep();
+                //ShroudObjRep.ShroudRep();
+                //Add new things here - remember to add them to OnDisable() as well!
+                // Use this to enable the example managedobjecttypes for testing or debugging
+                //ManagedObjectExamples.PlacedObjectsExample();
+                //scdgeighep
+                //EFFECTS
+                Effects.PWMalfunction.Patch();
             }
-            if (EGInstalled == 0)
+            catch (Exception e)
             {
-                PWood.WriteLine("ExtendedGates not found, applying related hooks");
-                ExtendedGates.Enable();
-            }
-            if (SBehInstalled == 0)
-            {
-                PWood.WriteLine("ShelterBehaviors not installed, applying related hooks");
-                SBeh.SBehCentral.Enable();
+                Logger.LogError("Error on RK Onenable! " + e);
             }
 
-            //Objects
-            ColouredLightSource.RegisterAsFullyManagedObject();
-            Machinery.MachineryStatic.Enable();
-            MiscPO.MiscPOStatic.Enable();
-            Particles.ParticlesStatic.Enable();
-            Drawable.Register();
-            SpinningFanObjRep.SpinningFanRep();
-            //ShroudObjRep.ShroudRep();
-            //Add new things here - remember to add them to OnDisable() as well!
-            // Use this to enable the example managedobjecttypes for testing or debugging
-            //ManagedObjectExamples.PlacedObjectsExample();
-
-            //EFFECTS
-            Effects.PWMalfunction.Patch();
+            
         }
 
         public void OnDisable() {

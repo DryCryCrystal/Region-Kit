@@ -37,7 +37,7 @@ public static class LooseSpriteLoader
                         tex.filterMode = FilterMode.Point;
                     }
                     Futile.atlasManager.LoadAtlasFromTexture(spriteName, tex);
-                    //Debug.Log("RegionKit: Loaded loose sprite - " + spriteName);
+                    //PetrifiedWood.WriteLine("RegionKit: Loaded loose sprite - " + spriteName);
                 }
             }
         }

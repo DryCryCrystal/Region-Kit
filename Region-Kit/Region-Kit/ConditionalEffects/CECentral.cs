@@ -5,8 +5,9 @@ using System.Text;
 using UnityEngine;
 using Menu;
 using DevInterface;
+using RegionKit.Utils;
 
-using static RegionKit.ConditionalEffects.CEExt;
+using static RegionKit.Utils.RKUtils;
 
 namespace RegionKit.ConditionalEffects
 {
@@ -87,7 +88,7 @@ namespace RegionKit.ConditionalEffects
             }
             catch
             {
-                Debug.Log("Wrong syntax effect loaded for filter: " + s[0]);
+                PetrifiedWood.WriteLine("Wrong syntax effect loaded for filter: " + s[0]);
             }
             RainWorld rw = UnityEngine.Object.FindObjectOfType<RainWorld>();
             if (TryGetWeak(filterFlags, self, out bool[] testFlags))

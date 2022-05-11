@@ -2,6 +2,8 @@
 
 using System;
 using UnityEngine;
+using RegionKit.Utils;
+
 
 namespace RegionKit 
 {
@@ -18,8 +20,8 @@ namespace RegionKit
                 On.SuperStructureFuses.ctor += SuperStructureFuses_ctor;
             }
             catch (Exception x) {
-                Debug.Log("There was an issue initializing SuperStructureFusesFix:");
-                Debug.Log(x);
+                PetrifiedWood.WriteLine("There was an issue initializing SuperStructureFusesFix:");
+                PetrifiedWood.WriteLine(x);
             }
         }
 

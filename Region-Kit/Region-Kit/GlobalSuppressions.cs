@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Irrelevant")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "Irrelevant")]

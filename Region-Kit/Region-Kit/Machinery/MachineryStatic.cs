@@ -44,7 +44,6 @@ namespace RegionKit.Machinery
         /// </summary>
         public static void Disable()
         {
-            
             foreach (var h in MachineryHooks) h.Undo();
         }
 

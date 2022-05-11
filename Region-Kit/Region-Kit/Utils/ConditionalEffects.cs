@@ -5,11 +5,12 @@ using System.Text;
 using UnityEngine;
 using DevInterface;
 using RWCustom;
+using RegionKit.Utils;
 
 public class ConditionalEffects : Partiality.Modloader.PartialityMod
 {
-    public static Dictionary<WeakReference, bool[]> filterFlags = new Dictionary<WeakReference, bool[]>();
-    public static Dictionary<WeakReference, float> baseIntensities = new Dictionary<WeakReference, float>();
+    public static Dictionary<WeakReference, bool[]> filterFlags = new();
+    public static Dictionary<WeakReference, float> baseIntensities = new();
 
     public ConditionalEffects()
     {
@@ -94,7 +95,7 @@ public class ConditionalEffects : Partiality.Modloader.PartialityMod
                 value = pair.Value;
                 return true;
             }
-        value = default(T);
+        value = default;
         return false;
     }
 
@@ -135,7 +136,7 @@ public class ConditionalEffects : Partiality.Modloader.PartialityMod
         }
         } catch
         {
-            Debug.Log("Wrong syntax effect loaded for filter: " + s[0]);
+            PetrifiedWood.WriteLine("Wrong syntax effect loaded for filter: " + s[0]);
         }
         RainWorld rw = UnityEngine.Object.FindObjectOfType<RainWorld>();
         if (TryGetWeak(filterFlags, self, out bool[] testFlags))
@@ -187,7 +188,7 @@ public class ConditionalEffects : Partiality.Modloader.PartialityMod
         {
             for (int i = 0; i < 3; i++)
             {
-                FSprite sprite = new FSprite("Circle20", true);
+                FSprite sprite = new("Circle20", true);
                 sprite.color = PlayerGraphics.SlugcatColor(i);
                 sprite.anchorX = 0f;
                 sprite.anchorY = 0.5f;

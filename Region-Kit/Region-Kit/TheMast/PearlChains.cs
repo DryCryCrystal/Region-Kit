@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using RegionKit.Utils;
+
 
 //Made by Slime_Cubed and Doggo
 namespace RegionKit.TheMast
@@ -103,7 +105,7 @@ namespace RegionKit.TheMast
                     apo = new AbstractPearlChain(world, EnumExt_PearlChains.PearlChain, null, apo.pos, apo.ID, int.Parse(data[3]), int.Parse(data[4]), null, int.Parse(data[5]));
                 } catch(Exception e)
                 {
-                    Debug.LogException(new Exception("Failed to load PearlChain", e));
+                    PetrifiedWood.WriteLine(new Exception("Failed to load PearlChain", e));
                     apo = null;
                 }
             }
@@ -428,8 +430,8 @@ namespace RegionKit.TheMast
                 }
                 if (witnesses > 0)
                 {
-                    Debug.Log($"pearl chain theft noticed by {witnesses} scavengers!");
-                    if (witnesses == 4) Debug.Log("Good luck.");
+                    PetrifiedWood.WriteLine($"pearl chain theft noticed by {witnesses} scavengers!");
+                    if (witnesses == 4) PetrifiedWood.WriteLine("Good luck.");
                 }
             }
 
@@ -591,7 +593,7 @@ namespace RegionKit.TheMast
                         length = Vector2.Distance(anchorPos, topPearlPos);
                     } else
                     {
-                        Debug.Log("Pearl chain spawned broken!");
+                        PetrifiedWood.WriteLine("Pearl chain spawned broken!");
                         length = -1f;
                         anchorPos = topPearlPos;
                     }

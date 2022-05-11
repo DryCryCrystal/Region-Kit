@@ -165,7 +165,6 @@ namespace RegionKit.Particles
         protected override bool AreaNeedsRefresh => base.AreaNeedsRefresh && c_dir == base.GetValue<Vector2>("sdBase");
         protected override List<IntVector2> GetSuitableTiles(Room rm)
         {
-            //TODO(thalber): test this
             var res = new List<IntVector2>();
             var rb = new IntRect(0 - margin, 0 - margin, rm.Width + margin, rm.Height + margin);
             var dropVector = GetValue<Vector2>("sdBase");
@@ -238,6 +237,10 @@ namespace RegionKit.Particles
         public string shader = "Basic";
         public Vector2 p2 => GetValue<Vector2>("p2");
         public ContainerCodes cc => GetValue<ContainerCodes>("cc");
+        [FloatField("z_scalemin", 0.1f, 2f, 1f, 0.05f, ManagedFieldWithPanel.ControlType.slider, displayName:"scale min")]
+        public float scalemin = 1f;
+        [FloatField("z_scalemax", 0.1f, 2f, 1f, 0.05f, ManagedFieldWithPanel.ControlType.slider, displayName: "scale max")]
+        public float scalemax = 1f;
 
         public ParticleVisualCustomizer(PlacedObject owner) : base(owner, new ManagedField[]
         {
@@ -254,18 +257,29 @@ namespace RegionKit.Particles
 
         public PVisualState DataForNew()
         {
-            //TODO(thalber): finish pvs.datafornew
-            var res = new PVisualState
+            var res = new PVisualState(
+                elmName,
+                shader,
+                cc,
+                spriteColor.Deviation(spriteColorFluke),
+                lightColor.Deviation(lightColorFluke),
+                ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
+                ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
+                ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
+                0f,
+                flatLight,
+                Lerp(scalemin, scalemax, UnityEngine.Random.value))
             {
-                sCol = spriteColor.Deviation(spriteColorFluke),
-                lCol = lightColor.Deviation(lightColorFluke),
-                lRadMin = ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
-                lRadMax = ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
-                lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
-                aElm = elmName,
-                shader = shader,
-                container = cc,
-                flat = flatLight
+                //sCol = spriteColor.Deviation(spriteColorFluke),
+                //lCol = lightColor.Deviation(lightColorFluke),
+                //lRadMin = ClampedFloatDeviation(lightRadMin, lightRadMinFluke, minRes: 0f),
+                //lRadMax = ClampedFloatDeviation(lightRadMax, lightRadMaxFluke, minRes: 0f),
+                //lInt = ClampedFloatDeviation(LightIntensity, LightIntensityFluke, minRes: 0f),
+                //aElm = elmName,
+                //shader = shader,
+                //container = cc,
+                //flat = flatLight,
+                //scale = Lerp(scalemin, scalemax, UnityEngine.Random.value),
             };
             res.sCol.ClampToNormal();
             res.lCol.ClampToNormal();

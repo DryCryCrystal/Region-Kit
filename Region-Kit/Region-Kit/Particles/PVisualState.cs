@@ -22,9 +22,11 @@ namespace RegionKit.Particles
         public float lRadMin;
         public float affByDark;
         public bool flat;
+        public float scale;
 
-        public PVisualState(string aElm, string shader, ContainerCodes container, Color sCol, Color lCol, float lInt, float lRadMax, float lRadMin, float affByDark, bool flat)
+        public PVisualState(string aElm, string shader, ContainerCodes container, Color sCol, Color lCol, float lInt, float lRadMax, float lRadMin, float affByDark, bool flat, float scale)
         {
+            this.scale = scale;
             this.aElm = aElm;
             this.shader = shader;
             this.container = container;

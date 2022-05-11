@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--No debug conf since never a reason to build on debug-->
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -14,15 +15,6 @@
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
@@ -30,164 +22,67 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AridBarrens\ABCentral.cs" />
-    <Compile Include="AridBarrens\EnumExt_ABThing.cs" />
-    <Compile Include="AridBarrens\SandPuffs.cs" />
-    <Compile Include="AridBarrens\SandStorm.cs" />
-    <Compile Include="ARKillRect.cs" />
-    <Compile Include="ArenaFixes.cs" />
-    <Compile Include="ConditionalEffects\CECentral.cs" />
-    <Compile Include="ConditionalEffects\CEExt.cs" />
-    <Compile Include="Effects\ColoredRoomEffect.cs" />
-    <Compile Include="Effects\FogOfWar.cs" />
-    <Compile Include="Effects\FogOfWarController.cs" />
-    <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
-    <Compile Include="GlowingSwimmersCI.cs" />
-    <Compile Include="MiscPO\PlacedHalo.cs" />
-    <Compile Include="NoWallSlideZones.cs" />
-    <Compile Include="Objects\Drawable.cs" />
-    <Compile Include="Objects\Shroud.cs" />
-    <Compile Include="Objects\SpinningFan.cs" />
-    <Compile Include="Objects\SteamHazard.cs" />
-    <Compile Include="Effects\ReplaceEffectColor.cs" />
+    <!--Code-->
     <Compile Include="Shaders.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Shaders.resx</DependentUpon>
     </Compile>
-    <Compile Include="Sprites\LooseSpriteLoader.cs" />
-    <Compile Include="SunBlockerFix.cs" />
-    <Compile Include="SuperstructureFusesFix.cs" />
-    <Compile Include="EchoExtender\CRSEchoParser.cs" />
-    <Compile Include="EchoExtender\EchoExtender.cs" />
-    <Compile Include="EchoExtender\EchoSettings.cs" />
-    <Compile Include="EchoExtender\EnumExt_EchoExtender.cs" />
-    <Compile Include="EchoExtender\ExtensionMethods.cs" />
-    <Compile Include="Effects\PWMalfunction.cs" />
-    <Compile Include="INotifyWhenRoomIsViewed.cs" />
-    <Compile Include="Machinery\OscillationParams.cs" />
-    <Compile Include="MiscPO\PlacedWaterFall.cs" />
-    <Compile Include="MiscPO\MiscPOStatic.cs" />
-    <Compile Include="MiscPO\MiscPO_MPO.cs" />
-    <Compile Include="MiscPO\WormgrassManager.cs" />
-    <Compile Include="NewObjects.cs" />
-    <Compile Include="Objects\ColouredLightSource.cs" />
-    <Compile Include="CustomArenaDivisions.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Machinery\MachineryMPO.cs" />
-    <Compile Include="Machinery\MachineryStatic.cs" />
-    <Compile Include="Machinery\PistonArray.cs" />
-    <Compile Include="Machinery\RoomPowerManager.cs" />
-    <Compile Include="Machinery\SimpleCog.cs" />
-    <Compile Include="Machinery\SimplePiston.cs" />
-    <Compile Include="ManagedObjectExamples.cs" />
-    <Compile Include="Particles\GenericParticle.cs" />
-    <Compile Include="Particles\ParticleBehaviourProvider.cs" />
-    <Compile Include="Particles\PBehaviourModule.cs" />
-    <Compile Include="Particles\PMoveState.cs" />
-    <Compile Include="Particles\ParticlesMPO.cs" />
-    <Compile Include="Particles\ParticlesStatic.cs" />
-    <Compile Include="Particles\PVisualState.cs" />
-    <Compile Include="Particles\RoomParticleSystem.cs" />
-    <Compile Include="PlacedObjectsManager.cs" />
+    <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
+    <Compile Include="*.cs" />
+    <Compile Include="Shaders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shaders.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TheMast\Localization\*.cs" />
+    <Compile Include="ConditionalEffects\*.cs" />
+    <Compile Include="EchoExtender\*.cs" />
+    <Compile Include="AridBarrens\*.cs" />
+    <Compile Include="Machinery\*.cs" />
+    <Compile Include="Particles\*.cs" />
+    <Compile Include="Effects\*.cs" />
+    <Compile Include="Objects\*.cs" />
+    <Compile Include="TheMast\*.cs" />
+    <Compile Include="Sprites\*.cs" />
+    <Compile Include="MiscPO\*.cs" />
+	<Compile Include="Utils\*.cs" />
+    <Compile Include="SBeh\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Objects\PWLightRod.cs" />
-    <Compile Include="RainbowNoFade.cs" />
-    <Compile Include="RegionKitMod.cs" />
-    <Compile Include="RoomLoader.cs" />
-    <Compile Include="RK_APOFSFix.cs" />
-    <Compile Include="TheMast\ArenaBackgrounds.cs" />
-    <Compile Include="TheMast\BetterClouds.cs" />
-    <Compile Include="TheMast\CustomAtlases.cs" />
-    <Compile Include="TheMast\DeerFix.cs" />
-    <Compile Include="TheMast\ElectricGates.cs" />
-    <Compile Include="TheMast\Localization\Strings.Designer.cs" />
-    <Compile Include="TheMast\Localization\Translator.cs" />
-    <Compile Include="TheMast\PearlChains.cs" />
-    <Compile Include="TheMast\RainThreatFix.cs" />
-    <Compile Include="TheMast\SkyDandelionBgFix.cs" />
-    <Compile Include="TheMast\WindSystem.cs" />
-    <Compile Include="TheMast\WormGrassFix.cs" />
-    <Compile Include="Utils\AttachedField.cs" />
-    <Compile Include="Utils\ContainerCodes.cs" />
-    <Compile Include="Utils\ICanBringDataToKin.cs" />
-    <Compile Include="Utils\PetrifiedWood.cs" />
-    <Compile Include="Utils\RKExtensions.cs" />
-    <Compile Include="Utils\RKUtils.cs" />
-    <Compile Include="Utils\Tuple.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Atlases\TheMast.tps" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Atlases\TheMast\Symbol_PearlChain.png" />
+    <!-- ER -->
+	<EmbeddedResource Include="Atlases\*" />
+    <EmbeddedResource Include="Atlases\*\*" />
     <EmbeddedResource Include="Shaders.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Shaders.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Sprites\spinningFan.png" />
+    <EmbeddedResource Include="Resources\*.txt" />
   </ItemGroup>
   <ItemGroup>
+    <!-- other stuff -->
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
-    <None Include="Resources\FogOfWar.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp.refstub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Assembly-CSharp.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.refstub, Version=5.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\BepInEx.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomRegions.refstub, Version=0.8.41.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\CustomRegions.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="EnumExtender.refstub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\EnumExtender.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="HOOKS-Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\HOOKS-Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.refstub, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Mono.Cecil.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.refstub, Version=20.5.21.5, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MonoMod.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="MonoMod.RuntimeDetour.refstub, Version=19.11.5.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MonoMod.RuntimeDetour.refstub.dll</HintPath>
-    </Reference>
-    <Reference Include="Partiality.refstub, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\Partiality.refstub.dll</HintPath>
+    <!--refs-->
+    <Reference Include="lib\*.dll">
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="UnityEngine.refstub, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\UnityEngine.refstub.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+	<RunPostBuildEvent>Always</RunPostBuildEvent>
+    <PostBuildEvent>if defined RWMods (copy /Y "$(TargetPath)" "%25RWMods%25")</PostBuildEvent>
   </PropertyGroup>
 </Project>

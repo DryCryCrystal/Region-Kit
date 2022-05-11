@@ -2,98 +2,101 @@
 using RWCustom;
 using UnityEngine;
 
-//Made By LeeMoriya
-public static class NewObjects
+namespace RegionKit
 {
-    public static void Hook()
-    {
-        On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData;
-        On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
-        On.Room.Loaded += Room_Loaded;
-        /// Unused
-        //On.RoomCamera.ctor += RoomCamera_ctor;
-    }
 
-    /*private static void RoomCamera_ctor(On.RoomCamera.orig_ctor orig, RoomCamera self, RainWorldGame game, int cameraNumber)
+    //Made By LeeMoriya
+    public static class NewObjects
     {
-        orig.Invoke(self, game, cameraNumber);
-    }*/
-
-    private static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
-    {
-        if (self.game == null)
+        public static void Hook()
         {
-            return;
+            On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData;
+            On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
+            On.Room.Loaded += Room_Loaded;
+            /// Unused
+            //On.RoomCamera.ctor += RoomCamera_ctor;
         }
-        for (int m = 0; m < self.roomSettings.placedObjects.Count; m++)
+
+        /*private static void RoomCamera_ctor(On.RoomCamera.orig_ctor orig, RoomCamera self, RainWorldGame game, int cameraNumber)
         {
-            if (self.roomSettings.placedObjects[m].active)
+            orig.Invoke(self, game, cameraNumber);
+        }*/
+
+        private static void Room_Loaded(On.Room.orig_Loaded orig, Room self)
+        {
+            if (self.game == null)
             {
-                if (self.roomSettings.placedObjects[m].type == EnumExt_ARKillRect.ARKillRect)
+                return;
+            }
+            for (int m = 0; m < self.roomSettings.placedObjects.Count; m++)
+            {
+                if (self.roomSettings.placedObjects[m].active)
                 {
-                    self.AddObject(new ARKillRect(self, self.roomSettings.placedObjects[m]));
+                    if (self.roomSettings.placedObjects[m].type == EnumExt_ARKillRect.ARKillRect)
+                    {
+                        self.AddObject(new ARKillRect(self, self.roomSettings.placedObjects[m]));
+                    }
+                    if (self.roomSettings.placedObjects[m].type == EnumExt_RainbowNoFade.RainbowNoFade)
+                    {
+                        self.AddObject(new RainbowNoFade(self, self.roomSettings.placedObjects[m]));
+                    }
                 }
-                if (self.roomSettings.placedObjects[m].type == EnumExt_RainbowNoFade.RainbowNoFade)
+            }
+            orig.Invoke(self);
+        }
+
+        private static void ObjectsPage_CreateObjRep(On.DevInterface.ObjectsPage.orig_CreateObjRep orig, ObjectsPage self, PlacedObject.Type tp, PlacedObject pObj)
+        {
+            if (tp == EnumExt_ARKillRect.ARKillRect)
+            {
+                if (pObj == null)
                 {
-                    self.AddObject(new RainbowNoFade(self, self.roomSettings.placedObjects[m]));
+                    pObj = new PlacedObject(tp, null);
+                    pObj.pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), 0.25f) + Custom.DegToVec(Random.value * 360f) * 0.2f;
+                    self.RoomSettings.placedObjects.Add(pObj);
                 }
+                PlacedObjectRepresentation placedObjectRepresentation;
+                placedObjectRepresentation = new GridRectObjectRepresentation(self.owner, "ARKillRect" + "_Rep", self, pObj, tp.ToString());
+                if (placedObjectRepresentation != null)
+                {
+                    self.tempNodes.Add(placedObjectRepresentation);
+                    self.subNodes.Add(placedObjectRepresentation);
+                }
+                return;
             }
+            if (tp == EnumExt_RainbowNoFade.RainbowNoFade)
+            {
+                if (pObj == null)
+                {
+                    pObj = new PlacedObject(tp, null);
+                    pObj.pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), 0.25f) + Custom.DegToVec(Random.value * 360f) * 0.2f;
+                    self.RoomSettings.placedObjects.Add(pObj);
+                }
+                PlacedObjectRepresentation placedObjectRepresentation;
+                placedObjectRepresentation = new RainbowNoFadeRepresentation(self.owner, "RainbowNoFade" + "_Rep", self, pObj);
+                if (placedObjectRepresentation != null)
+                {
+                    self.tempNodes.Add(placedObjectRepresentation);
+                    self.subNodes.Add(placedObjectRepresentation);
+                }
+                return;
+            }
+            orig.Invoke(self, tp, pObj);
         }
-        orig.Invoke(self);
-    }
 
-    private static void ObjectsPage_CreateObjRep(On.DevInterface.ObjectsPage.orig_CreateObjRep orig, ObjectsPage self, PlacedObject.Type tp, PlacedObject pObj)
-    {
-        if (tp == EnumExt_ARKillRect.ARKillRect)
+        private static void PlacedObject_GenerateEmptyData(On.PlacedObject.orig_GenerateEmptyData orig, PlacedObject self)
         {
-            if (pObj == null)
+            if (self.type == EnumExt_ARKillRect.ARKillRect)
             {
-                pObj = new PlacedObject(tp, null);
-                pObj.pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), 0.25f) + Custom.DegToVec(UnityEngine.Random.value * 360f) * 0.2f;
-                self.RoomSettings.placedObjects.Add(pObj);
+                self.data = new PlacedObject.GridRectObjectData(self);
+                return;
             }
-            PlacedObjectRepresentation placedObjectRepresentation;
-            placedObjectRepresentation = new GridRectObjectRepresentation(self.owner, "ARKillRect" + "_Rep", self, pObj, tp.ToString());
-            if (placedObjectRepresentation != null)
+            if (self.type == EnumExt_RainbowNoFade.RainbowNoFade)
             {
-                self.tempNodes.Add(placedObjectRepresentation);
-                self.subNodes.Add(placedObjectRepresentation);
+                self.data = new RainbowNoFade.RainbowNoFadeData(self);
+                return;
             }
-            return;
+            orig.Invoke(self);
         }
-        if (tp == EnumExt_RainbowNoFade.RainbowNoFade)
-        {
-            if (pObj == null)
-            {
-                pObj = new PlacedObject(tp, null);
-                pObj.pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), 0.25f) + Custom.DegToVec(UnityEngine.Random.value * 360f) * 0.2f;
-                self.RoomSettings.placedObjects.Add(pObj);
-            }
-            PlacedObjectRepresentation placedObjectRepresentation;
-            placedObjectRepresentation = new RainbowNoFadeRepresentation(self.owner, "RainbowNoFade" + "_Rep", self, pObj);
-            if (placedObjectRepresentation != null)
-            {
-                self.tempNodes.Add(placedObjectRepresentation);
-                self.subNodes.Add(placedObjectRepresentation);
-            }
-            return;
-        }
-        orig.Invoke(self, tp, pObj);
-    }
-
-    private static void PlacedObject_GenerateEmptyData(On.PlacedObject.orig_GenerateEmptyData orig, PlacedObject self)
-    {
-        if (self.type == EnumExt_ARKillRect.ARKillRect)
-        {
-            self.data = new PlacedObject.GridRectObjectData(self);
-            return;
-        }
-        if (self.type == EnumExt_RainbowNoFade.RainbowNoFade)
-        {
-            self.data = new RainbowNoFade.RainbowNoFadeData(self);
-            return;
-        }
-        orig.Invoke(self);
     }
 }
-

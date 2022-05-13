@@ -109,6 +109,7 @@ namespace RegionKit.MiscPO
 
         private static void RegisterMPO()
         {
+            RegisterManagedObject<RoomBorderTeleport, BorderTpData, ManagedRepresentation>("RoomBorderTP");
             RegisterEmptyObjectType<WormgrassRectData, ManagedRepresentation>("WormgrassRect");
             RegisterManagedObject<PlacedWaterFall, PlacedWaterfallData, ManagedRepresentation>("PlacedWaterfall");
             //RegisterManagedObject<PlacedHalo, PlacedHaloData, ManagedRepresentation>("PlacedHalo");

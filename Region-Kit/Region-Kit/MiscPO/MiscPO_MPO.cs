@@ -48,4 +48,14 @@ namespace RegionKit.MiscPO
 
         }
     }
+
+    internal class BorderTpData : ManagedData
+    {
+        [IntegerField("buffer", 1, 30, 0, ManagedFieldWithPanel.ControlType.arrows, "buffer tiles")]
+        public int buff;
+
+        public BorderTpData(PlacedObject owner) : base(owner, null)
+        {
+        }
+    }
 }

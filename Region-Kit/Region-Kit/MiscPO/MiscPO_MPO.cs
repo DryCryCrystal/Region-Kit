@@ -48,4 +48,20 @@ namespace RegionKit.MiscPO
 
         }
     }
+
+    internal class BorderTpData : ManagedData
+    {
+        [IntegerField("buffer", 1, 30, 0, ManagedFieldWithPanel.ControlType.arrows, "buffer tiles")]
+        public int buff;
+        [FloatField("tpfrac", 1f, 1.9f, 1.3f, 0.05f, displayName:"tp buffer frac")]
+        public float tpFrac;
+        [BooleanField("vOn", true, displayName: "vertical warp")]
+        public bool vOn;
+        [BooleanField("hOn", true, displayName:"horizontal warp")]
+        public bool hOn;
+
+        public BorderTpData(PlacedObject owner) : base(owner, null)
+        {
+        }
+    }
 }

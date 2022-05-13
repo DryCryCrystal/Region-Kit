@@ -32,7 +32,7 @@ namespace RegionKit
             string woodpath = "RegionKitLog.txt";
             try
             {
-                if (RKEnv.RulesDet?.TryGetValue("RKLogOutput", out var prm) ?? false)
+                if (RKEnv.RulesDet is not null && RKEnv.RulesDet.TryGetValue("RKLogOutput", out var prm))
                 {
                     woodpath = prm?.FirstOrDefault();
                 }
@@ -118,7 +118,7 @@ namespace RegionKit
                 }
                 //henpemods:
                 //CSL, extendedgates, shelterbehaviours
-                if (RKEnv.RulesDet?.TryGetValue("CSLForceState", out prm) ?? false)
+                if (RKEnv.RulesDet is not null && RKEnv.RulesDet.TryGetValue("CSLForceState", out prm))
                 {
                     byte.TryParse(prm.First(), out CSLInstalled);
                     PWood.WriteLine("Forcing CSL mode: " + CSLInstalled);

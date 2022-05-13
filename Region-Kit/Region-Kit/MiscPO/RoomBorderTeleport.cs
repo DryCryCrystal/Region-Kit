@@ -18,8 +18,8 @@ namespace RegionKit.MiscPO
             _ow = owner;
         }
         private readonly PlacedObject _ow;
-        private BorderTpData btpd => _ow.data as BorderTpData;
-        private float buffPX => (float)btpd.buff * 20f;
+        private BorderTpData ow_data => _ow.data as BorderTpData;
+        private float buffPX => (float)ow_data.buff * 20f;
 
         public override void Update(bool eu)
         {
@@ -31,19 +31,23 @@ namespace RegionKit.MiscPO
                 //Vector2 shift = default;
                 var rm = room.RoomRect;
                 var outer = rm.Grow(buffPX);
-                IntVector2 reqshifts = default;
+                IntVector2 reqshift = default;
                 foreach (var chunk in po.bodyChunks)
                 {
                     var cp = chunk.pos;
-                    if (cp.x > outer.right) reqshifts.x--;
-                    if (cp.x < outer.left) reqshifts.x++;
-                    if (cp.y > outer.top) reqshifts.y--;
-                    if (cp.y < outer.bottom) reqshifts.y++;
+                    if (cp.x > outer.right) reqshift.x--;
+                    if (cp.x < outer.left) reqshift.x++;
+                    if (cp.y > outer.top) reqshift.y--;
+                    if (cp.y < outer.bottom) reqshift.y++;
                 }
                 Vector2 shift = new()
                 {
-                    x = (Abs(reqshifts.x) == po.bodyChunks.Length) ? (room.PixelWidth + buffPX * 1.5f) * Sign(reqshifts.x) : 0f,
-                    y = (Abs(reqshifts.y) == po.bodyChunks.Length) ? (room.PixelHeight + buffPX * 1.5f) * Sign(reqshifts.y) : 0f,
+                    x = (Abs(reqshift.x) == po.bodyChunks.Length && ow_data.hOn)
+                    ? (room.PixelWidth + buffPX * ow_data.tpFrac) * Sign(reqshift.x)
+                    : 0f,
+                    y = (Abs(reqshift.y) == po.bodyChunks.Length && ow_data.vOn)
+                    ? (room.PixelHeight + buffPX * ow_data.tpFrac) * Sign(reqshift.y)
+                    : 0f,
                 };
                 if (shift is { x:0f, y:0f }) continue;
                 foreach (var chunk in po.bodyChunks) chunk.pos += shift;

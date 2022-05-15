@@ -67,9 +67,10 @@ Our goal for region kit is to have a unified mod to hold objects, room effects, 
   - Use of arbitrary sprites
   - Controlled randomization of visuals and movement
   - Modularity: combine visuals, behaviour and modifiers in any way you like.
- Expandability:
+  - Expandability:
 	- Relatively simple to make user defined behaviours
 	- Basework for making new types of emitters, particle classes and behaviour modifier classes
+
 For more detailed instructions, see: `P_GUIDE.md`
 
 ### CustomSpritesLoader

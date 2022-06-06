@@ -35,8 +35,7 @@ namespace RegionKit
                 {
                     for (int k = 0; k < room.physicalObjects[i][j].bodyChunks.Length; k++)
                     {
-                        Vector2 v = room.physicalObjects[i][j].bodyChunks[k].pos;
-                        if (Custom.InsideRect(room.GetTilePosition(v), rect))
+                        if (Custom.InsideRect(room.GetTilePosition(room.physicalObjects[i][j].bodyChunks[k].pos), rect))
                         {
                             if (room.physicalObjects[i][j] is Creature)
                             {

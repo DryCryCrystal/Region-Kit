@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MonoMod.RuntimeDetour;
-using Partiality.Modloader;
 using System.Reflection;
 using System.Security;
 using System.Runtime.CompilerServices;

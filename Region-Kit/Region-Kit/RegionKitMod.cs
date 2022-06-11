@@ -51,6 +51,9 @@ namespace RegionKit
                 LooseSpriteLoader.LoadSprites();
                 ConditionalEffects.CECentral.Enable(); //Applies Conditional Effects
                 Effects.FogOfWar.Patch();
+                LittlePlanet.ApplyHooks();
+                RKProjectedCircle.ApplyHooks();
+                CustomEntranceSymbols.ApplyHooks();
 
 
                 bool MastInstalled = false;

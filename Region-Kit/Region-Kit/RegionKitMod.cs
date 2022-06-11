@@ -69,7 +69,7 @@ namespace RegionKit
                     if (asm.FullName.Contains("TheMast")) MastInstalled = true;
                     if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
                     if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
-                    if (asm.FullName.Contains("ARObjects")) CGInstalled = true;
+                    if (asm.FullName.Contains("ConcealedGarden")) CGInstalled = true;
                     if (asm.FullName.Contains("ShelterBehaviors")) SBehInstalled++;
                 }
                 foreach (var mod in Partiality.PartialityManager.Instance.modManager.loadedMods)

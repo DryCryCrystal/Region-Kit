@@ -20,14 +20,12 @@ using RegionKit.Objects;
 namespace RegionKit
 {
     [BepInPlugin("RegionKit", "RegionKit", modVersion + "." + buildVersion)]
-    public partial class RegionKitMod : BaseUnityPlugin
-    {
+    public partial class RegionKitMod : BaseUnityPlugin {
 
         public const string modVersion = "2.1"; //used for assembly version!
         public const string buildVersion = "41"; //Increments for every code change without a version change.
 
-        public void OnEnable()
-        {
+        public void OnEnable() {
             __me = new(this);
             Logger.Log(LogLevel.Info, "running RK ruleset:" + Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
             //wood setup
@@ -175,11 +173,9 @@ namespace RegionKit
                 Logger.LogError("Error on RK Onenable! " + e);
             }
 
-
         }
 
-        public void OnDisable()
-        {
+        public void OnDisable() {
             ExtendedGates.Disable();
             SBeh.SBehCentral.Disable();
             Sprites.CSLCentral.Disable();
@@ -195,8 +191,7 @@ namespace RegionKit
             //Add new things here- remember to add them to OnEnable() as well!
             var casm = Assembly.GetExecutingAssembly();
             foreach (var t in casm.GetTypes()) if (t != typeof(PWood)) t.CleanUpStatic();
-                else
-                {
+                else {
                     PWood.selfDestruct |= PWood.wrThr?.ThreadState == System.Threading.ThreadState.Running;
                     if (!PWood.selfDestruct) t.CleanUpStatic();
                 }

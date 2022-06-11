@@ -20,12 +20,14 @@ using RegionKit.Objects;
 namespace RegionKit
 {
     [BepInPlugin("RegionKit", "RegionKit", modVersion + "." + buildVersion)]
-    public partial class RegionKitMod : BaseUnityPlugin {
+    public partial class RegionKitMod : BaseUnityPlugin
+    {
 
         public const string modVersion = "2.1"; //used for assembly version!
         public const string buildVersion = "41"; //Increments for every code change without a version change.
 
-        public void OnEnable() {
+        public void OnEnable()
+        {
             __me = new(this);
             Logger.Log(LogLevel.Info, "running RK ruleset:" + Environment.GetEnvironmentVariable(RKEnv.RKENVKEY));
             //wood setup
@@ -57,6 +59,7 @@ namespace RegionKit
                 bool ABInstalled = false;
                 bool ForsakenStationInstalled = false;
                 bool ARInstalled = false;
+                bool CGInstalled = false;
                 //0 - none, 1 - any, 2 - 1.3 and higher
                 byte CSLInstalled = default;
                 byte SBehInstalled = default;
@@ -68,6 +71,7 @@ namespace RegionKit
                     if (asm.FullName.Contains("TheMast")) MastInstalled = true;
                     if (asm.FullName.Contains("ForsakenStation") || asm.FullName.Contains("Forsaken Station") || asm.FullName.Contains("Forsaken_Station")) ForsakenStationInstalled = true;
                     if (asm.FullName.Contains("ARObjects")) ARInstalled = true;
+                    if (asm.FullName.Contains("ARObjects")) CGInstalled = true;
                     if (asm.FullName.Contains("ShelterBehaviors")) SBehInstalled++;
                 }
                 foreach (var mod in Partiality.PartialityManager.Instance.modManager.loadedMods)
@@ -116,6 +120,12 @@ namespace RegionKit
                     PWood.WriteLine("AR objects not installed; applying related object hooks.");
                     NewObjects.Hook();
                 }
+                if (!CGInstalled)
+                {
+                    PWood.WriteLine("ConcealedGarden not installed, applying related hooks");
+                    ConcealedGarden.CGDrySpot.Register();
+                    ConcealedGarden.CGGateCustomization.Register();
+                }
                 //henpemods:
                 //CSL, extendedgates, shelterbehaviours
                 if (RKEnv.RulesDet is not null && RKEnv.RulesDet.TryGetValue("CSLForceState", out prm))
@@ -144,6 +154,7 @@ namespace RegionKit
                     SBeh.SBehCentral.Enable();
                 }
 
+
                 //Objects
                 ColouredLightSource.RegisterAsFullyManagedObject();
                 Machinery.MachineryStatic.Enable();
@@ -164,10 +175,11 @@ namespace RegionKit
                 Logger.LogError("Error on RK Onenable! " + e);
             }
 
-            
+
         }
 
-        public void OnDisable() {
+        public void OnDisable()
+        {
             ExtendedGates.Disable();
             SBeh.SBehCentral.Disable();
             Sprites.CSLCentral.Disable();
@@ -183,7 +195,8 @@ namespace RegionKit
             //Add new things here- remember to add them to OnEnable() as well!
             var casm = Assembly.GetExecutingAssembly();
             foreach (var t in casm.GetTypes()) if (t != typeof(PWood)) t.CleanUpStatic();
-                else {
+                else
+                {
                     PWood.selfDestruct |= PWood.wrThr?.ThreadState == System.Threading.ThreadState.Running;
                     if (!PWood.selfDestruct) t.CleanUpStatic();
                 }

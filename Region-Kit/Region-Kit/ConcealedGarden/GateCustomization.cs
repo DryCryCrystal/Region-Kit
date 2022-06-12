@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RegionKit.ConcealedGarden
 {
-    internal class CGGateCustomization : UpdatableAndDeletable, IDrawable
+    internal class GateCustomization : UpdatableAndDeletable, IDrawable
     {
         private readonly PlacedObject pObj;
         private RegionGateGraphics.DoorGraphic leftDoor;
@@ -15,7 +15,7 @@ namespace RegionKit.ConcealedGarden
 
         POM.PlacedObjectsManager.ManagedData data => pObj.data as POM.PlacedObjectsManager.ManagedData;
 
-        public CGGateCustomization(Room room, PlacedObject pObj)
+        public GateCustomization(Room room, PlacedObject pObj)
         {
             this.room = room;
             this.pObj = pObj;
@@ -57,7 +57,7 @@ namespace RegionKit.ConcealedGarden
                 new POM.PlacedObjectsManager.BooleanField("noright", false, displayName:"No Right Door"),
                 new POM.PlacedObjectsManager.BooleanField("nowater", false, displayName:"No Water"),
                 new POM.PlacedObjectsManager.BooleanField("zdontstop", false, displayName:"Dont cut song"),
-            }, typeof(CGGateCustomization), "CGGateCustomization");
+            }, typeof(GateCustomization), "CGGateCustomization");
         }
 
         public override void Update(bool eu)

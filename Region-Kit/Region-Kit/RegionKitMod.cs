@@ -121,8 +121,8 @@ namespace RegionKit
                 if (!CGInstalled)
                 {
                     PWood.WriteLine("ConcealedGarden not installed, applying related hooks");
-                    ConcealedGarden.CGDrySpot.Register();
-                    ConcealedGarden.CGGateCustomization.Register();
+                    ConcealedGarden.DrySpot.Register();
+                    ConcealedGarden.GateCustomization.Register();
                 }
                 //henpemods:
                 //CSL, extendedgates, shelterbehaviours

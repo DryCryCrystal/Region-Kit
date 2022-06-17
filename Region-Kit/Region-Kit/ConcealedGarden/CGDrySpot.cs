@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace RegionKit.ConcealedGarden
 {
-    internal class DrySpot : UpdatableAndDeletable, IDrawable
+    internal class CGDrySpot : UpdatableAndDeletable, IDrawable
     {
         private readonly PlacedObject pObj;
         private bool swappedDrawOrder;
@@ -16,12 +16,12 @@ namespace RegionKit.ConcealedGarden
         internal static void Register()
         {
             POM.PlacedObjectsManager.RegisterManagedObject(new POM.PlacedObjectsManager.ManagedObjectType("CGDrySpot",
-                typeof(DrySpot), typeof(DrySpotData), typeof(POM.PlacedObjectsManager.ManagedRepresentation)));
+                typeof(CGDrySpot), typeof(CGDrySpotData), typeof(POM.PlacedObjectsManager.ManagedRepresentation)));
         }
 
-        DrySpotData data => pObj.data as DrySpotData;
+        CGDrySpotData data => pObj.data as CGDrySpotData;
 
-        public DrySpot(Room room, PlacedObject pObj)
+        public CGDrySpot(Room room, PlacedObject pObj)
         {
             this.room = room;
             this.pObj = pObj;
@@ -152,7 +152,7 @@ namespace RegionKit.ConcealedGarden
         public void AddToContainer(RoomCamera.SpriteLeaser sLeaser, RoomCamera rCam, FContainer newContatiner) { }
 
 
-        class DrySpotData : POM.PlacedObjectsManager.ManagedData
+        class CGDrySpotData : POM.PlacedObjectsManager.ManagedData
         {
             public FloatRect rect
             {
@@ -169,7 +169,7 @@ namespace RegionKit.ConcealedGarden
             [BackedByField("handle")]
             public Vector2 handlePos;
 #pragma warning restore 0649
-            public DrySpotData(PlacedObject owner) : base(owner, new POM.PlacedObjectsManager.ManagedField[] {
+            public CGDrySpotData(PlacedObject owner) : base(owner, new POM.PlacedObjectsManager.ManagedField[] {
                     new POM.PlacedObjectsManager.Vector2Field("handle", new Vector2(100,100), POM.PlacedObjectsManager.Vector2Field.VectorReprType.rect)})
             {
             }

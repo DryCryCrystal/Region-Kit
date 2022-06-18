@@ -40,6 +40,7 @@
     </Compile>
     <Compile Include="TheMast\Localization\*.cs" />
     <Compile Include="ConditionalEffects\*.cs" />
+    <Compile Include="ConcealedGarden\*.cs" />
     <Compile Include="EchoExtender\*.cs" />
     <Compile Include="AridBarrens\*.cs" />
     <Compile Include="Machinery\*.cs" />

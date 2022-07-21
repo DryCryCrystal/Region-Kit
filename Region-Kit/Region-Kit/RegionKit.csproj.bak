@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--No debug conf since never a reason to build on debug-->
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A8D4F157-97E1-4CB6-9F79-7EDA989EC893}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RegionKit</RootNamespace>
+    <AssemblyName>RegionKit</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <LangVersion>9.0</LangVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--Code-->
+    <Compile Include="Shaders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shaders.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
+    <Compile Include="ArenaFixes.cs" />
+    <Compile Include="ARKillRect.cs" />
+    <Compile Include="CustomArenaDivisions.cs" />
+    <Compile Include="ExtendedGates.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="INotifyWhenRoomIsViewed.cs" />
+    <Compile Include="IsExternalInit.cs" />
+    <Compile Include="ManagedObjectExamples.cs" />
+    <Compile Include="NewObjects.cs" />
+    <Compile Include="PlacedObjectsManager.cs" />
+    <Compile Include="RainbowNoFade.cs" />
+    <Compile Include="RegionKitMod.cs" />
+    <Compile Include="RK_APOFSFix.cs" />
+    <Compile Include="RoomLoader.cs" />
+    <Compile Include="Shaders.Designer.cs" />
+    <Compile Include="SunBlockerFix.cs" />
+    <Compile Include="SuperstructureFusesFix.cs" />
+    <Compile Include="Shaders.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Shaders.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TheMast\Localization\*.cs" />
+    <Compile Include="ConditionalEffects\*.cs" />
+    <Compile Include="ConcealedGarden\*.cs" />
+    <Compile Include="EchoExtender\*.cs" />
+    <Compile Include="AridBarrens\*.cs" />
+    <Compile Include="Machinery\*.cs" />
+    <Compile Include="Particles\*.cs" />
+    <Compile Include="Effects\*.cs" />
+    <Compile Include="Objects\*.cs" />
+    <Compile Include="TheMast\*.cs" />
+    <Compile Include="Sprites\*.cs" />
+    <Compile Include="MiscPO\*.cs" />
+    <Compile Include="Utils\*.cs" />
+    <Compile Include="SBeh\*.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- ER -->
+    <EmbeddedResource Include="Atlases\*" />
+    <EmbeddedResource Include="Atlases\*\*" />
+    <EmbeddedResource Include="Shaders.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Shaders.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
+    <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
+    <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
+    <EmbeddedResource Include="Sprites\spinningFan.png" />
+    <EmbeddedResource Include="Resources\*.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- other stuff -->
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <!--refs-->
+    <Reference Include="asm-REF">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\asm-REF.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\core\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomRegions">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\plugins\CustomRegions.dll</HintPath>
+    </Reference>
+    <Reference Include="EnumExtender">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\plugins\EnumExtender.dll</HintPath>
+    </Reference>
+    <Reference Include="HOOKS-Assembly-CSharp">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\plugins\PartialityWrapper\HOOKS-Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="lib\*.dll">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\core\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\core\MonoMod.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Partiality">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\BepInEx\plugins\PartialityWrapper\Partiality.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Downloads\RDBMODS\Rain World Bepinex\Rain World\RainWorld_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <PostBuildEvent>if defined RWMods (copy /Y "$(TargetPath)" "%25RWMods%25")</PostBuildEvent>
+  </PropertyGroup>
+</Project>

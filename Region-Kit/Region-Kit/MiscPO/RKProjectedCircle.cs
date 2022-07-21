@@ -1,9 +1,7 @@
 using UnityEngine;
-using DevInterface;
-using RWCustom;
 using CoralBrain;
 
-namespace RegionKit
+namespace RegionKit.MiscPO
 {
     public class RKProjectedCircle
     {

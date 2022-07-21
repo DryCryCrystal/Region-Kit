@@ -10,7 +10,7 @@ using static System.Text.RegularExpressions.Regex;
 /// By LB Gamer/M4rbleL1ne
 /// </summary>
 
-namespace RegionKit
+namespace RegionKit.MiscPO
 {
     public class NoWallSlideZones
     {
@@ -21,58 +21,57 @@ namespace RegionKit
 
         public static void Apply()
         {
-            On.Room.Loaded +=
-                (orig, self) =>
+            On.Room.Loaded += (orig, self) =>
+            {
+                orig(self);
+                for (var i = 0; i < self.roomSettings.placedObjects.Count; i++)
                 {
-                    orig(self);
-                    for (int i = 0; i < self.roomSettings.placedObjects.Count; i++)
-                    {
-                        var pObj = self.roomSettings.placedObjects[i];
-                        if (pObj.active && pObj.type == EnumExt_NoWallSlideZones.NoWallSlideZone) self.AddObject(new NoWallSlideZone(self, pObj));
-                    }
-                };
-            On.DevInterface.ObjectsPage.CreateObjRep +=
-                (orig, self, tp, pObj) =>
+                    var pObj = self.roomSettings.placedObjects[i];
+                    if (pObj.active && pObj.type == EnumExt_NoWallSlideZones.NoWallSlideZone)
+                        self.AddObject(new NoWallSlideZone(self, pObj));
+                }
+            };
+            On.DevInterface.ObjectsPage.CreateObjRep += (orig, self, tp, pObj) =>
+            {
+                if (tp == EnumExt_NoWallSlideZones.NoWallSlideZone)
                 {
-                    if (tp == EnumExt_NoWallSlideZones.NoWallSlideZone)
+                    if (pObj is null)
                     {
-                        if (pObj is null)
+                        self.RoomSettings.placedObjects.Add(pObj = new(tp, null)
                         {
-                            pObj = new PlacedObject(tp, null)
-                            {
-                                pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new Vector2(-683f, 384f), .25f) + DegToVec(Random.value * 360f) * .2f
-                            };
-                            self.RoomSettings.placedObjects.Add(pObj);
-                        }
-                        var pObjRep = new FloatRectRepresentation(self.owner, $"{tp}_Rep", self, pObj, tp.ToString());
-                        self.tempNodes.Add(pObjRep);
-                        self.subNodes.Add(pObjRep);
+                            pos = self.owner.room.game.cameras[0].pos + Vector2.Lerp(self.owner.mousePos, new(-683f, 384f), .25f) + DegToVec(Random.value * 360f) * .2f
+                        });
                     }
-                    else orig(self, tp, pObj);
-                };
-            On.PlacedObject.GenerateEmptyData +=
-                (orig, self) =>
+                    var pObjRep = new FloatRectRepresentation(self.owner, $"{tp}_Rep", self, pObj, tp.ToString());
+                    self.tempNodes.Add(pObjRep);
+                    self.subNodes.Add(pObjRep);
+                }
+                else
+                    orig(self, tp, pObj);
+            };
+            On.PlacedObject.GenerateEmptyData += (orig, self) =>
+            {
+                orig(self);
+                if (self.type == EnumExt_NoWallSlideZones.NoWallSlideZone)
+                    self.data = new FloatRectData(self);
+            };
+            On.Player.WallJump += (orig, self, direction) =>
+            {
+                if (self.InsideNWSRects())
+                    return;
+                orig(self, direction);
+            };
+            On.Player.Update += (orig, self, eu) =>
+            {
+                orig(self, eu);
+                if (self.bodyMode is Player.BodyModeIndex.WallClimb && self.InsideNWSRects() && !self.submerged && self.bodyChunks[0].ContactPoint.x is not 0 && self.bodyChunks[0].ContactPoint.x == self.input[0].x)
                 {
-                    if (self.type == EnumExt_NoWallSlideZones.NoWallSlideZone) self.data = new FloatRectData(self);
-                    else orig(self);
-                };
-            On.Player.WallJump +=
-                (orig, self, direction) =>
-                {
-                    if (self.InsideNWSRects()) return;
-                    orig(self, direction);
-                };
-            On.Player.Update +=
-                (orig, self, eu) =>
-                {
-                    orig(self, eu);
-                    if (self.bodyMode == Player.BodyModeIndex.WallClimb && self.InsideNWSRects() && !self.submerged && self.bodyChunks[0].ContactPoint.x != 0 && self.bodyChunks[0].ContactPoint.x == self.input[0].x)
-                    {
-                        foreach (var b in self.bodyChunks) b.contactPoint.x = 0;
-                        self.bodyMode = Player.BodyModeIndex.Default;
-                        self.animation = Player.AnimationIndex.None;
-                    }
-                };
+                    foreach (var b in self.bodyChunks)
+                        b.contactPoint.x = 0;
+                    self.bodyMode = Player.BodyModeIndex.Default;
+                    self.animation = Player.AnimationIndex.None;
+                }
+            };
         }
     }
 
@@ -92,7 +91,8 @@ namespace RegionKit
         {
             base.Update(eu);
             var r = (pObj.data as FloatRectData).Rect;
-            if (!rect.EqualsFloatRect(r)) rect = r;
+            if (!rect.EqualsFloatRect(r))
+                rect = r;
         }
     }
 
@@ -100,9 +100,9 @@ namespace RegionKit
     {
         public Vector2 handlePos;
 
-        public virtual FloatRect Rect => new FloatRect(Min(owner.pos.x, owner.pos.x + handlePos.x), Min(owner.pos.y, owner.pos.y + handlePos.y), Max(owner.pos.x, owner.pos.x + handlePos.x), Max(owner.pos.y, owner.pos.y + handlePos.y));
+        public virtual FloatRect Rect => new(Min(owner.pos.x, owner.pos.x + handlePos.x), Min(owner.pos.y, owner.pos.y + handlePos.y), Max(owner.pos.x, owner.pos.x + handlePos.x), Max(owner.pos.y, owner.pos.y + handlePos.y));
 
-        public FloatRectData(PlacedObject owner) : base(owner) => handlePos = new Vector2(80f, 80f);
+        public FloatRectData(PlacedObject owner) : base(owner) => handlePos = new(80f, 80f);
 
         public override void FromString(string s)
         {
@@ -120,11 +120,11 @@ namespace RegionKit
 
         public FloatRectRepresentation(DevUI owner, string IDstring, DevUINode parentNode, PlacedObject pObj, string name) : base(owner, IDstring, parentNode, pObj, name)
         {
-            subNodes.Add(new Handle(owner, "Float_Rect_Handle", this, new Vector2(80f, 80f)));
+            subNodes.Add(new Handle(owner, "Float_Rect_Handle", this, new(80f, 80f)));
             (subNodes[subNodes.Count - 1] as Handle).pos = Data.handlePos;
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
-                fSprites.Add(new FSprite("pixel")
+                fSprites.Add(new("pixel")
                 {
                     anchorX = 0f,
                     anchorY = 0f
@@ -173,7 +173,7 @@ namespace RegionKit
 
         public static bool InsideNWSRects(this Player self)
         {
-            if (self.room != null)
+            if (self.room is not null)
             {
                 foreach (var uad in self.room.updateList)
                 {
@@ -181,7 +181,8 @@ namespace RegionKit
                     {
                         foreach (var bc in self.bodyChunks)
                         {
-                            if (InsideRect(bc.pos, nws.rect)) return true;
+                            if (InsideRect(bc.pos, nws.rect))
+                                return true;
                         }
                     }
                 }

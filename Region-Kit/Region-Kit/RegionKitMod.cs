@@ -44,14 +44,16 @@ namespace RegionKit
                 SuperstructureFusesFix.Patch();
                 ArenaFixes.ApplyHK();
                 SunBlockerFix.Apply();
-                GlowingSwimmersCI.Apply();
-                NoWallSlideZones.Apply();
+                Effects.GlowingSwimmersCI.Apply();
+                MiscPO.NoWallSlideZones.Apply();
                 CustomArenaDivisions.Patch();
                 EchoExtender.EchoExtender.ApplyHooks();
                 LooseSpriteLoader.LoadSprites();
                 ConditionalEffects.CECentral.Enable(); //Applies Conditional Effects
                 Effects.FogOfWar.Patch();
-                CloudAdjustment.Apply();
+                MiscPO.LittlePlanet.ApplyHooks();
+                MiscPO.RKProjectedCircle.ApplyHooks();
+                MiscPO.CustomEntranceSymbols.ApplyHooks();
 
 
                 bool MastInstalled = false;

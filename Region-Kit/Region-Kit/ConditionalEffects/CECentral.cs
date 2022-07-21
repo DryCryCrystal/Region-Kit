@@ -72,9 +72,8 @@ namespace RegionKit.ConditionalEffects
         {
             orig.Invoke(self, s);
             try
-            {
-                
-                if (s.Length > 4 && s[4] != "Color")
+            { 
+                if (s.Length > 4 && s[4] is not "Color")
                 {
                     bool[] flags = new bool[3] { false, false, false };
                     SetWeak(filterFlags, self, flags);

@@ -26,11 +26,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!--Code-->
-    <Compile Include="Shaders.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Shaders.resx</DependentUpon>
-    </Compile>
     <Compile Include="ExtraPOM\Vector2ArrayField.cs" />
     <Compile Include="*.cs" />
     <Compile Include="Shaders.Designer.cs">
@@ -50,17 +45,18 @@
     <Compile Include="TheMast\*.cs" />
     <Compile Include="Sprites\*.cs" />
     <Compile Include="MiscPO\*.cs" />
-	<Compile Include="Utils\*.cs" />
+    <Compile Include="Utils\*.cs" />
     <Compile Include="SBeh\*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <!-- ER -->
-	<EmbeddedResource Include="Atlases\*" />
+    <EmbeddedResource Include="Atlases\*" />
     <EmbeddedResource Include="Atlases\*\*" />
     <EmbeddedResource Include="Shaders.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Shaders.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="TheMast\Atlases\TheMast.png" />
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
@@ -83,7 +79,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-	<RunPostBuildEvent>Always</RunPostBuildEvent>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
     <PostBuildEvent>if defined RWMods (copy /Y "$(TargetPath)" "%25RWMods%25")</PostBuildEvent>
   </PropertyGroup>
 </Project>

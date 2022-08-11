@@ -62,7 +62,8 @@
     <EmbeddedResource Include="TheMast\Atlases\TheMast.txt" />
     <EmbeddedResource Include="TheMast\Localization\Strings.resx" />
     <EmbeddedResource Include="Sprites\spinningFan.png" />
-    <EmbeddedResource Include="Resources\*.txt" />
+    <EmbeddedResource Include="Resources\CSLDesc.txt" />
+    <None Include="Resources\FogOfWar.txt" />
   </ItemGroup>
   <ItemGroup>
     <!-- other stuff -->

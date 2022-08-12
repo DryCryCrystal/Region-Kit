@@ -41,7 +41,6 @@ namespace RegionKit.POM
         On.PlacedObject.GenerateEmptyData += PlacedObject_GenerateEmptyData_Patch;
         On.Room.Loaded += Room_Loaded_Patch;
         On.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep_Patch;
-        On.RainWorldGame.RawUpdate += RainWorldGame_RawUpdate;
         On.DevInterface.PositionedDevUINode.Move += Vector2ArrayField.OnPositionedDevUINodeMove;
 
         //PlacedObjectsExample();
@@ -94,15 +93,6 @@ namespace RegionKit.POM
         }
     }
 
-    private static void RainWorldGame_RawUpdate(On.RainWorldGame.orig_RawUpdate orig, RainWorldGame self, float dt)
-    {
-        orig(self, dt);
-        if (self.devUI == null)
-        {
-            ManagedStringControl.activeStringControl = null;     // remove string control focus when dev tools are closed
-        }
-    }
-
     #endregion HOOKS
 
     #region NATIVEDETOURS
@@ -115,6 +105,8 @@ namespace RegionKit.POM
     {
         if (_stringsdetoured) return;
         _stringsdetoured = true;
+
+        On.RainWorldGame.RawUpdate += RainWorldGame_RawUpdate; // cleanup string focus
 
         System.Reflection.BindingFlags bindingFlags =
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static;
@@ -130,6 +122,15 @@ namespace RegionKit.POM
         captureInputMethod = typeof(PlacedObjectsManager)
                 .GetMethod("CaptureInput", bindingFlags, null, new Type[] { typeof(KeyCode) }, null);
         inputDetour_code = new NativeDetour(getKeyMethod, captureInputMethod);
+    }
+
+    private static void RainWorldGame_RawUpdate(On.RainWorldGame.orig_RawUpdate orig, RainWorldGame self, float dt)
+    {
+        orig(self, dt);
+        if (self.devUI == null)
+        {
+            ManagedStringControl.activeStringControl = null;     // remove string control focus when dev tools are closed
+        }
     }
 
 #pragma warning disable IDE0051 // Reflection, dearling
@@ -2143,7 +2144,7 @@ namespace RegionKit.POM
         protected bool clickedLastUpdate = false;
 
         public ManagedStringControl(ManagedFieldWithPanel field, ManagedData data,
-                ManagedControlPanel panel, float sizeOfDisplayname)
+                DevUINode panel, float sizeOfDisplayname)
                 : base(panel.owner, "ManagedStringControl", panel, Vector2.zero)
         {
             SetupInputDetours();
@@ -2189,7 +2190,8 @@ namespace RegionKit.POM
             {
                 if ((subNodes[1] as RectangularDevUINode).MouseOver && activeStringControl != this)
                 {
-                    // replace whatever instance/null that was focused
+                    // get focus
+                    Text = field.DisplayValueForNode(this, data);
                     activeStringControl = this;
                     subNodes[1].fLabels[0].color = new Color(0.1f, 0.4f, 0.2f);
                 }

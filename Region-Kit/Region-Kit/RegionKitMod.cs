@@ -55,7 +55,6 @@ namespace RegionKit
                 MiscPO.RKProjectedCircle.ApplyHooks();
                 MiscPO.CustomEntranceSymbols.ApplyHooks();
                 PaletteTextInput.Apply();
-                CloudAdjustment.Apply();
 
 
                 bool MastInstalled = false;

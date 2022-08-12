@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Security;
 using System.Security.Permissions;
-using Partiality.Modloader;
 using RegionKit.POM;
 
 using static RegionKit.POM.PlacedObjectsManager;

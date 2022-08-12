@@ -97,11 +97,11 @@ namespace RegionKit.TheMast
         public static AbstractPhysicalObject SaveState_AbstractPhysicalObjectFromString(On.SaveState.orig_AbstractPhysicalObjectFromString orig, World world, string objString)
         {
             AbstractPhysicalObject apo = orig(world, objString);
-            if (apo.type == EnumExt_PearlChains.PearlChain)
+            if (apo is not null && apo.type == EnumExt_PearlChains.PearlChain)
             {
                 try
                 {
-                string[] data = Regex.Split(objString, "<oA>");
+                    string[] data = Regex.Split(objString, "<oA>");
                     apo = new AbstractPearlChain(world, EnumExt_PearlChains.PearlChain, null, apo.pos, apo.ID, int.Parse(data[3]), int.Parse(data[4]), null, int.Parse(data[5]));
                 } catch(Exception e)
                 {

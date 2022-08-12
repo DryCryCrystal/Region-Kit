@@ -158,7 +158,14 @@ namespace RegionKit.TheMast
 
                                 float overlap = EstimateOverlap(chunks[chunk]);
                                 chunkForce *= force * overlap / (chunks[chunk].mass + 0.5f);
-                                chunks[chunk].vel.x = ApplyWind(chunks[chunk].vel.x, targetVel, chunkForce);
+                                if (Data.vertGroup == WindData.VertGroup.Horizontal)
+                                {
+                                    chunks[chunk].vel.x = ApplyWind(chunks[chunk].vel.x, targetVel, chunkForce);
+                                }
+                                else
+                                {
+                                    chunks[chunk].vel.y = ApplyWind(chunks[chunk].vel.y, targetVel, chunkForce);
+                                }
                             }
                         }
                         if (po is Player ply && ply.graphicsModule != null)
@@ -166,25 +173,50 @@ namespace RegionKit.TheMast
                             PlayerGraphics pg = (PlayerGraphics)ply.graphicsModule;
                             for (int j = 0; j < pg.tail.Length; j++)
                             {
-                                if (WindAffectsPoint(pg.tail[j].pos))
-                                    pg.tail[j].vel.x = ApplyWind(pg.tail[j].vel.x, targetVel, force);
+                                if (Data.vertGroup == WindData.VertGroup.Horizontal)
+                                {
+                                    if (WindAffectsPoint(pg.tail[j].pos))
+                                        pg.tail[j].vel.x = ApplyWind(pg.tail[j].vel.x, targetVel, force);
+                                }
+                                else if (Data.vertGroup == WindData.VertGroup.Vertical)
+                                {
+                                    if (WindAffectsPoint(pg.tail[j].pos))
+                                        pg.tail[j].vel.y = ApplyWind(pg.tail[j].vel.y, targetVel, force);
+                                }
                             }
                         }
                     }
                     else if (objs[i] is SkyDandelions.SkyDandelion sd)
                     {
                         // Make sky dandelions wrap around the screen
+
                         Vector2 sPos = sd.pos;
                         if (sPos.x < levelBounds.xMin) sPos.x += levelBounds.width;
                         if (sPos.x > levelBounds.xMax) sPos.x -= levelBounds.width;
                         sd.lastPos += sPos - sd.pos;
                         sd.pos = sPos;
+                        if (Data.vertGroup == WindData.VertGroup.Horizontal)
+                        {
 
-                        if (WindAffectsPoint(sd.pos)) sd.vel.x = ApplyWind(sd.vel.x, targetVel, force);
+                            if (WindAffectsPoint(sd.pos)) sd.vel.x = ApplyWind(sd.vel.x, targetVel, force);
+                        }
+                        else if (Data.vertGroup == WindData.VertGroup.Vertical)
+                        {
+
+                            if (WindAffectsPoint(sd.pos)) sd.vel.y = ApplyWind(sd.vel.y, targetVel, force);
+                        }
                     }
                     else if (objs[i] is Smoke.SmokeSystem.SmokeSystemParticle sp)
                     {
-                        if (WindAffectsPoint(sp.pos)) sp.vel.x = ApplyWind(sp.vel.x, targetVel, force);
+                        if (Data.vertGroup == WindData.VertGroup.Horizontal)
+                        {
+                            if (WindAffectsPoint(sp.pos)) sp.vel.x = ApplyWind(sp.vel.x, targetVel, force);
+                        }
+                        else if (Data.vertGroup == WindData.VertGroup.Vertical)
+                        {
+
+                            if (WindAffectsPoint(sp.pos)) sp.vel.y = ApplyWind(sp.vel.y, targetVel, force);
+                        }
                     }
                 }
             }
@@ -261,6 +293,11 @@ namespace RegionKit.TheMast
                 Visuals, Objects, Creatures
             }
             public AffectGroup affectGroup;
+            public enum VertGroup : byte
+            {
+                Horizontal, Vertical
+            }
+            public VertGroup vertGroup;
 
             public WindData(PlacedObject owner) : base(owner)
             {
@@ -282,11 +319,20 @@ namespace RegionKit.TheMast
                     }
                 }
                 catch (ArgumentException) { }
+                try
+                {
+                    if (array.Length >= 9)
+                    {
+                        VertGroup ag = (VertGroup)Enum.Parse(typeof(VertGroup), array[8]);
+                        vertGroup = ag;
+                    }
+                }
+                catch (ArgumentException) { }
             }
 
             public override string ToString()
             {
-                return string.Concat(base.ToString(), "~", velocity.ToString(), "~", affectGroup.ToString());
+                return string.Concat(base.ToString(), "~", velocity.ToString(), "~", affectGroup.ToString(), "~", vertGroup.ToString());
             }
         }
 
@@ -295,7 +341,8 @@ namespace RegionKit.TheMast
             public WindControlPanel(DevUI owner, string IDstring, DevUINode parentNode, Vector2 pos) : base(owner, IDstring, parentNode, pos, new Vector2(250f, 50f), "Wind Area")
             {
                 subNodes.Add(new WindStrengthSlider(owner, "Wind_Strength", this, new Vector2(5f, 5f), "Velocity"));
-                subNodes.Add(new WindAffectGroupCycler(owner, "Wind_Affect_Group", this, new Vector2(55f, 25f), 190f));
+                subNodes.Add(new WindAffectGroupCycler(owner, "Wind_Affect_Group", this, new Vector2(55f, 25f), 60f));
+                subNodes.Add(new WindVertGroupCycler(owner, "Wind_Vert_Group", this, new Vector2(175f, 25f), 70f));
             }
 
             public void Signal(DevUISignalType type, DevUINode sender, string message)
@@ -341,7 +388,45 @@ namespace RegionKit.TheMast
                     SwitchOption(options[op % options.Length]);
                 }
             }
+            private class WindVertGroupCycler : Button
+            {
+                public const string prefix = "Vertical:";
 
+                public WindData.VertGroup[] options;
+
+                public WindVertGroupCycler(DevUI owner, string IDstring, DevUINode parentNode, Vector2 pos, float width) : base(owner, IDstring, parentNode, pos, width, string.Empty)
+                {
+                    subNodes.Add(new DevUILabel(owner, "Title", this, new Vector2(-50f, 0f), 45f, prefix));
+                    options = (WindData.VertGroup[])Enum.GetValues(typeof(WindData.VertGroup));
+                }
+
+                private WindData Data
+                {
+                    get
+                    {
+                        if (!(parentNode.parentNode is QuadObjectRepresentation rep) || !(rep.pObj.data is WindData wd)) return null;
+                        return wd;
+                    }
+                }
+
+                public override void Refresh()
+                {
+                    base.Refresh();
+                    SwitchOption(Data.vertGroup);
+                }
+
+                private void SwitchOption(WindData.VertGroup ag)
+                {
+                    Data.vertGroup = ag;
+                    Text = ag.ToString();
+                }
+
+                public override void Clicked()
+                {
+                    int op = Array.IndexOf(options, Data.vertGroup) + 1;
+                    SwitchOption(options[op % options.Length]);
+                }
+            }
             private class WindStrengthSlider : Slider
             {
                 public WindStrengthSlider(DevUI owner, string IDstring, DevUINode parentNode, Vector2 pos, string title) : base(owner, IDstring, parentNode, pos, title, false, 110f)

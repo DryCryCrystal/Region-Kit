@@ -54,6 +54,7 @@ namespace RegionKit
                 MiscPO.LittlePlanet.ApplyHooks();
                 MiscPO.RKProjectedCircle.ApplyHooks();
                 MiscPO.CustomEntranceSymbols.ApplyHooks();
+                PaletteTextInput.Apply();
 
 
                 bool MastInstalled = false;

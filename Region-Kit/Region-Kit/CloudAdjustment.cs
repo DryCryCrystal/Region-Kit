@@ -56,13 +56,15 @@ namespace RegionKit
             OffsetMax = 1620f;
             startAltitude = 20000f;
             endAltitude = 31400f;
-
-            string Cloudy = CloudSearch(self.region.name);
-            if (Cloudy != null)
+            if (self.game != null && self.game.IsStorySession)
             {
-                CloudAssign(Cloudy);
-            }
 
+                string Cloudy = CloudSearch(self.region.name);
+                if (Cloudy != null)
+                {
+                    CloudAssign(Cloudy);
+                }
+            }
             orig(self, slugcatNumber);
         }
 

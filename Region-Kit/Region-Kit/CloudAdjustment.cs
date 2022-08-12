@@ -97,7 +97,7 @@ namespace RegionKit
                 {
                     if (self.room.roomSettings.effects[k].type == RoomSettings.RoomEffect.Type.AboveCloudsView && self.room.roomSettings.effects[k].amount != 1f)
                     {
-                        //a.y = Mathf.Lerp(startAltitude / 20f - 100, endAltitude / 10f, (float)Math.Pow(self.room.roomSettings.effects[k].amount, 2.5));
+                        //a.y = Mathf.Lerp(startAltitude / 20f - 100, endAltitude / 10f, (float)Math.Pow(self.room.roomSettings.effects[k].amount, 2.5))
                         a.y += Mathf.Lerp(OffsetMin, OffsetMax, self.room.roomSettings.effects[k].amount);
 
                         NewValue = true;

@@ -11,10 +11,7 @@ namespace RegionKit
     internal class CloudAdjustment
     {
 
-        public static class EnumExt_CloudAdjustment
-        {
-            public static RoomSettings.RoomEffect.Type CloudAdjustment;
-        }
+        
         public static void Apply()
         {
             //load values from the Properties file
@@ -77,44 +74,52 @@ namespace RegionKit
         private static Vector2 BackgroundScene_RoomToWorldPos(On.BackgroundScene.orig_RoomToWorldPos orig, BackgroundScene self, Vector2 inRoomPos)
         {
             bool NewValue = false;
+            bool Clouds = false;
             Vector2 a = self.room.world.GetAbstractRoom(self.room.abstractRoom.index).mapPos / 3f + new Vector2(10f, 10f);
 
-            if (self.room.game.IsArenaSession)
-            {
+            
                 for (int k = 0; k < self.room.roomSettings.effects.Count; k++)
                 {
+                    if (self.room.roomSettings.effects[k].type == EnumExt_Effects.CloudAdjustment)
+                    {
+
+                        if (self.room.game.IsArenaSession)
+                        {
+                            a.y = Mathf.Lerp(900, 4000, (float)Math.Pow(self.room.roomSettings.effects[k].amount, 2.5));
+                            NewValue = true;
+                        }
+
+                        if (self.room.game.IsStorySession)
+                        {
+                            //a.y = Mathf.Lerp(startAltitude / 20f - 100, endAltitude / 10f, (float)Math.Pow(self.room.roomSettings.effects[k].amount, 2.5))
+
+                            a.y += Mathf.Lerp(OffsetMin, OffsetMax, self.room.roomSettings.effects[k].amount);
+                            NewValue = true;
+
+                        }
+
+                    }
+
                     if (self.room.roomSettings.effects[k].type == RoomSettings.RoomEffect.Type.AboveCloudsView)
-                    {
-                        a.y = Mathf.Lerp(900, 4000, (float)Math.Pow(self.room.roomSettings.effects[k].amount, 2.5));
-                        NewValue = true;
-                    }
+                    { Clouds = true; }
 
                 }
-            }
-            else if (self.room.game.IsStorySession)
+
+
+            if (Clouds && Offset != 0f)
             {
-                for (int k = 0; k < self.room.roomSettings.effects.Count; k++)
-                {
-                    if (self.room.roomSettings.effects[k].type == RoomSettings.RoomEffect.Type.AboveCloudsView && self.room.roomSettings.effects[k].amount != 1f)
-                    {
-                        //a.y = Mathf.Lerp(startAltitude / 20f - 100, endAltitude / 10f, (float)Math.Pow(self.room.roomSettings.effects[k].amount, 2.5))
-                        a.y += Mathf.Lerp(OffsetMin, OffsetMax, self.room.roomSettings.effects[k].amount);
-
-                        NewValue = true;
-                    }
-
-                }
-                if (!NewValue && Offset != 0f)
-                {
-                    a.y += Offset;
-                    NewValue = true;
-                }
+                a.y += Offset;
+                NewValue = true;
             }
 
-            if (!NewValue) { orig(self, inRoomPos); }
+            if (!NewValue || !Clouds)
+            { return orig(self, inRoomPos); }
 
-            return a * 20f + inRoomPos - new Vector2((float)self.room.world.GetAbstractRoom(self.room.abstractRoom.index).size.x * 20f,
-                (float)self.room.world.GetAbstractRoom(self.room.abstractRoom.index).size.y * 20f) / 2f;
+            else {
+
+                return a * 20f + inRoomPos - new Vector2((float)self.room.world.GetAbstractRoom(self.room.abstractRoom.index).size.x * 20f,
+                    (float)self.room.world.GetAbstractRoom(self.room.abstractRoom.index).size.y * 20f) / 2f;
+            }
 
         }
 
@@ -125,18 +130,23 @@ namespace RegionKit
             if (self.room.game.IsStorySession)
             {
                 //if these variables are changed from default, change them
-
+                bool Change = false;
                 if (startAltitude != 20000f)
                 {
                     self.startAltitude = startAltitude;
+                    Change = true;
                 }
                 if (endAltitude != 31400f)
                 {
                     self.endAltitude = endAltitude;
+                    Change = true;
                 }
 
-                self.sceneOrigo = new Vector2(2514f, (self.startAltitude + self.endAltitude) / 2f);
-                Debug.Log("Cloud offset is" + Offset);
+                if (Change)
+                {
+                    self.sceneOrigo = new Vector2(2514f, (self.startAltitude + self.endAltitude) / 2f);
+                    Debug.Log("Cloud offset is" + Offset);
+                }
             }
         }
 

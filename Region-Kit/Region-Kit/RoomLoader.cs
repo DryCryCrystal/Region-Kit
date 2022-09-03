@@ -16,6 +16,8 @@ namespace RegionKit
         public static RoomSettings.RoomEffect.Type PWMalfunction;
         public static RoomSettings.RoomEffect.Type FogOfWarSolid;
         public static RoomSettings.RoomEffect.Type FogOfWarDarkened;
+        public static RoomSettings.RoomEffect.Type CloudAdjustment;
+
     }
     class RoomLoader {
         public static void Patch() {

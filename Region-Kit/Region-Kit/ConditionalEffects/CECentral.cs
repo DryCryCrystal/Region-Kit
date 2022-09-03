@@ -91,11 +91,13 @@ namespace RegionKit.ConditionalEffects
             }
             RainWorld rw = UnityEngine.Object.FindObjectOfType<RainWorld>();
             if (TryGetWeak(filterFlags, self, out bool[] testFlags))
+            {
                 if (!testFlags[rw.progression.currentSaveState.saveStateNumber])
                 {
                     SetWeak(baseIntensities, self, self.amount);
                     self.amount = 0;
                 }
+            }
         }
 
         private static string RoomEffect_ToString(On.RoomSettings.RoomEffect.orig_ToString orig, RoomSettings.RoomEffect self)

@@ -1,5 +1,13 @@
 # Region Kit
 
+**THIS REPO WILL BE ARCHIVED ON 19 June 2023**
+
+Go to the new repo for the workshop versions.
+
+https://github.com/Rain-World-Modding/RegionKit
+
+---
+
 A unified dependency and object kit for Rain World region modding. Created by The Substratum Dev Team and other members of the community.
 
 #### Table of Contents
